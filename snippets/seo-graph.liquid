@@ -1,0 +1,94 @@
+{%- comment -%}
+  Site-wide JSON-LD entity graph: Organization (escalevr.ca) + AutoPartsStore (the parts
+  department / online store) + WebSite with SearchAction. Stable @id values let search and
+  AI engines merge the boutique with the dealership entity.
+{%- endcomment -%}
+{%- liquid
+  assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
+  assign org_id = main_url | append: '/#organization'
+  assign store_id = request.origin | append: '/#parts-store'
+  assign site_id = request.origin | append: '/#website'
+  assign areas = settings.biz_area_served | split: ','
+  assign search_template = request.origin | append: routes.search_url | append: '?q={search_term_string}'
+  assign year = 'now' | date: '%Y'
+  assign has_seasons = false
+  if settings.high_season_start != blank and settings.high_season_end != blank
+    assign has_seasons = true
+  endif
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": {{ org_id | json }},
+      "name": {{ settings.biz_name | json }},
+      "legalName": {{ settings.biz_legal_name | json }},
+      "url": {{ main_url | json }},
+      "foundingDate": {{ settings.biz_founded | json }},
+      {%- if settings.logo_schema != blank %}
+      "logo": {{ settings.logo_schema | image_url: width: 600 | prepend: 'https:' | json }},
+      {%- else %}
+      "logo": {{ 'escale-logo-dark.png' | asset_url | prepend: 'https:' | json }},
+      {%- endif %}
+      "telephone": {{ settings.biz_phone_e164 | json }},
+      "email": {{ settings.biz_email | json }},
+      "sameAs": [{{ settings.social_facebook | json }}, {{ settings.social_instagram | json }}]
+    },
+    {
+      "@type": "AutoPartsStore",
+      "@id": {{ store_id | json }},
+      "name": {{ shop.name | json }},
+      "description": "Département des pièces et boutique en ligne d'Escale VR : pièces, accessoires et plans d'entretien de VR.",
+      "url": {{ request.origin | json }},
+      "parentOrganization": { "@id": {{ org_id | json }} },
+      "telephone": {{ settings.biz_phone_e164 | json }},
+      "email": {{ settings.biz_email | json }},
+      "priceRange": "$$",
+      "currenciesAccepted": "CAD",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": {{ settings.biz_street | json }},
+        "addressLocality": {{ settings.biz_city | json }},
+        "addressRegion": {{ settings.biz_region | json }},
+        "postalCode": {{ settings.biz_postal | json }},
+        "addressCountry": "CA"
+      },
+      "geo": { "@type": "GeoCoordinates", "latitude": {{ settings.biz_lat | json }}, "longitude": {{ settings.biz_lng | json }} },
+      {%- if has_seasons %}
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": {{ settings.hours_high_weekday_open | json }}, "closes": {{ settings.hours_high_weekday_close | json }}, "validFrom": {{ year | append: '-' | append: settings.high_season_start | json }}, "validThrough": {{ year | append: '-' | append: settings.high_season_end | json }} },
+        {%- if settings.hours_high_weekend_open != blank %}
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": {{ settings.hours_high_weekend_open | json }}, "closes": {{ settings.hours_high_weekend_close | json }}, "validFrom": {{ year | append: '-' | append: settings.high_season_start | json }}, "validThrough": {{ year | append: '-' | append: settings.high_season_end | json }} },
+        {%- endif %}
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": {{ settings.hours_off_weekday_open | json }}, "closes": {{ settings.hours_off_weekday_close | json }} }
+      ],
+      {%- else %}
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": {{ settings.hours_off_weekday_open | json }}, "closes": {{ settings.hours_off_weekday_close | json }} }
+      ],
+      {%- endif %}
+      "areaServed": [
+        {%- for area in areas -%}
+          { "@type": "Place", "name": {{ area | strip | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      "knowsLanguage": ["fr-CA", "en-CA"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": {{ site_id | json }},
+      "url": {{ request.origin | json }},
+      "name": {{ shop.name | json }},
+      "inLanguage": {{ request.locale.iso_code | json }},
+      "publisher": { "@id": {{ org_id | json }} },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": {{ search_template | json }} },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>

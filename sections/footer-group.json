@@ -5,13 +5,46 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "shop": { "type": "menu", "settings": { "heading": "Magasiner", "menu": "footer" } },
-        "help": { "type": "menu", "settings": { "heading": "Service à la clientèle", "menu": "footer-help" } },
-        "hours": { "type": "hours", "settings": { "heading": "Comptoir des pièces" } }
+        "shop": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer"
+          }
+        },
+        "parts": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-parts"
+          }
+        },
+        "help": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-help"
+          }
+        },
+        "hours": {
+          "type": "hours",
+          "settings": {}
+        }
       },
-      "block_order": ["shop", "help", "hours"],
-      "settings": { "show_newsletter": true, "show_payment_icons": true }
+      "block_order": [
+        "shop",
+        "parts",
+        "help",
+        "hours"
+      ],
+      "settings": {
+        "show_trust": true,
+        "show_newsletter": true,
+        "show_payment_icons": true
+      }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }

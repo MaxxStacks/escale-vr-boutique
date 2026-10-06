@@ -10,24 +10,71 @@
     endif
   endfor
   assign sort_by = collection.sort_by | default: collection.default_sort_by
+
+  # Find this collection's siblings in the navigation menu to build the category rail.
+  assign rail_parent = nil
+  for link in section.settings.nav_menu.links
+    for child in link.links
+      if child.url == collection.url
+        assign rail_parent = link
+      endif
+    endfor
+  endfor
+
+  assign in_stock_count = 0
+  for p in collection.products
+    if p.available
+      assign in_stock_count = in_stock_count | plus: 1
+    endif
+  endfor
+  assign promo_after = section.settings.promo_after
 -%}
 <section class="collection">
-  <div class="collection__banner{% if collection.image and section.settings.show_image %} collection__banner--image{% endif %}">
+  <div class="coll-hero{% if collection.image and section.settings.show_image %} coll-hero--image{% endif %}">
     {%- if collection.image and section.settings.show_image -%}
-      {{ collection.image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '750, 1100, 1500, 1920', sizes: '100vw', class: 'collection__banner-img', alt: collection.image.alt | default: collection.title }}
+      {{ collection.image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '750, 1100, 1500, 1920', sizes: '100vw', class: 'coll-hero__img', alt: collection.image.alt | default: collection.title }}
     {%- endif -%}
-    <div class="page-width collection__banner-inner">
+    <div class="page-width coll-hero__inner">
       {%- render 'breadcrumbs' -%}
-      <h1 class="h1">{{ collection.title }}</h1>
-      {%- if collection.description != blank and paginate.current_page == 1 -%}
-        <div class="collection__intro rte">{{ collection.description }}</div>
-      {%- endif -%}
+      <div class="coll-hero__head">
+        <span class="coll-hero__icon">{%- render 'category-icon', handle: collection.handle, title: collection.title -%}</span>
+        <div>
+          <h1 class="h1">{{ collection.title }}</h1>
+          {%- if collection.description != blank and paginate.current_page == 1 -%}
+            <div class="coll-hero__intro rte">{{ collection.description }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+      <ul class="coll-hero__stats" role="list">
+        <li><strong>{{ collection.products_count }}</strong> {{ 'sections.collection.stat_products' | t }}</li>
+        <li>{%- render 'icon', name: 'truck' -%} {{ 'sections.collection.stat_shipping' | t: threshold: settings.free_shipping_threshold }}</li>
+        {%- if settings.pickup_enabled -%}<li>{%- render 'icon', name: 'store' -%} {{ 'sections.collection.stat_pickup' | t }}</li>{%- endif -%}
+        <li>{%- render 'icon', name: 'wrench' -%} {{ 'sections.collection.stat_experts' | t }}</li>
+      </ul>
     </div>
   </div>
+
+  {%- if rail_parent -%}
+    <nav class="coll-rail" aria-label="{{ rail_parent.title | escape }}">
+      <div class="page-width coll-rail__inner">
+        <a href="{{ rail_parent.url }}" class="coll-rail__item">{%- render 'icon', name: 'grid' -%}<span>{{ 'sections.header.view_all' | t }} {{ rail_parent.title | escape }}</span></a>
+        {%- for child in rail_parent.links -%}
+          <a href="{{ child.url }}" class="coll-rail__item{% if child.url == collection.url %} is-active{% endif %}"{% if child.url == collection.url %} aria-current="page"{% endif %}>
+            {%- render 'category-icon', handle: child.handle, title: child.title -%}<span>{{ child.title | escape }}</span>
+          </a>
+        {%- endfor -%}
+      </div>
+    </nav>
+  {%- endif -%}
 
   <div class="page-width collection__layout" data-collection>
     <aside class="collection__sidebar" data-facets-drawer>
       {%- render 'facets', results: collection, url: collection.url -%}
+      <div class="help-card">
+        <p class="help-card__title">{%- render 'icon', name: 'wrench' -%} {{ 'sections.collection.help_title' | t }}</p>
+        <p class="small muted">{{ 'sections.collection.help_text' | t }}</p>
+        <a href="tel:{{ settings.biz_phone_e164 }}" class="btn btn--primary btn--block btn--sm">{%- render 'icon', name: 'phone' -%} {{ settings.biz_phone }}</a>
+      </div>
     </aside>
 
     <div class="collection__main">
@@ -35,7 +82,14 @@
         <button type="button" class="btn btn--ghost toolbar__filter" data-facets-open>
           {%- render 'icon', name: 'filter' -%} {{ 'sections.filters.title' | t }}{% if active_count > 0 %} ({{ active_count }}){% endif %}
         </button>
-        <p class="toolbar__count muted" role="status">{{ 'sections.collection.products_count' | t: count: collection.products_count }}</p>
+        <p class="toolbar__count" role="status">
+          <strong>{{ 'sections.collection.products_count' | t: count: collection.products_count }}</strong>
+          {%- if paginate.pages > 1 %} <span class="muted">· {{ 'general.meta.page' | t: page: paginate.current_page }} / {{ paginate.pages }}</span>{% endif -%}
+        </p>
+        <div class="toolbar__density" role="group" aria-label="{{ 'sections.collection.density' | t }}">
+          <button type="button" class="toolbar__dens-btn" data-density="3" aria-label="3">{%- render 'icon', name: 'grid' -%}</button>
+          <button type="button" class="toolbar__dens-btn is-active" data-density="4" aria-label="4"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9.5" y="2" width="5" height="5" rx="1"/><rect x="17" y="2" width="5" height="5" rx="1"/><rect x="2" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="17" y="9.5" width="5" height="5" rx="1"/><rect x="2" y="17" width="5" height="5" rx="1"/><rect x="9.5" y="17" width="5" height="5" rx="1"/><rect x="17" y="17" width="5" height="5" rx="1"/></svg></button>
+        </div>
         <div class="toolbar__sort">
           <label for="SortBy" class="small muted">{{ 'sections.filters.sort' | t }}</label>
           <select id="SortBy" name="sort_by" form="FacetsForm" data-sort>
@@ -47,10 +101,10 @@
       </div>
 
       {%- if active_count > 0 -%}
-        <ul class="active-filters">
+        <ul class="active-filters" role="list">
           {%- for filter in collection.filters -%}
             {%- for value in filter.active_values -%}
-              <li><a href="{{ value.url_to_remove }}" class="chip">{{ value.label | escape }} {%- render 'icon', name: 'close' -%}</a></li>
+              <li><a href="{{ value.url_to_remove }}" class="chip">{{ filter.label | escape }} : {{ value.label | escape }} {%- render 'icon', name: 'close' -%}</a></li>
             {%- endfor -%}
             {%- if filter.type == 'price_range' -%}
               {%- if filter.min_value.value or filter.max_value.value -%}
@@ -63,13 +117,17 @@
       {%- endif -%}
 
       {%- if collection.products.size == 0 -%}
-        <div class="empty-state">
-          <p class="h4">{{ 'sections.collection.empty' | t }}</p>
+        <div class="empty-state empty-state--rich">
+          <span class="empty-state__icon">{%- render 'category-icon', handle: collection.handle, title: collection.title -%}</span>
+          <p class="h3">{% if active_count > 0 %}{{ 'sections.collection.empty' | t }}{% else %}{{ 'sections.collection.empty_new' | t }}{% endif %}</p>
           <p class="muted">{{ 'sections.collection.empty_help' | t: phone: settings.biz_phone }}</p>
-          <a href="{{ collection.url }}" class="btn btn--primary">{{ 'sections.filters.clear' | t }}</a>
+          <div class="empty-state__actions">
+            {%- if active_count > 0 -%}<a href="{{ collection.url }}" class="btn btn--primary">{{ 'sections.filters.clear' | t }}</a>{%- endif -%}
+            <a href="{{ routes.collections_url }}" class="btn btn--ghost">{{ 'sections.header.all_categories' | t }}</a>
+          </div>
         </div>
       {%- else -%}
-        <ul class="grid grid--products grid--{{ section.settings.columns }}" role="list">
+        <ul class="grid grid--products grid--{{ section.settings.columns }}" role="list" data-product-grid>
           {%- for product in collection.products -%}
             {%- liquid
               assign lazy = true
@@ -78,6 +136,16 @@
               endif
             -%}
             <li>{%- render 'product-card', product: product, lazy: lazy -%}</li>
+            {%- if section.settings.show_promo and forloop.index == promo_after and paginate.current_page == 1 -%}
+              <li class="grid__promo">
+                <div class="promo-card">
+                  <span class="promo-card__icon">{%- render 'icon', name: 'phone' -%}</span>
+                  <p class="promo-card__title">{{ 'sections.collection.promo_title' | t }}</p>
+                  <p class="promo-card__text">{{ 'sections.collection.promo_text' | t }}</p>
+                  <a href="tel:{{ settings.biz_phone_e164 }}" class="btn btn--accent btn--sm">{{ settings.biz_phone }}</a>
+                </div>
+              </li>
+            {%- endif -%}
           {%- endfor -%}
         </ul>
         {%- render 'pagination', paginate: paginate -%}
@@ -121,7 +189,10 @@
     { "type": "range", "id": "per_page", "label": "Products per page", "min": 12, "max": 48, "step": 4, "default": 24 },
     { "type": "select", "id": "columns", "label": "Columns", "default": "4", "options": [{ "value": "3", "label": "3" }, { "value": "4", "label": "4" }] },
     { "type": "checkbox", "id": "show_image", "label": "Show collection image in banner", "default": true },
-    { "type": "paragraph", "content": "SEO: write the collection description (top, short) in the admin. For a long-form SEO block below the grid, create a collection metafield custom.description_bottom (rich text)." }
+    { "type": "link_list", "id": "nav_menu", "label": "Menu used for the category rail", "default": "main-menu" },
+    { "type": "checkbox", "id": "show_promo", "label": "Show expert-help card inside the grid", "default": true },
+    { "type": "range", "id": "promo_after", "label": "Help card after product #", "min": 4, "max": 16, "step": 1, "default": 7 },
+    { "type": "paragraph", "content": "SEO: write the collection description (top, short) in the admin. For a long-form SEO block below the grid, use the collection metafield custom.description_bottom." }
   ]
 }
 {% endschema %}

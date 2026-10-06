@@ -1,12 +1,13 @@
 {%- comment -%} FR/EN language switcher. Usage: {% render 'localization-switcher', id: 'HeaderLocalization' %} {%- endcomment -%}
 {%- if localization.available_languages.size > 1 -%}
   {%- form 'localization', id: id, class: 'lang-switch' -%}
-    <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
     <span class="visually-hidden">{{ 'general.language' | t }}</span>
     <div class="lang-switch__options">
       {%- for language in localization.available_languages -%}
         <button
           type="submit"
+          name="language_code"
+          value="{{ language.iso_code }}"
           class="lang-switch__btn{% if language.iso_code == localization.language.iso_code %} is-active{% endif %}"
           lang="{{ language.iso_code }}"
           data-lang="{{ language.iso_code }}"

@@ -31,7 +31,7 @@
 
     {{ content_for_header }}
 
-    {%- render 'schema-site' -%}
+    {%- render 'seo-graph' -%}
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   </head>
 
@@ -57,6 +57,7 @@
           cartChange: {{ routes.cart_change_url | json }},
           predictiveSearch: {{ routes.predictive_search_url | json }}
         },
+        autoLanguage: {{ settings.auto_language | json }},
         strings: {
           addToCart: {{ 'products.product.add_to_cart' | t | json }},
           soldOut: {{ 'products.product.sold_out' | t | json }},

@@ -15,26 +15,60 @@
         "msg2": {
           "type": "message",
           "settings": {
-            "text": "Grande liquidation : plus de 300 000 $ de pièces en inventaire",
+            "text": "Grande liquidation : plus de 300 000 $ de pièces VR en inventaire",
             "link": "shopify://collections/liquidation"
+          }
+        },
+        "msg3": {
+          "type": "message",
+          "settings": {
+            "text": "Réservez votre mise en service printanière dès maintenant",
+            "link": "shopify://collections/plans-entretien"
           }
         }
       },
       "block_order": [
         "msg1",
-        "msg2"
+        "msg2",
+        "msg3"
       ],
       "settings": {
-        "show_phone": false,
-        "show_main_site": true
+        "site_menu": "escalevr-site"
       }
     },
     "header": {
       "type": "header",
+      "blocks": {
+        "promo_parts": {
+          "type": "promo",
+          "settings": {
+            "menu_title": "Pièces",
+            "eyebrow": "Liquidation",
+            "heading": "Pièces neuves à prix de liquidation",
+            "text": "Plus de 300 000 $ d'inventaire de concessionnaire, quantités limitées.",
+            "button_label": "Voir les aubaines",
+            "link": "shopify://collections/liquidation"
+          }
+        },
+        "promo_brands": {
+          "type": "promo",
+          "settings": {
+            "menu_title": "Marques",
+            "eyebrow": "Sur commande",
+            "heading": "Des milliers de pièces de nos distributeurs",
+            "text": "Vous ne trouvez pas votre pièce? On la commande pour vous.",
+            "button_label": "Demander une pièce",
+            "link": "shopify://pages/nous-joindre"
+          }
+        }
+      },
+      "block_order": [
+        "promo_parts",
+        "promo_brands"
+      ],
       "settings": {
         "logo_width": 170,
         "menu": "main-menu",
-        "site_menu": "escalevr-site",
         "sticky": true
       }
     }

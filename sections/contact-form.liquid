@@ -8,8 +8,7 @@
         {{ settings.biz_street }}, {{ settings.biz_city }} ({{ 'general.province_quebec' | t }}) {{ settings.biz_postal }}<br>
         <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a> · <a href="mailto:{{ settings.biz_email }}">{{ settings.biz_email }}</a>
       </address>
-      <h3 class="h5">{{ 'general.hours' | t }}</h3>
-      <p>{{ settings.biz_hours | newline_to_br }}</p>
+      {%- render 'parts-hours', style: 'contact' -%}
       {%- if section.settings.map_query != blank -%}
         <iframe class="contact__map" title="{{ 'general.map' | t }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
           src="https://www.google.com/maps?q={{ section.settings.map_query | url_encode }}&output=embed"></iframe>
@@ -26,7 +25,7 @@
         <label>{{ 'contact.phone' | t }}<input type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}"></label>
         <label>{{ 'contact.rv' | t }}<input type="text" name="contact[vr]" placeholder="{{ 'contact.rv_placeholder' | t }}"></label>
       </div>
-      <label>{{ 'contact.part' | t }}<input type="text" name="contact[piece]"></label>
+      <label>{{ 'contact.part' | t }}<input type="text" name="contact[piece]" data-prefill="piece"></label>
       <label>{{ 'contact.message' | t }} *<textarea name="contact[body]" rows="6" required>{{ form.body }}</textarea></label>
       <p class="small muted">{{ 'contact.privacy' | t }}</p>
       <button type="submit" class="btn btn--accent btn--lg">{{ 'contact.send' | t }}</button>

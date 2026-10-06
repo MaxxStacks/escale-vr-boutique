@@ -1,0 +1,51 @@
+{%- comment -%}
+  Parts department opening hours (NOT sales). Two seasons from theme settings.
+  Usage: {% render 'parts-hours', style: 'footer' %}
+{%- endcomment -%}
+{%- liquid
+  assign today = 'now' | date: '%m-%d'
+  assign in_high = false
+  if settings.high_season_start != blank and settings.high_season_end != blank
+    if today >= settings.high_season_start and today <= settings.high_season_end
+      assign in_high = true
+    endif
+  endif
+  assign t_closed = 'hours.closed' | t
+-%}
+<div class="hours hours--{{ style | default: 'default' }}">
+  <p class="hours__title">{%- render 'icon', name: 'wrench' -%}<span>{{ 'hours.title' | t }}</span></p>
+  <p class="hours__note">{{ 'hours.not_sales' | t }}</p>
+  {%- for season in (1..2) -%}
+    {%- liquid
+      if season == 1
+        assign key = 'high'
+        assign wd_o = settings.hours_high_weekday_open
+        assign wd_c = settings.hours_high_weekday_close
+        assign we_o = settings.hours_high_weekend_open
+        assign we_c = settings.hours_high_weekend_close
+        assign current = in_high
+      else
+        assign key = 'off'
+        assign wd_o = settings.hours_off_weekday_open
+        assign wd_c = settings.hours_off_weekday_close
+        assign we_o = settings.hours_off_weekend_open
+        assign we_c = settings.hours_off_weekend_close
+        assign current = false
+        if settings.high_season_start != blank and in_high == false
+          assign current = true
+        endif
+      endif
+      assign label_key = 'hours.season_' | append: key
+    -%}
+    <div class="hours__season{% if current %} is-current{% endif %}">
+      <p class="hours__season-name">
+        {{ label_key | t }}
+        {%- if current -%}<span class="hours__now">{{ 'hours.now' | t }}</span>{%- endif -%}
+      </p>
+      <dl>
+        <div><dt>{{ 'hours.weekdays' | t }}</dt><dd>{% if wd_o != blank %}{{ wd_o | remove_first: '0' }} – {{ wd_c | remove_first: '0' }}{% else %}{{ t_closed }}{% endif %}</dd></div>
+        <div><dt>{{ 'hours.weekend' | t }}</dt><dd>{% if we_o != blank %}{{ we_o | remove_first: '0' }} – {{ we_c | remove_first: '0' }}{% else %}{{ t_closed }}{% endif %}</dd></div>
+      </dl>
+    </div>
+  {%- endfor -%}
+</div>

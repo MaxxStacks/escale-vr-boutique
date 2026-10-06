@@ -1,34 +1,112 @@
-<section class="page-width section">
-  {%- render 'breadcrumbs' -%}
-  <h1 class="h1">{{ section.settings.heading }}</h1>
-  <ul class="tiles tiles--4">
-    {%- for c in collections -%}
-      {%- unless c.handle == 'frontpage' or c.handle == 'all' -%}
-        <li class="tile">
-          <a href="{{ c.url }}" class="tile__link">
-            <span class="tile__media">
-              {%- if c.featured_image -%}
-                {{ c.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 990px) 25vw, 50vw', alt: c.title }}
-              {%- else -%}
-                {{ 'collection-1' | placeholder_svg_tag: 'placeholder' }}
-              {%- endif -%}
-            </span>
-            <span class="tile__title">{{ c.title }}</span>
-            <span class="tile__count">{{ 'sections.collection.products_count' | t: count: c.products_count }}</span>
-          </a>
-        </li>
-      {%- endunless -%}
-    {%- endfor -%}
-  </ul>
+<section class="shop-hero">
+  <div class="page-width shop-hero__inner">
+    {%- render 'breadcrumbs' -%}
+    <p class="eyebrow eyebrow--light">{{ 'sections.all_categories.eyebrow' | t }}</p>
+    <h1 class="h1">{{ section.settings.heading }}</h1>
+    <p class="shop-hero__text">{{ section.settings.text }}</p>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="hero__search">
+      <label for="CatSearch" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
+      {%- render 'icon', name: 'search' -%}
+      <input id="CatSearch" type="search" name="q" placeholder="{{ 'sections.search.placeholder_long' | t }}">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="btn btn--accent">{{ 'sections.search.submit' | t }}</button>
+    </form>
+    {%- if section.blocks.size > 1 -%}
+      <nav class="shop-hero__jump" aria-label="{{ 'sections.all_categories.jump' | t }}">
+        {%- for block in section.blocks -%}
+          <a href="#group-{{ block.id }}" class="chip chip--light">{{ block.settings.title }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </div>
 </section>
+
+<div class="page-width shop-groups">
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign list = block.settings.collections
+      if list == blank and forloop.first
+        assign list = collections
+      endif
+    -%}
+    {%- if list != blank -%}
+      <section class="shop-group" id="group-{{ block.id }}" {{ block.shopify_attributes }}>
+        <div class="section__head">
+          <div>
+            <h2 class="h2">{{ block.settings.title }}</h2>
+            {%- if block.settings.text != blank -%}<p class="section__sub">{{ block.settings.text }}</p>{%- endif -%}
+          </div>
+        </div>
+        <ul class="cat-grid cat-grid--{{ block.settings.style }}" role="list">
+          {%- for c in list -%}
+            {%- if c.handle == 'frontpage' or c.handle == 'all' -%}{%- continue -%}{%- endif -%}
+            <li>
+              <a href="{{ c.url }}" class="cat-card">
+                <span class="cat-card__media">
+                  {%- if c.featured_image -%}
+                    {{ c.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 990px) 25vw, 50vw', alt: c.title }}
+                  {%- else -%}
+                    {%- render 'category-icon', handle: c.handle, title: c.title -%}
+                  {%- endif -%}
+                </span>
+                <span class="cat-card__body">
+                  <span class="cat-card__title">{{ c.title }}</span>
+                  {%- if c.description != blank and block.settings.style != 'compact' -%}
+                    <span class="cat-card__desc">{{ c.description | strip_html | truncatewords: 14 }}</span>
+                  {%- endif -%}
+                  <span class="cat-card__meta">
+                    {%- if c.products_count > 0 -%}
+                      {{ 'sections.collection.products_count' | t: count: c.products_count }}
+                    {%- else -%}
+                      {{ 'sections.all_categories.coming_soon' | t }}
+                    {%- endif -%}
+                    {%- render 'icon', name: 'arrow' -%}
+                  </span>
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <aside class="help-band">
+    <span class="help-band__icon">{%- render 'icon', name: 'wrench' -%}</span>
+    <div>
+      <p class="h4">{{ 'sections.all_categories.help_title' | t }}</p>
+      <p class="muted">{{ 'sections.all_categories.help_text' | t }}</p>
+    </div>
+    <div class="help-band__actions">
+      <a href="tel:{{ settings.biz_phone_e164 }}" class="btn btn--primary">{%- render 'icon', name: 'phone' -%} {{ settings.biz_phone }}</a>
+      <a href="{{ pages['nous-joindre'].url | default: '/pages/nous-joindre' }}" class="btn btn--ghost">{{ 'sections.all_categories.request' | t }}</a>
+    </div>
+  </aside>
+</div>
 
 {% schema %}
 {
-  "name": "Collections list",
+  "name": "All categories",
   "tag": "div",
   "class": "section-list-collections",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Toutes les catégories de pièces VR" }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Toutes les catégories de pièces VR" },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Pièces, accessoires et plans d'entretien pour roulottes, caravanes à sellette, tentes-roulottes et motorisés. Expédiés de Beaumont partout au Québec et au Canada." }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Category group",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Pièces par catégorie" },
+        { "type": "text", "id": "text", "label": "Subtitle" },
+        { "type": "collection_list", "id": "collections", "label": "Collections", "info": "The first group shows every collection if left empty." },
+        { "type": "select", "id": "style", "label": "Style", "default": "large", "options": [
+          { "value": "large", "label": "Large cards" },
+          { "value": "compact", "label": "Compact" }
+        ] }
+      ]
+    }
   ]
 }
 {% endschema %}

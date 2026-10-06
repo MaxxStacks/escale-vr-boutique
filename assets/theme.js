@@ -10,7 +10,7 @@
 
   /* ---------- Announcement rotator ---------- */
   $$('[data-rotator]').forEach((wrap) => {
-    const msgs = $$('.announcement__msg', wrap);
+    const msgs = $$('.utility__msg', wrap);
     if (msgs.length < 2) return;
     let i = 0;
     setInterval(() => {
@@ -50,13 +50,20 @@
   $$('[data-predictive-search]').forEach((form) => {
     const input = $('input[type="search"]', form);
     const results = $('[data-predictive-results]', form);
-    if (!input || !results || !T.routes.predictiveSearch) return;
+    if (!input || !results || !T.routes.predictiveSearch || form.hasAttribute('data-predictive-off')) return;
+    const emptyTpl = $('[data-predictive-empty]', form);
     let controller;
 
     const close = () => { results.hidden = true; input.setAttribute('aria-expanded', 'false'); };
+    const showEmpty = () => {
+      if (!emptyTpl) return close();
+      results.innerHTML = emptyTpl.innerHTML;
+      results.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    };
     const search = debounce(async () => {
       const q = input.value.trim();
-      if (q.length < 2) return close();
+      if (q.length < 2) return showEmpty();
       controller?.abort();
       controller = new AbortController();
       try {
@@ -74,7 +81,7 @@
     }, 220);
 
     input.addEventListener('input', search);
-    input.addEventListener('focus', () => { if (results.innerHTML.trim()) { results.hidden = false; } });
+    input.addEventListener('focus', () => { if (input.value.trim().length < 2) showEmpty(); else if (results.innerHTML.trim()) results.hidden = false; });
     document.addEventListener('click', (e) => { if (!form.contains(e.target)) close(); });
     input.addEventListener('keydown', (e) => {
       const links = $$('a', results);
@@ -132,6 +139,8 @@
       }
       const cart = await (await fetch(`${T.routes.cart}.js`)).json();
       $$('[data-cart-count]').forEach((c) => { c.textContent = cart.item_count; c.classList.toggle('is-empty', cart.item_count === 0); });
+      const fmt = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-CA' : 'fr-CA', { style: 'currency', currency: cart.currency || 'CAD' });
+      $$('[data-cart-total]').forEach((t) => { t.textContent = fmt.format(cart.total_price / 100); });
       if (open) openCart();
     } catch (e) { /* keep page usable */ }
   }
@@ -200,14 +209,52 @@
   /* ---------- Product page: gallery, variants, sticky ATC ---------- */
   $$('[data-product-section]').forEach((section) => {
     const gallery = $('[data-gallery]', section);
-    const showMedia = (id) => {
-      if (!gallery || !id) return;
-      $$('[data-media-id]', gallery).forEach((s) => s.classList.toggle('is-active', s.dataset.mediaId === String(id)));
-      $$('[data-thumb]', gallery).forEach((t) => t.classList.toggle('is-active', t.dataset.thumb === String(id)));
+    const track = gallery && $('[data-gallery-track]', gallery);
+    const slides = gallery ? $$('[data-media-id]', gallery) : [];
+    const markActive = (idx) => {
+      $$('[data-thumb]', gallery).forEach((t, i) => t.classList.toggle('is-active', i === idx));
+      $$('.gallery__dot', gallery).forEach((d, i) => d.classList.toggle('is-active', i === idx));
     };
+    const showMedia = (id) => {
+      if (!track || !id) return;
+      const idx = slides.findIndex((s) => s.dataset.mediaId === String(id));
+      if (idx < 0) return;
+      track.scrollTo({ left: slides[idx].offsetLeft, behavior: 'smooth' });
+      markActive(idx);
+    };
+    track?.addEventListener('scroll', debounce(() => {
+      const idx = Math.round(track.scrollLeft / track.clientWidth);
+      markActive(idx);
+    }, 60));
     gallery?.addEventListener('click', (e) => {
       const thumb = e.target.closest('[data-thumb]');
       if (thumb) showMedia(thumb.dataset.thumb);
+      const zoom = e.target.closest('[data-zoom]');
+      const box = $('[data-lightbox]', section);
+      if (zoom && box && box.showModal) {
+        $('[data-lightbox-img]', box).src = zoom.dataset.zoom;
+        box.showModal();
+      }
+    });
+    const lightbox = $('[data-lightbox]', section);
+    lightbox?.addEventListener('click', (e) => { if (e.target === lightbox || e.target.closest('[data-lightbox-close]')) lightbox.close(); });
+
+    // Copy part number
+    $('[data-copy-sku]', section)?.addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const txt = $('[data-sku]', section)?.textContent.trim();
+      if (!txt || !navigator.clipboard) return;
+      navigator.clipboard.writeText(txt).then(() => { btn.classList.add('is-copied'); setTimeout(() => btn.classList.remove('is-copied'), 1500); });
+    });
+
+    // Tabs
+    $$('[data-tabs]', section).forEach((tabs) => {
+      tabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-tab]');
+        if (!btn) return;
+        $$('[data-tab]', tabs).forEach((b) => { const on = b === btn; b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on); });
+        $$('[role="tabpanel"]', tabs).forEach((p) => { p.hidden = p.id !== btn.getAttribute('aria-controls'); });
+      });
     });
 
     const json = $('[data-variants-json]', section);
@@ -236,7 +283,7 @@
           ? `<span class="stock__dot"></span>${T.strings.inStock}`
           : `<span class="stock__dot stock__dot--out"></span>${T.strings.outOfStock}`;
         if (!variant) return;
-        if (sku && variant.sku) sku.textContent = variant.sku;
+        if (variant.sku) $$('[data-sku]', section).forEach((el) => { el.textContent = variant.sku; });
         if (variant.featured_media) showMedia(variant.featured_media.id);
 
         // Re-render price + keep URL shareable/canonical-friendly
@@ -349,4 +396,52 @@
     country.addEventListener('change', () => { province.dataset.default = ''; fill(); });
     fill();
   });
+
+  /* ---------- Header height (sticky offsets) ---------- */
+  const setHeaderVar = () => {
+    const h = $('.section-header');
+    if (h) document.documentElement.style.setProperty('--header-sticky', `${h.offsetHeight}px`);
+  };
+  setHeaderVar();
+  window.addEventListener('resize', debounce(setHeaderVar, 150));
+
+  /* ---------- Grid density (collection) ---------- */
+  const grid = $('[data-product-grid]');
+  if (grid) {
+    const apply = (n) => {
+      grid.classList.remove('is-dense-3', 'is-dense-4');
+      grid.classList.add(`is-dense-${n}`);
+      $$('[data-density]').forEach((b) => b.classList.toggle('is-active', b.dataset.density === String(n)));
+    };
+    let saved = null;
+    try { saved = localStorage.getItem('ev-density'); } catch (e) {}
+    if (saved) apply(saved);
+    $$('[data-density]').forEach((b) => b.addEventListener('click', () => {
+      apply(b.dataset.density);
+      try { localStorage.setItem('ev-density', b.dataset.density); } catch (e) {}
+    }));
+  }
+
+  /* ---------- Contact form prefill (?piece=) ---------- */
+  const params = new URLSearchParams(window.location.search);
+  $$('[data-prefill]').forEach((el) => { const v = params.get(el.dataset.prefill); if (v && !el.value) el.value = v; });
+
+  /* ---------- Browser language auto-detect (first visit only) ---------- */
+  (() => {
+    if (!T.autoLanguage) return;
+    if (/bot|crawl|spider|slurp|lighthouse|preview/i.test(navigator.userAgent)) return;
+    let chosen = null;
+    try { chosen = localStorage.getItem('ev-lang'); } catch (e) {}
+    $$('.lang-switch__btn').forEach((b) => b.addEventListener('click', () => { try { localStorage.setItem('ev-lang', b.dataset.lang); } catch (e) {} }));
+    if (chosen) return;
+    const current = (document.documentElement.lang || 'fr').slice(0, 2);
+    const wanted = (navigator.languages && navigator.languages[0] || navigator.language || 'fr').slice(0, 2).toLowerCase();
+    try { localStorage.setItem('ev-lang', wanted === 'en' ? 'en' : 'fr'); } catch (e) {}
+    const target = wanted === 'en' ? 'en' : 'fr';
+    if (target === current) return;
+    const form = $('form.lang-switch');
+    const btn = form && form.querySelector(`[data-lang="${target}"]`);
+    if (!form || !btn) return;
+    btn.click();
+  })();
 })();

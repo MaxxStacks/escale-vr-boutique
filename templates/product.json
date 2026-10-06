@@ -5,13 +5,22 @@
       "settings": {
         "layout": "part",
         "show_dynamic_checkout": true,
-        "low_stock": 3
+        "low_stock": 3,
+        "shipping_page": "livraison-et-retours"
       }
     },
-    "recommendations": {
+    "complementary": {
       "type": "product-recommendations",
       "settings": {
         "heading": "Souvent achetés ensemble",
+        "intent": "complementary",
+        "limit": 4
+      }
+    },
+    "related": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Vous pourriez aussi aimer",
         "intent": "related",
         "limit": 4
       }
@@ -19,6 +28,7 @@
   },
   "order": [
     "main",
-    "recommendations"
+    "complementary",
+    "related"
   ]
 }

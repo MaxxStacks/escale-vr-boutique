@@ -1,0 +1,31 @@
+{%- comment -%} Picks a category icon from a collection handle/title. Usage: {% render 'category-icon', handle: c.handle, title: c.title %} {%- endcomment -%}
+{%- liquid
+  assign key = handle | append: ' ' | append: title | downcase
+  assign icon = 'package'
+  if key contains 'electri' or key contains 'batter'
+    assign icon = 'bolt'
+  elsif key contains 'plomb' or key contains 'eau' or key contains 'plumb' or key contains 'water'
+    assign icon = 'drop'
+  elsif key contains 'chauff' or key contains 'clim' or key contains 'heat'
+    assign icon = 'flame'
+  elsif key contains 'auvent' or key contains 'exterieur' or key contains 'awning'
+    assign icon = 'awning'
+  elsif key contains 'attelage' or key contains 'remorqu' or key contains 'hitch' or key contains 'tow'
+    assign icon = 'hitch'
+  elsif key contains 'essieu' or key contains 'frein' or key contains 'suspension' or key contains 'axle' or key contains 'atlas'
+    assign icon = 'wheel'
+  elsif key contains 'entretien-produit' or key contains 'chimique' or key contains 'cleaning'
+    assign icon = 'sparkle'
+  elsif key contains 'interieur' or key contains 'cuisine' or key contains 'interior'
+    assign icon = 'sofa'
+  elsif key contains 'camping'
+    assign icon = 'tent'
+  elsif key contains 'liquidation' or key contains 'clearance'
+    assign icon = 'tag'
+  elsif key contains 'plan' or key contains 'service'
+    assign icon = 'calendar'
+  elsif key contains 'nouveaut' or key contains 'new'
+    assign icon = 'star'
+  endif
+-%}
+<span class="cat-icon cat-icon--{{ icon }}">{%- render 'icon', name: icon -%}</span>

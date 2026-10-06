@@ -1,4 +1,5 @@
 {%- assign c = section.settings.collection -%}
+{%- if c != blank and c.products_count > 0 or request.design_mode -%}
 <section class="section{% if section.settings.surface %} section--surface{% endif %}">
   <div class="page-width">
     <div class="section__head">
@@ -29,6 +30,7 @@
     </ul>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

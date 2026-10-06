@@ -6,12 +6,13 @@
         <h2 class="h2">{{ section.settings.heading }}</h2>
       </div>
       {%- if section.settings.link_label != blank -%}
-        <a href="{{ section.settings.link | default: routes.collections_url }}" class="link-arrow">{{ section.settings.link_label }} {%- render 'icon', name: 'arrow' -%}</a>
+        <a href="{{ routes.collections_url }}" class="link-arrow">{{ section.settings.link_label }} {%- render 'icon', name: 'arrow' -%}</a>
       {%- endif -%}
     </div>
     <ul class="tiles tiles--{{ section.settings.columns }}">
       {%- for block in section.blocks -%}
         {%- assign c = block.settings.collection -%}
+        {%- if c == blank and request.design_mode == false -%}{%- continue -%}{%- endif -%}
         <li class="tile" {{ block.shopify_attributes }}>
           <a href="{{ c.url | default: '#' }}" class="tile__link">
             <span class="tile__media">
@@ -19,7 +20,7 @@
               {%- if img -%}
                 {{ img | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 990px) 16vw, 45vw', alt: c.title | default: block.settings.title }}
               {%- else -%}
-                {{ 'collection-1' | placeholder_svg_tag: 'placeholder' }}
+                {%- render 'category-icon', handle: c.handle, title: c.title -%}
               {%- endif -%}
             </span>
             <span class="tile__title">{{ block.settings.title | default: c.title }}</span>

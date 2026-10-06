@@ -167,19 +167,31 @@
   "newsletter": {
     "button": "Subscribe",
     "label": "Your email",
-    "success": "Thanks! You're subscribed."
+    "success": "Thanks! You're subscribed.",
+    "heading": "Get the deals first",
+    "text": "Clearance deals, new arrivals and seasonal maintenance reminders. No spam, promise.",
+    "legal": "Unsubscribe in one click. Your data stays protected (Quebec Law 25)."
   },
   "products": {
     "assurances": {
       "expert": "Not sure it fits? Call us:",
-      "pickup": "Free pickup in Beaumont (exit 337, Hwy 20)",
-      "plan_booking": "Appointment confirmed within 48 business hours",
-      "plan_techs": "Performed at the Escale VR shop in Beaumont",
-      "returns": "Returns within {{ days }} days (new, uninstalled parts)",
-      "shipping": "Free shipping in Canada over ${{ threshold }}"
+      "pickup": "Beaumont, exit 337, Hwy 20",
+      "plan_booking": "Confirmed within 48 business hours",
+      "plan_techs": "At the Escale VR shop in Beaumont",
+      "returns": "{{ days }} days, new uninstalled parts",
+      "shipping": "Free in Canada over ${{ threshold }}",
+      "shipping_title": "Fast shipping",
+      "pickup_title": "Free pickup",
+      "returns_title": "Easy returns",
+      "secure_title": "Secure checkout",
+      "secure": "Shop Pay, credit cards",
+      "plan_booking_title": "Fast booking",
+      "plan_techs_title": "Certified technicians"
     },
     "badges": {
-      "liquidation": "Clearance"
+      "liquidation": "Clearance",
+      "plan": "Maintenance plan",
+      "sale": "Sale"
     },
     "product": {
       "add_to_cart": "Add to cart",
@@ -203,14 +215,47 @@
       "regular_price": "Regular price",
       "sold_out": "Sold out",
       "taxes_note": "Taxes extra. Shipping calculated at checkout.",
-      "unavailable": "Unavailable"
+      "unavailable": "Unavailable",
+      "add_short": "Add",
+      "choose": "Choose",
+      "copy": "Copy part number",
+      "eta": "Ships in {{ days }} business days from Beaumont",
+      "in_stock_short": "In stock",
+      "pickup_at": "Pickup available at {{ location }} · {{ time }}",
+      "save_pct": "-{{ pct }}%",
+      "you_save": "You save {{ amount }}",
+      "zoom": "Zoom image"
     },
     "tabs": {
       "compatibility": "Compatibility",
       "description": "Description",
       "shipping": "Shipping & returns",
       "shipping_default": "Ships from Beaumont, Quebec, anywhere in Canada; free over ${{ threshold }}. Free counter pickup. Returns within {{ days }} days for new, uninstalled parts in original packaging.",
-      "specifications": "Specifications"
+      "specifications": "Specifications",
+      "no_description": "Description coming soon. Contact us with any questions."
+    },
+    "expert": {
+      "title": "Questions about this part?",
+      "text": "Our technicians answer during parts department hours."
+    },
+    "fit": {
+      "title": "Will it fit my RV?",
+      "text": "Send us your RV's make, model and year: we confirm compatibility before shipping.",
+      "cta": "Check compatibility",
+      "none": "Detailed compatibility isn't listed for this part yet. Call the parts department at {{ phone }} or write to us: we'll confirm for your RV before shipping."
+    },
+    "plan": {
+      "included": "Included in this plan"
+    },
+    "condition": {
+      "new": "New",
+      "used": "Used",
+      "refurbished": "Refurbished"
+    },
+    "specs": {
+      "brand": "Brand",
+      "barcode": "Barcode (UPC)",
+      "weight": "Weight"
     }
   },
   "sections": {
@@ -243,7 +288,17 @@
         "one": "{{ count }} product",
         "other": "{{ count }} products"
       },
-      "view_all": "View all"
+      "view_all": "View all",
+      "density": "Grid size",
+      "empty_new": "Stock is on its way in this category",
+      "help_title": "Need help?",
+      "help_text": "Not sure which part? A technician will guide you.",
+      "promo_title": "Not the right part?",
+      "promo_text": "We order from thousands of parts at our distributors.",
+      "stat_products": "products",
+      "stat_shipping": "Free shipping over ${{ threshold }}",
+      "stat_pickup": "Free pickup in Beaumont",
+      "stat_experts": "RV technician advice"
     },
     "filters": {
       "apply": "Apply",
@@ -254,9 +309,12 @@
       "to": "To ($)"
     },
     "header": {
-      "boutique": "Shop",
+      "boutique": "Boutique",
       "menu": "Main menu",
-      "view_all": "View all:"
+      "view_all": "View all:",
+      "all_categories": "All categories",
+      "hello": "Hello,",
+      "mega_help": "Need help finding a part? Call the parts department:"
     },
     "plans": {
       "popular": "Most popular"
@@ -276,7 +334,18 @@
       "submit": "Search",
       "suggestions": "Suggestions",
       "title": "Search for a part",
-      "view_all": "View all results for \"{{ terms }}\""
+      "view_all": "View all results for \"{{ terms }}\"",
+      "no_results_help": "Call the parts department at {{ phone }}: we can probably order it.",
+      "placeholder_long": "Search by part number, brand or keyword…",
+      "popular": "Popular searches"
+    },
+    "all_categories": {
+      "eyebrow": "Escale VR shop",
+      "jump": "Jump to",
+      "coming_soon": "Stock arriving",
+      "help_title": "Can't find your part?",
+      "help_text": "Our partner distributors carry tens of thousands of parts. We'll find it and order it for you.",
+      "request": "Request a part"
     }
   },
   "templates": {
@@ -285,5 +354,35 @@
       "subtext": "This page no longer exists, but the part you're looking for may still be in stock.",
       "title": "Page not found"
     }
+  },
+  "footer": {
+    "about": "The online store and parts department of Escale VR, a recreational vehicle dealer in Beaumont since 1986. Parts, accessories and maintenance plans for every RV.",
+    "exit": "Exit 337, Highway 20",
+    "trust_shipping": "Free shipping over ${{ threshold }}",
+    "trust_shipping_sub": "Anywhere in Canada",
+    "trust_pickup": "Free in-store pickup",
+    "trust_pickup_sub": "at the parts counter",
+    "trust_experts": "RV experts since 1986",
+    "trust_experts_sub": "Advice from real technicians",
+    "trust_secure": "100% secure checkout",
+    "trust_secure_sub": "Shop Pay, Visa, Mastercard, Amex"
+  },
+  "hours": {
+    "title": "Opening hours — Parts department",
+    "not_sales": "Parts counter hours (the sales department keeps its own hours).",
+    "season_high": "High season",
+    "season_off": "Off-season",
+    "now": "Current",
+    "weekdays": "Monday to Friday",
+    "weekend": "Saturday and Sunday",
+    "closed": "Closed"
+  },
+  "utility": {
+    "new_rvs": "New RVs",
+    "used_rvs": "Used RVs",
+    "rental": "Rentals",
+    "service": "Service",
+    "financing": "Financing",
+    "parts": "Parts:"
   }
 }

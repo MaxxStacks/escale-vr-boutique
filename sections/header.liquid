@@ -1,13 +1,13 @@
 {%- liquid
   assign menu = section.settings.menu
-  assign site_menu = section.settings.site_menu
   assign t_account = 'customer.account.title' | t
   assign logo_w = section.settings.logo_width
+  assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
 -%}
 <header class="header{% if section.settings.sticky %} header--sticky{% endif %}" data-header>
-  {%- comment -%} Tier 1 — white bar that mirrors escalevr.ca (logo + dealership menu) {%- endcomment -%}
-  <div class="header__top">
-    <div class="page-width header__top-inner">
+  {%- comment -%} Main bar — logo + BOUTIQUE, part search, account, cart {%- endcomment -%}
+  <div class="header__main">
+    <div class="page-width header__main-inner">
       <details class="header__drawer" data-drawer>
         <summary class="header__icon header__icon--menu" aria-label="{{ 'sections.header.menu' | t }}">
           <span class="when-closed">{%- render 'icon', name: 'menu' -%}</span>
@@ -15,7 +15,6 @@
         </summary>
         <div class="drawer-menu" id="MobileMenu">
           <nav aria-label="{{ 'sections.header.menu' | t }}">
-            <p class="drawer-menu__label">{{ 'sections.header.boutique' | t }}</p>
             <ul class="drawer-menu__list">
               {%- for link in menu.links -%}
                 <li>
@@ -34,15 +33,15 @@
                   {%- endif -%}
                 </li>
               {%- endfor -%}
+              <li><a href="{{ routes.collections_url }}">{{ 'sections.header.all_categories' | t }}</a></li>
             </ul>
-            {%- if site_menu.links.size > 0 -%}
-              <p class="drawer-menu__label">{{ settings.biz_name }}</p>
-              <ul class="drawer-menu__list drawer-menu__list--site">
-                {%- for link in site_menu.links -%}
-                  <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
-                {%- endfor -%}
-              </ul>
-            {%- endif -%}
+            <p class="drawer-menu__label">{{ settings.biz_name }}</p>
+            <ul class="drawer-menu__list drawer-menu__list--site">
+              <li><a href="{{ main_url }}/acheter/">{{ 'utility.new_rvs' | t }}</a></li>
+              <li><a href="{{ main_url }}/vr-occasion/">{{ 'utility.used_rvs' | t }}</a></li>
+              <li><a href="{{ main_url }}/louer-un-vr/">{{ 'utility.rental' | t }}</a></li>
+              <li><a href="{{ main_url }}/notre-service/">{{ 'utility.service' | t }}</a></li>
+            </ul>
           </nav>
           <div class="drawer-menu__footer">
             <a href="{{ routes.account_url }}" class="drawer-menu__link">{%- render 'icon', name: 'account' -%} {{ 'customer.account.title' | t }}</a>
@@ -76,87 +75,168 @@
         <span class="header__badge">{{ 'sections.header.boutique' | t }}</span>
       </div>
 
-      {%- if site_menu.links.size > 0 -%}
-        <nav class="header__site-nav" aria-label="{{ settings.biz_name }}">
-          <ul>
-            {%- for link in site_menu.links -%}
-              <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
-            {%- endfor -%}
-          </ul>
-        </nav>
-      {%- endif -%}
-
-      <div class="header__icons">
-        <a href="tel:{{ settings.biz_phone_e164 }}" class="header__phone">{%- render 'icon', name: 'phone' -%}<span>{{ settings.biz_phone }}</span></a>
-        <a href="{{ routes.account_url }}" class="header__icon" aria-label="{{ 'customer.account.title' | t }}">
-          {%- render 'icon', name: 'account' -%}
-          <span class="header__icon-label">{% if customer %}{{ customer.first_name | default: t_account }}{% else %}{{ 'customer.login.title' | t }}{% endif %}</span>
-        </a>
-        <a href="{{ routes.cart_url }}" class="header__icon header__cart" data-cart-toggle aria-label="{{ 'sections.cart.title' | t }}">
-          {%- render 'icon', name: 'cart' -%}
-          <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  {%- comment -%} Tier 2 — green store bar: boutique navigation + part search {%- endcomment -%}
-  <div class="header__bar">
-    <div class="page-width header__bar-inner">
-      <nav class="header__nav" aria-label="{{ 'sections.header.menu' | t }}">
-        <ul class="nav">
-          {%- for link in menu.links -%}
-            <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
-              {%- if link.links.size > 0 -%}
-                <details class="nav__details" data-hover-menu>
-                  <summary class="nav__link">{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
-                  <div class="mega">
-                    <div class="page-width mega__inner">
-                      {%- for child in link.links -%}
-                        <div class="mega__col">
-                          <a href="{{ child.url }}" class="mega__title">{{ child.title | escape }}</a>
-                          {%- if child.links.size > 0 -%}
-                            <ul>
-                              {%- for grandchild in child.links -%}
-                                <li><a href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a></li>
-                              {%- endfor -%}
-                            </ul>
-                          {%- endif -%}
-                        </div>
-                      {%- endfor -%}
-                      <a href="{{ link.url }}" class="mega__all btn btn--ghost">{{ 'sections.header.view_all' | t }} {{ link.title | escape }} {%- render 'icon', name: 'arrow' -%}</a>
-                    </div>
-                  </div>
-                </details>
-              {%- else -%}
-                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
-        </ul>
-      </nav>
-
       <div class="header__search">
-        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form" data-predictive-search>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form" data-predictive-search{% unless settings.predictive_search %} data-predictive-off{% endunless %}>
           <label for="HeaderSearch" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
+          <span class="search-form__icon">{%- render 'icon', name: 'search' -%}</span>
           <input
             id="HeaderSearch"
             type="search"
             name="q"
             value="{{ search.terms | escape }}"
-            placeholder="{{ 'sections.search.placeholder' | t }}"
+            placeholder="{{ 'sections.search.placeholder_long' | t }}"
             autocomplete="off"
             role="combobox"
             aria-expanded="false"
-            aria-owns="PredictiveResults"
             aria-controls="PredictiveResults"
             aria-autocomplete="list"
           >
           <input type="hidden" name="options[prefix]" value="last">
-          <button type="submit" class="search-form__submit" aria-label="{{ 'sections.search.submit' | t }}">{%- render 'icon', name: 'search' -%}</button>
+          <button type="submit" class="btn btn--accent search-form__submit">{{ 'sections.search.submit' | t }}</button>
           <div id="PredictiveResults" class="predictive" data-predictive-results hidden></div>
+          <template data-predictive-empty>
+            <div class="predictive__inner">
+              {%- assign popular = settings.popular_searches | split: ',' -%}
+              {%- if popular.size > 0 -%}
+                <div class="predictive__group">
+                  <p class="predictive__heading">{{ 'sections.search.popular' | t }}</p>
+                  <ul class="predictive__chips">
+                    {%- for term in popular -%}
+                      {%- assign t = term | strip -%}
+                      <li><a class="chip" href="{{ routes.search_url }}?q={{ t | url_encode }}&options%5Bprefix%5D=last">{%- render 'icon', name: 'search' -%}{{ t }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+              {%- if menu.links.size > 0 -%}
+                <div class="predictive__group">
+                  <p class="predictive__heading">{{ 'sections.search.collections' | t }}</p>
+                  <ul class="predictive__cats">
+                    {%- for link in menu.links -%}
+                      {%- if link.links.size > 0 -%}
+                        {%- for child in link.links limit: 8 -%}
+                          <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                        {%- endfor -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            </div>
+          </template>
         </form>
       </div>
+
+      <div class="header__icons">
+        <a href="{{ routes.account_url }}" class="header__icon" aria-label="{{ 'customer.account.title' | t }}">
+          {%- render 'icon', name: 'account' -%}
+          <span class="header__icon-label">
+            <small>{% if customer %}{{ 'sections.header.hello' | t }}{% else %}{{ 'customer.login.title' | t }}{% endif %}</small>
+            <strong>{% if customer %}{{ customer.first_name | default: t_account }}{% else %}{{ 'customer.account.title' | t }}{% endif %}</strong>
+          </span>
+        </a>
+        <a href="{{ routes.cart_url }}" class="header__icon header__cart" data-cart-toggle aria-label="{{ 'sections.cart.title' | t }}">
+          {%- render 'icon', name: 'cart' -%}
+          <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+          <span class="header__icon-label"><small>{{ 'sections.cart.title' | t }}</small><strong data-cart-total>{{ cart.total_price | money }}</strong></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Nav bar — rich mega menu {%- endcomment -%}
+  <div class="header__bar">
+    <div class="page-width header__bar-inner">
+      <nav class="header__nav" aria-label="{{ 'sections.header.menu' | t }}">
+        <ul class="nav">
+          {%- for link in menu.links -%}
+            {%- liquid
+              assign link_handle = link.title | handle
+              assign promo = nil
+              for block in section.blocks
+                assign block_handle = block.settings.menu_title | handle
+                if block_handle == link_handle
+                  assign promo = block
+                endif
+              endfor
+            -%}
+            <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
+              {%- if link.links.size > 0 -%}
+                <details class="nav__details" data-hover-menu>
+                  <summary class="nav__link{% if link.child_active or link.active %} is-active{% endif %}">{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
+                  <div class="mega">
+                    <div class="page-width mega__inner{% if promo %} mega__inner--promo{% endif %}">
+                      <div class="mega__main">
+                        <div class="mega__head">
+                          <p class="mega__heading">{{ link.title | escape }}</p>
+                          <a href="{{ link.url }}" class="link-arrow">{{ 'sections.header.view_all' | t }} {{ link.title | escape }} {%- render 'icon', name: 'arrow' -%}</a>
+                        </div>
+                        {%- assign has_grand = false -%}
+                        {%- for child in link.links -%}{%- if child.links.size > 0 -%}{%- assign has_grand = true -%}{%- endif -%}{%- endfor -%}
+                        {%- if has_grand -%}
+                          <div class="mega__cols">
+                            {%- for child in link.links -%}
+                              <div class="mega__col">
+                                <a href="{{ child.url }}" class="mega__title">{{ child.title | escape }}</a>
+                                {%- if child.links.size > 0 -%}
+                                  <ul>
+                                    {%- for grandchild in child.links -%}
+                                      <li><a href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a></li>
+                                    {%- endfor -%}
+                                  </ul>
+                                {%- endif -%}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        {%- else -%}
+                          <ul class="mega__tiles" role="list">
+                            {%- for child in link.links -%}
+                              <li>
+                                <a href="{{ child.url }}" class="mega__tile">
+                                  <span class="mega__tile-media">
+                                    {%- if child.type == 'collection_link' and child.object.featured_image -%}
+                                      {{ child.object.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', width: 56, height: 56, alt: '' }}
+                                    {%- else -%}
+                                      {%- render 'category-icon', handle: child.handle, title: child.title -%}
+                                    {%- endif -%}
+                                  </span>
+                                  <span class="mega__tile-text">
+                                    <strong>{{ child.title | escape }}</strong>
+                                    {%- if child.type == 'collection_link' and child.object.products_count > 0 -%}
+                                      <small>{{ 'sections.collection.products_count' | t: count: child.object.products_count }}</small>
+                                    {%- endif -%}
+                                  </span>
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                        <p class="mega__help">{%- render 'icon', name: 'phone' -%} {{ 'sections.header.mega_help' | t }} <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a></p>
+                      </div>
+                      {%- if promo -%}
+                        <a href="{{ promo.settings.link | default: link.url }}" class="mega__promo" {{ promo.shopify_attributes }}>
+                          {%- if promo.settings.image != blank -%}
+                            {{ promo.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 500, 700', sizes: '340px', alt: promo.settings.heading }}
+                          {%- endif -%}
+                          <span class="mega__promo-body">
+                            {%- if promo.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--light">{{ promo.settings.eyebrow }}</span>{%- endif -%}
+                            <span class="mega__promo-heading">{{ promo.settings.heading }}</span>
+                            {%- if promo.settings.text != blank -%}<span class="mega__promo-text">{{ promo.settings.text }}</span>{%- endif -%}
+                            {%- if promo.settings.button_label != blank -%}<span class="btn btn--accent btn--sm">{{ promo.settings.button_label }}</span>{%- endif -%}
+                          </span>
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </details>
+              {%- else -%}
+                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+      <a href="{{ routes.collections_url }}" class="header__all">{%- render 'icon', name: 'grid' -%}<span>{{ 'sections.header.all_categories' | t }}</span></a>
     </div>
   </div>
 </header>
@@ -169,9 +249,23 @@
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo (leave empty to use the official Escale VR logo)" },
     { "type": "range", "id": "logo_width", "label": "Logo width", "min": 100, "max": 260, "step": 5, "unit": "px", "default": 170 },
-    { "type": "link_list", "id": "menu", "label": "Store menu (green bar)", "default": "main-menu" },
-    { "type": "link_list", "id": "site_menu", "label": "Dealership menu (links to escalevr.ca)", "info": "Create a menu with: Nos VR neufs, Nos VR usagés, Location, Services, Financement, Promotions, all pointing to escalevr.ca" },
+    { "type": "link_list", "id": "menu", "label": "Store menu (mega menu)", "default": "main-menu" },
     { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "promo",
+      "name": "Mega menu promo",
+      "settings": [
+        { "type": "text", "id": "menu_title", "label": "Show under menu item (exact title)", "default": "Pièces" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Liquidation" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Pièces neuves à prix de liquidation" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Pièces neuves, quantités limitées." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Voir les aubaines" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
   ]
 }
 {% endschema %}

@@ -1,7 +1,7 @@
 {%- paginate search.results by section.settings.per_page -%}
 <section class="collection">
-  <div class="collection__banner">
-    <div class="page-width collection__banner-inner">
+  <div class="coll-hero">
+    <div class="page-width coll-hero__inner">
       <h1 class="h1">{%- if search.performed -%}{{ 'sections.search.results_for' | t: terms: search.terms }}{%- else -%}{{ 'sections.search.title' | t }}{%- endif -%}</h1>
       <form action="{{ routes.search_url }}" method="get" role="search" class="hero__search hero__search--inline">
         <label for="SearchPage" class="visually-hidden">{{ 'sections.search.label' | t }}</label>

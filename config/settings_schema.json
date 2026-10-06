@@ -10,89 +10,431 @@
   {
     "name": "Brand colors",
     "settings": [
-      { "type": "paragraph", "content": "Match these to the escalevr.ca brand. Primary = header/footer/brand, Accent = buttons and calls to action." },
-      { "type": "color", "id": "color_primary", "label": "Primary (Escale green)", "default": "#465C50" },
-      { "type": "color", "id": "color_primary_contrast", "label": "Text on primary", "default": "#FFFFFF" },
-      { "type": "color", "id": "color_primary_dark", "label": "Primary dark (footer, hero overlay)", "default": "#354940" },
-      { "type": "color", "id": "color_accent", "label": "Accent (Escale orange)", "default": "#F5901D" },
-      { "type": "color", "id": "color_accent_contrast", "label": "Text on accent", "default": "#FFFFFF" },
-      { "type": "color", "id": "color_text", "label": "Body text", "default": "#2B302D" },
-      { "type": "color", "id": "color_muted", "label": "Muted text", "default": "#66726B" },
-      { "type": "color", "id": "color_background", "label": "Background", "default": "#FFFFFF" },
-      { "type": "color", "id": "color_surface", "label": "Surface (cards, bands)", "default": "#F2F5F3" },
-      { "type": "color", "id": "color_border", "label": "Borders", "default": "#DCE3DF" },
-      { "type": "color", "id": "color_sale", "label": "Sale / liquidation badge", "default": "#C8102E" },
-      { "type": "color", "id": "color_success", "label": "In stock", "default": "#2E7D32" }
+      {
+        "type": "paragraph",
+        "content": "Match these to the escalevr.ca brand. Primary = header/footer/brand, Accent = buttons and calls to action."
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary (Escale green)",
+        "default": "#465C50"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_contrast",
+        "label": "Text on primary",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_dark",
+        "label": "Primary dark (footer, hero overlay)",
+        "default": "#354940"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent (Escale orange)",
+        "default": "#F5901D"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_contrast",
+        "label": "Text on accent",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Body text",
+        "default": "#2B302D"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Muted text",
+        "default": "#66726B"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface (cards, bands)",
+        "default": "#F2F5F3"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Borders",
+        "default": "#DCE3DF"
+      },
+      {
+        "type": "color",
+        "id": "color_sale",
+        "label": "Sale / liquidation badge",
+        "default": "#C8102E"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "In stock",
+        "default": "#2E7D32"
+      }
     ]
   },
   {
     "name": "Typography",
     "settings": [
-      { "type": "font_picker", "id": "type_header_font", "label": "Headings", "default": "montserrat_n7" },
-      { "type": "font_picker", "id": "type_body_font", "label": "Body", "default": "assistant_n4" },
-      { "type": "range", "id": "heading_scale", "label": "Heading size", "min": 90, "max": 130, "step": 5, "unit": "%", "default": 100 },
-      { "type": "checkbox", "id": "heading_uppercase", "label": "Uppercase headings", "default": false }
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Headings",
+        "default": "montserrat_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "label": "Heading size",
+        "min": 90,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_uppercase",
+        "label": "Uppercase headings",
+        "default": false
+      }
     ]
   },
   {
     "name": "Shape",
     "settings": [
-      { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 16, "step": 2, "unit": "px", "default": 8 },
-      { "type": "range", "id": "button_radius", "label": "Button radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8 }
+      {
+        "type": "range",
+        "id": "radius",
+        "label": "Corner radius",
+        "min": 0,
+        "max": 16,
+        "step": 2,
+        "unit": "px",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "button_radius",
+        "label": "Button radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 8
+      }
     ]
   },
   {
     "name": "Business info (SEO / schema)",
     "settings": [
-      { "type": "paragraph", "content": "Used for LocalBusiness / AutoPartsStore structured data, the footer and the contact page. Keep it identical to Google Business Profile (NAP consistency)." },
-      { "type": "text", "id": "biz_name", "label": "Public brand name", "default": "Escale VR" },
-      { "type": "image_picker", "id": "logo_schema", "label": "Logo for Google (square or wide PNG, 600px+)" },
-      { "type": "text", "id": "biz_legal_name", "label": "Legal name", "default": "Escale VR Beaumont inc." },
-      { "type": "text", "id": "biz_street", "label": "Street address", "default": "12, rue de la Chute" },
-      { "type": "text", "id": "biz_city", "label": "City", "default": "Beaumont" },
-      { "type": "text", "id": "biz_region", "label": "Province code", "default": "QC" },
-      { "type": "text", "id": "biz_postal", "label": "Postal code", "default": "G0R 1C0" },
-      { "type": "text", "id": "biz_phone", "label": "Phone (display)", "default": "418 833-5777" },
-      { "type": "text", "id": "biz_phone_e164", "label": "Phone (E.164 for links/schema)", "default": "+14188335777" },
-      { "type": "text", "id": "biz_email", "label": "Email", "default": "info@escalevr.ca" },
-      { "type": "text", "id": "biz_lat", "label": "Latitude", "default": "46.8333" },
-      { "type": "text", "id": "biz_lng", "label": "Longitude", "default": "-70.8833", "info": "Verify on Google Maps before launch." },
-      { "type": "text", "id": "biz_founded", "label": "Founding year", "default": "1986" },
-      { "type": "textarea", "id": "biz_hours", "label": "Parts counter hours (one per line, display)", "default": "Lundi au vendredi : 9 h à 17 h\nSamedi : sur rendez-vous" },
-      { "type": "text", "id": "biz_hours_schema", "label": "Hours (schema.org format)", "default": "Mo-Fr 09:00-17:00", "info": "Example: Mo-Fr 09:00-17:00" },
-      { "type": "text", "id": "biz_area_served", "label": "Area served (comma separated)", "default": "Beaumont, Lévis, Québec, Bellechasse, Montmagny, Rive-Sud, Chaudière-Appalaches" },
-      { "type": "text", "id": "main_site_url", "label": "Main dealership website", "default": "https://escalevr.ca" },
-      { "type": "text", "id": "social_facebook", "label": "Facebook URL", "default": "https://www.facebook.com/escalevr" },
-      { "type": "text", "id": "social_instagram", "label": "Instagram URL", "default": "https://www.instagram.com/escalevr/" }
+      {
+        "type": "paragraph",
+        "content": "Used for LocalBusiness / AutoPartsStore structured data, the footer and the contact page. Keep it identical to Google Business Profile (NAP consistency)."
+      },
+      {
+        "type": "text",
+        "id": "biz_name",
+        "label": "Public brand name",
+        "default": "Escale VR"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_schema",
+        "label": "Logo for Google (square or wide PNG, 600px+)"
+      },
+      {
+        "type": "text",
+        "id": "biz_legal_name",
+        "label": "Legal name",
+        "default": "Escale VR Beaumont inc."
+      },
+      {
+        "type": "text",
+        "id": "biz_street",
+        "label": "Street address",
+        "default": "12, rue de la Chute"
+      },
+      {
+        "type": "text",
+        "id": "biz_city",
+        "label": "City",
+        "default": "Beaumont"
+      },
+      {
+        "type": "text",
+        "id": "biz_region",
+        "label": "Province code",
+        "default": "QC"
+      },
+      {
+        "type": "text",
+        "id": "biz_postal",
+        "label": "Postal code",
+        "default": "G0R 1C0"
+      },
+      {
+        "type": "text",
+        "id": "biz_phone",
+        "label": "Phone (display)",
+        "default": "418 833-5777"
+      },
+      {
+        "type": "text",
+        "id": "biz_phone_e164",
+        "label": "Phone (E.164 for links/schema)",
+        "default": "+14188335777"
+      },
+      {
+        "type": "text",
+        "id": "biz_email",
+        "label": "Email",
+        "default": "info@escalevr.ca"
+      },
+      {
+        "type": "text",
+        "id": "biz_lat",
+        "label": "Latitude",
+        "default": "46.8333"
+      },
+      {
+        "type": "text",
+        "id": "biz_lng",
+        "label": "Longitude",
+        "default": "-70.8833",
+        "info": "Verify on Google Maps before launch."
+      },
+      {
+        "type": "text",
+        "id": "biz_founded",
+        "label": "Founding year",
+        "default": "1986"
+      },
+      {
+        "type": "header",
+        "content": "Parts department hours (not sales)"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shown in the footer, contact page and Google schema as the PARTS DEPARTMENT hours. Leave a field empty for closed. Use 24 h format (08:00)."
+      },
+      {
+        "type": "text",
+        "id": "hours_off_weekday_open",
+        "label": "Off-season Mon–Fri open",
+        "default": "08:00"
+      },
+      {
+        "type": "text",
+        "id": "hours_off_weekday_close",
+        "label": "Off-season Mon–Fri close",
+        "default": "17:00"
+      },
+      {
+        "type": "text",
+        "id": "hours_off_weekend_open",
+        "label": "Off-season Sat–Sun open (empty = closed)"
+      },
+      {
+        "type": "text",
+        "id": "hours_off_weekend_close",
+        "label": "Off-season Sat–Sun close"
+      },
+      {
+        "type": "text",
+        "id": "hours_high_weekday_open",
+        "label": "High season Mon–Fri open",
+        "default": "08:00"
+      },
+      {
+        "type": "text",
+        "id": "hours_high_weekday_close",
+        "label": "High season Mon–Fri close",
+        "default": "19:00"
+      },
+      {
+        "type": "text",
+        "id": "hours_high_weekend_open",
+        "label": "High season Sat–Sun open",
+        "default": "08:00"
+      },
+      {
+        "type": "text",
+        "id": "hours_high_weekend_close",
+        "label": "High season Sat–Sun close",
+        "default": "17:00"
+      },
+      {
+        "type": "text",
+        "id": "high_season_start",
+        "label": "High season starts (MM-DD)",
+        "info": "e.g. 04-15. Used to highlight the current hours and for Google schema."
+      },
+      {
+        "type": "text",
+        "id": "high_season_end",
+        "label": "High season ends (MM-DD)",
+        "info": "e.g. 10-15"
+      },
+      {
+        "type": "text",
+        "id": "biz_area_served",
+        "label": "Area served (comma separated)",
+        "default": "Beaumont, Lévis, Québec, Bellechasse, Montmagny, Rive-Sud, Chaudière-Appalaches"
+      },
+      {
+        "type": "text",
+        "id": "main_site_url",
+        "label": "Main dealership website",
+        "default": "https://escalevr.ca"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook URL",
+        "default": "https://www.facebook.com/escalevr"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram URL",
+        "default": "https://www.instagram.com/escalevr/"
+      }
     ]
   },
   {
     "name": "Shipping & returns",
     "settings": [
-      { "type": "text", "id": "free_shipping_threshold", "label": "Free shipping threshold (CAD, blank = off)", "default": "150" },
-      { "type": "range", "id": "return_days", "label": "Return window (days)", "min": 0, "max": 90, "step": 1, "default": 30 },
-      { "type": "text", "id": "handling_days", "label": "Handling time (days, schema)", "default": "1-2" },
-      { "type": "text", "id": "transit_days", "label": "Transit time in Canada (days, schema)", "default": "2-7" },
-      { "type": "checkbox", "id": "pickup_enabled", "label": "Show free in-store pickup in Beaumont", "default": true }
+      {
+        "type": "text",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold (CAD, blank = off)",
+        "default": "150"
+      },
+      {
+        "type": "range",
+        "id": "return_days",
+        "label": "Return window (days)",
+        "min": 0,
+        "max": 90,
+        "step": 1,
+        "default": 30
+      },
+      {
+        "type": "text",
+        "id": "handling_days",
+        "label": "Handling time (days, schema)",
+        "default": "1-2"
+      },
+      {
+        "type": "text",
+        "id": "transit_days",
+        "label": "Transit time in Canada (days, schema)",
+        "default": "2-7"
+      },
+      {
+        "type": "checkbox",
+        "id": "pickup_enabled",
+        "label": "Show free in-store pickup in Beaumont",
+        "default": true
+      }
     ]
   },
   {
     "name": "Product cards",
     "settings": [
-      { "type": "checkbox", "id": "card_show_vendor", "label": "Show brand", "default": true },
-      { "type": "checkbox", "id": "card_show_sku", "label": "Show part number", "default": true },
-      { "type": "checkbox", "id": "card_quick_add", "label": "Quick add button", "default": true },
-      { "type": "select", "id": "card_image_ratio", "label": "Image ratio", "default": "square", "options": [
-        { "value": "square", "label": "Square" },
-        { "value": "portrait", "label": "Portrait" },
-        { "value": "natural", "label": "Natural" }
-      ] }
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Show brand",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_sku",
+        "label": "Show part number",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_quick_add",
+        "label": "Quick add button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
+        "default": "square",
+        "options": [
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait"
+          },
+          {
+            "value": "natural",
+            "label": "Natural"
+          }
+        ]
+      }
     ]
   },
   {
     "name": "Favicon",
     "settings": [
-      { "type": "image_picker", "id": "favicon", "label": "Favicon (32×32 min)" }
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon (32×32 min)"
+      }
+    ]
+  },
+  {
+    "name": "Search & language",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search",
+        "label": "Predictive search",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "popular_searches",
+        "label": "Popular searches (comma separated)",
+        "default": "pompe à eau, batterie, antigel, auvent, contrôleur de freins, scellant de toit"
+      },
+      {
+        "type": "checkbox",
+        "id": "auto_language",
+        "label": "Auto-detect browser language (FR/EN) on first visit",
+        "default": true
+      }
     ]
   }
 ]

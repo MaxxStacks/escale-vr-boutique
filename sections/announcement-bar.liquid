@@ -1,46 +1,62 @@
-{%- if section.blocks.size > 0 -%}
-<div class="announcement" role="region" aria-label="{{ 'sections.announcement.label' | t }}" {{ section.shopify_attributes }}>
-  <div class="page-width announcement__inner">
-    <div class="announcement__messages" data-rotator>
+{%- comment -%}
+  Utility bar: rotating promo messages (left) + dealership links back to escalevr.ca,
+  phone and FR/EN switch (right). The dealership links come from a menu; if none is set,
+  sensible escalevr.ca defaults are used so the bar is never empty.
+{%- endcomment -%}
+{%- liquid
+  assign site_menu = section.settings.site_menu
+  assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
+-%}
+<div class="utility" role="region" aria-label="{{ 'sections.announcement.label' | t }}">
+  <div class="page-width utility__inner">
+    <div class="utility__messages" data-rotator>
       {%- for block in section.blocks -%}
-        <p class="announcement__msg{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
+        <p class="utility__msg{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
           {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text }}</a>{%- else -%}{{ block.settings.text }}{%- endif -%}
         </p>
       {%- endfor -%}
     </div>
-    <div class="announcement__aside">
-      {%- if section.settings.show_phone -%}
-        <a href="tel:{{ settings.biz_phone_e164 }}" class="announcement__phone">{%- render 'icon', name: 'phone' -%}<span>{{ settings.biz_phone }}</span></a>
-      {%- endif -%}
-      {%- if section.settings.show_main_site -%}
-        <a href="{{ settings.main_site_url }}" class="announcement__site">{{ 'sections.announcement.main_site' | t }}</a>
-      {%- endif -%}
-      {%- render 'localization-switcher', id: 'AnnouncementLocalization' -%}
+    <nav class="utility__links" aria-label="{{ settings.biz_name }}">
+      <ul>
+        {%- if site_menu.links.size > 0 -%}
+          {%- for link in site_menu.links -%}
+            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="{{ main_url }}/acheter/">{{ 'utility.new_rvs' | t }}</a></li>
+          <li><a href="{{ main_url }}/vr-occasion/">{{ 'utility.used_rvs' | t }}</a></li>
+          <li><a href="{{ main_url }}/louer-un-vr/">{{ 'utility.rental' | t }}</a></li>
+          <li><a href="{{ main_url }}/notre-service/">{{ 'utility.service' | t }}</a></li>
+          <li><a href="{{ main_url }}/financement/">{{ 'utility.financing' | t }}</a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+    <div class="utility__aside">
+      <a href="tel:{{ settings.biz_phone_e164 }}" class="utility__phone">{%- render 'icon', name: 'phone' -%}<span>{{ 'utility.parts' | t }} {{ settings.biz_phone }}</span></a>
+      {%- render 'localization-switcher', id: 'UtilityLocalization' -%}
     </div>
   </div>
 </div>
-{%- endif -%}
 
 {% schema %}
 {
-  "name": "Announcement bar",
+  "name": "Utility bar",
   "tag": "section",
   "class": "section-announcement",
   "max_blocks": 4,
   "settings": [
-    { "type": "checkbox", "id": "show_phone", "label": "Show phone", "default": true },
-    { "type": "checkbox", "id": "show_main_site", "label": "Show link back to escalevr.ca", "default": true }
+    { "type": "link_list", "id": "site_menu", "label": "Dealership links (escalevr.ca)", "info": "Leave empty to use the built-in escalevr.ca links." }
   ],
   "blocks": [
     {
       "type": "message",
       "name": "Message",
       "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "Livraison gratuite au Canada dès 150 $ · Cueillette gratuite à Beaumont" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Livraison gratuite au Canada dès 150 $" },
         { "type": "url", "id": "link", "label": "Link" }
       ]
     }
   ],
-  "presets": [{ "name": "Announcement bar", "blocks": [{ "type": "message" }] }]
+  "presets": [{ "name": "Utility bar", "blocks": [{ "type": "message" }] }]
 }
 {% endschema %}

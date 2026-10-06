@@ -2,7 +2,63 @@
   "sections": {
     "main": {
       "type": "main-list-collections",
-      "settings": {}
+      "settings": {
+        "heading": "Toutes les catégories de pièces VR",
+        "text": "Pièces, accessoires et plans d'entretien pour roulottes, caravanes à sellette, tentes-roulottes et motorisés. Expédiés de Beaumont partout au Québec et au Canada."
+      },
+      "blocks": {
+        "parts": {
+          "type": "group",
+          "settings": {
+            "title": "Pièces par catégorie",
+            "text": "Trouvez la pièce qu'il vous faut, classée par système de votre VR.",
+            "style": "large",
+            "collections": [
+              "electricite-batteries",
+              "plomberie-eau",
+              "chauffage-climatisation",
+              "auvents-exterieur",
+              "attelage-remorquage",
+              "essieux-suspension-freins",
+              "entretien-produits",
+              "interieur-cuisine",
+              "accessoires-camping"
+            ]
+          }
+        },
+        "deals": {
+          "type": "group",
+          "settings": {
+            "title": "Aubaines et services",
+            "text": "Liquidation de l'inventaire, nouveautés et plans d'entretien de notre atelier.",
+            "style": "large",
+            "collections": [
+              "liquidation",
+              "nouveautes",
+              "plans-entretien"
+            ]
+          }
+        },
+        "brands": {
+          "type": "group",
+          "settings": {
+            "title": "Nos distributeurs partenaires",
+            "text": "Des dizaines de milliers de pièces disponibles sur commande.",
+            "style": "compact",
+            "collections": [
+              "meyer",
+              "ntp-stag",
+              "keystone",
+              "atlas-trailer"
+            ]
+          }
+        }
+      },
+      "block_order": [
+        "parts",
+        "deals",
+        "brands"
+      ]
     }
   },
   "order": [

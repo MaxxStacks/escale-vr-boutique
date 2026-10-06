@@ -1,6 +1,6 @@
-<section class="section recommendations" data-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent={{ section.settings.intent }}">
+<section class="recommendations" data-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent={{ section.settings.intent }}">
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
-    <div class="page-width">
+    <div class="page-width recommendations__inner">
       <div class="section__head"><h2 class="h3">{{ section.settings.heading }}</h2></div>
       <ul class="grid grid--products grid--4" role="list">
         {%- for product in recommendations.products -%}

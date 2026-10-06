@@ -167,19 +167,31 @@
   "newsletter": {
     "button": "M'inscrire",
     "label": "Votre courriel",
-    "success": "Merci! Vous êtes inscrit."
+    "success": "Merci! Vous êtes inscrit.",
+    "heading": "Les aubaines avant tout le monde",
+    "text": "Liquidations, arrivages et rappels d'entretien saisonniers. Pas de pourriel, promis.",
+    "legal": "Désabonnement en un clic. Vos données restent au Québec (Loi 25)."
   },
   "products": {
     "assurances": {
       "expert": "Un doute sur la compatibilité? Appelez-nous :",
-      "pickup": "Cueillette gratuite à Beaumont (sortie 337, A-20)",
-      "plan_booking": "Rendez-vous confirmé sous 48 h ouvrables",
-      "plan_techs": "Réalisé à l'atelier Escale VR de Beaumont",
-      "returns": "Retours acceptés sous {{ days }} jours (pièces neuves non installées)",
-      "shipping": "Livraison gratuite au Canada dès {{ threshold }} $"
+      "pickup": "Beaumont, sortie 337 de l'A-20",
+      "plan_booking": "Confirmé sous 48 h ouvrables",
+      "plan_techs": "À l'atelier Escale VR de Beaumont",
+      "returns": "{{ days }} jours, pièces neuves non installées",
+      "shipping": "Gratuite au Canada dès {{ threshold }} $",
+      "shipping_title": "Livraison rapide",
+      "pickup_title": "Cueillette gratuite",
+      "returns_title": "Retours faciles",
+      "secure_title": "Paiement sécurisé",
+      "secure": "Shop Pay, cartes de crédit",
+      "plan_booking_title": "Rendez-vous rapide",
+      "plan_techs_title": "Techniciens certifiés"
     },
     "badges": {
-      "liquidation": "Liquidation"
+      "liquidation": "Liquidation",
+      "plan": "Plan d'entretien",
+      "sale": "Promo"
     },
     "product": {
       "add_to_cart": "Ajouter au panier",
@@ -203,14 +215,47 @@
       "regular_price": "Prix régulier",
       "sold_out": "Épuisé",
       "taxes_note": "Taxes en sus. Frais de livraison calculés à la caisse.",
-      "unavailable": "Non disponible"
+      "unavailable": "Non disponible",
+      "add_short": "Ajouter",
+      "choose": "Choisir",
+      "copy": "Copier le numéro de pièce",
+      "eta": "Expédié en {{ days }} jours ouvrables depuis Beaumont",
+      "in_stock_short": "En stock",
+      "pickup_at": "Cueillette disponible à {{ location }} · {{ time }}",
+      "save_pct": "-{{ pct }} %",
+      "you_save": "Vous économisez {{ amount }}",
+      "zoom": "Agrandir l'image"
     },
     "tabs": {
       "compatibility": "Compatibilité",
       "description": "Description",
       "shipping": "Livraison et retours",
       "shipping_default": "Expédition depuis Beaumont (Québec) partout au Canada, gratuite dès {{ threshold }} $. Cueillette gratuite au comptoir. Retours acceptés sous {{ days }} jours pour les pièces neuves non installées dans leur emballage d'origine.",
-      "specifications": "Caractéristiques"
+      "specifications": "Caractéristiques",
+      "no_description": "Description à venir. Contactez-nous pour toute question."
+    },
+    "expert": {
+      "title": "Une question sur cette pièce?",
+      "text": "Nos techniciens vous répondent pendant les heures du département des pièces."
+    },
+    "fit": {
+      "title": "Est-ce que ça fit sur mon VR?",
+      "text": "Donnez-nous la marque, le modèle et l'année de votre VR : on valide la compatibilité avant d'expédier.",
+      "cta": "Valider la compatibilité",
+      "none": "La compatibilité détaillée n'est pas encore listée pour cette pièce. Appelez le département des pièces au {{ phone }} ou écrivez-nous : on valide pour votre VR avant l'expédition."
+    },
+    "plan": {
+      "included": "Inclus dans ce plan"
+    },
+    "condition": {
+      "new": "Neuf",
+      "used": "Usagé",
+      "refurbished": "Remis à neuf"
+    },
+    "specs": {
+      "brand": "Marque",
+      "barcode": "Code-barres (UPC)",
+      "weight": "Poids"
     }
   },
   "sections": {
@@ -243,7 +288,17 @@
         "one": "{{ count }} produit",
         "other": "{{ count }} produits"
       },
-      "view_all": "Tout voir"
+      "view_all": "Tout voir",
+      "density": "Taille de la grille",
+      "empty_new": "Arrivage en cours dans cette catégorie",
+      "help_title": "Besoin d'aide?",
+      "help_text": "Pas certain de la bonne pièce? Un technicien vous guide.",
+      "promo_title": "Pas la bonne pièce?",
+      "promo_text": "On commande parmi des milliers de pièces chez nos distributeurs.",
+      "stat_products": "produits",
+      "stat_shipping": "Livraison gratuite dès {{ threshold }} $",
+      "stat_pickup": "Cueillette gratuite à Beaumont",
+      "stat_experts": "Conseils de techniciens VR"
     },
     "filters": {
       "apply": "Appliquer",
@@ -256,7 +311,10 @@
     "header": {
       "boutique": "Boutique",
       "menu": "Menu principal",
-      "view_all": "Tout voir :"
+      "view_all": "Tout voir :",
+      "all_categories": "Toutes les catégories",
+      "hello": "Bonjour,",
+      "mega_help": "Besoin d'aide pour trouver une pièce? Appelez le département des pièces :"
     },
     "plans": {
       "popular": "Le plus populaire"
@@ -276,7 +334,18 @@
       "submit": "Rechercher",
       "suggestions": "Suggestions",
       "title": "Rechercher une pièce",
-      "view_all": "Voir tous les résultats pour « {{ terms }} »"
+      "view_all": "Voir tous les résultats pour « {{ terms }} »",
+      "no_results_help": "Appelez le département des pièces au {{ phone }} : on peut probablement la commander.",
+      "placeholder_long": "Rechercher par numéro de pièce, marque ou mot-clé…",
+      "popular": "Recherches populaires"
+    },
+    "all_categories": {
+      "eyebrow": "Boutique Escale VR",
+      "jump": "Aller à",
+      "coming_soon": "Arrivage en cours",
+      "help_title": "Vous ne trouvez pas votre pièce?",
+      "help_text": "Nos distributeurs partenaires ont des dizaines de milliers de pièces. On la trouve et on la commande pour vous.",
+      "request": "Demander une pièce"
     }
   },
   "templates": {
@@ -285,5 +354,35 @@
       "subtext": "Cette page n'existe plus, mais la pièce que vous cherchez est peut-être encore en stock.",
       "title": "Page introuvable"
     }
+  },
+  "footer": {
+    "about": "La boutique en ligne et le département des pièces d'Escale VR, concessionnaire de véhicules récréatifs à Beaumont depuis 1986. Pièces, accessoires et plans d'entretien pour tous les VR.",
+    "exit": "Sortie 337 de l'autoroute 20",
+    "trust_shipping": "Livraison gratuite dès {{ threshold }} $",
+    "trust_shipping_sub": "Partout au Canada",
+    "trust_pickup": "Cueillette gratuite",
+    "trust_pickup_sub": "au comptoir des pièces",
+    "trust_experts": "Experts VR depuis 1986",
+    "trust_experts_sub": "Conseils de vrais techniciens",
+    "trust_secure": "Paiement 100 % sécurisé",
+    "trust_secure_sub": "Shop Pay, Visa, Mastercard, Amex"
+  },
+  "hours": {
+    "title": "Heures d'ouverture — Département des pièces",
+    "not_sales": "Heures du comptoir des pièces (le département des ventes a ses propres heures).",
+    "season_high": "Haute saison",
+    "season_off": "Basse saison",
+    "now": "En vigueur",
+    "weekdays": "Lundi au vendredi",
+    "weekend": "Samedi et dimanche",
+    "closed": "Fermé"
+  },
+  "utility": {
+    "new_rvs": "VR neufs",
+    "used_rvs": "VR usagés",
+    "rental": "Location",
+    "service": "Service",
+    "financing": "Financement",
+    "parts": "Pièces :"
   }
 }

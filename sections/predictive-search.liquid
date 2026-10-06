@@ -1,5 +1,14 @@
 {%- if predictive_search.performed -%}
+  {%- liquid
+    assign total = predictive_search.resources.products.size | plus: predictive_search.resources.collections.size | plus: predictive_search.resources.queries.size
+  -%}
   <div class="predictive__inner" data-predictive-content>
+    {%- if total == 0 -%}
+      <div class="predictive__empty">
+        <p><strong>{{ 'sections.search.no_results' | t: terms: predictive_search.terms }}</strong></p>
+        <p class="muted small">{{ 'sections.search.no_results_help' | t: phone: settings.biz_phone }}</p>
+      </div>
+    {%- endif -%}
     {%- if predictive_search.resources.queries.size > 0 -%}
       <div class="predictive__group">
         <p class="predictive__heading">{{ 'sections.search.suggestions' | t }}</p>
@@ -35,7 +44,7 @@
                   {%- assign pn = product.metafields.custom.part_number.value | default: product.selected_or_first_available_variant.sku -%}
                   {%- if pn != blank -%}<span class="predictive__sku">{{ pn }}</span>{%- endif -%}
                 </span>
-                <span class="predictive__price">{{ product.price | money }}</span>
+                <span class="predictive__price">{%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}{{ product.price | money }}</span>
               </a>
             </li>
           {%- endfor -%}

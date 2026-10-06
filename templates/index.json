@@ -3,11 +3,33 @@
     "hero": {
       "type": "hero",
       "blocks": {
-        "s1": { "type": "stat", "settings": { "value": "300 000 $+", "label": "de pièces en inventaire" } },
-        "s2": { "type": "stat", "settings": { "value": "35 ans+", "label": "d'expertise en VR" } },
-        "s3": { "type": "stat", "settings": { "value": "4", "label": "grands distributeurs partenaires" } }
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "300 000 $+",
+            "label": "de pièces en inventaire"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "35 ans+",
+            "label": "d'expertise en VR"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "4",
+            "label": "grands distributeurs partenaires"
+          }
+        }
       },
-      "block_order": ["s1", "s2", "s3"],
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
       "settings": {
         "overlay": 55,
         "min_height": 70,
@@ -26,25 +48,139 @@
     "trust": {
       "type": "trust-bar",
       "blocks": {
-        "t1": { "type": "item", "settings": { "icon": "truck", "title": "Livraison gratuite dès 150 $", "text": "Partout au Canada" } },
-        "t2": { "type": "item", "settings": { "icon": "store", "title": "Cueillette gratuite", "text": "Beaumont, sortie 337 de l'A-20" } },
-        "t3": { "type": "item", "settings": { "icon": "wrench", "title": "Conseils d'experts", "text": "Techniciens VR certifiés" } },
-        "t4": { "type": "item", "settings": { "icon": "shield", "title": "Paiement sécurisé", "text": "Shop Pay, Visa, Mastercard, Amex" } }
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "Livraison gratuite dès 150 $",
+            "text": "Partout au Canada"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "store",
+            "title": "Cueillette gratuite",
+            "text": "Beaumont, sortie 337 de l'A-20"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "wrench",
+            "title": "Conseils d'experts",
+            "text": "Techniciens VR certifiés"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "title": "Paiement sécurisé",
+            "text": "Shop Pay, Visa, Mastercard, Amex"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4"],
-      "settings": { "style": "light" }
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {
+        "style": "light"
+      }
     },
     "categories": {
       "type": "collection-tiles",
       "blocks": {
-        "c1": { "type": "collection", "settings": { "collection": "electricite-batteries" } },
-        "c2": { "type": "collection", "settings": { "collection": "plomberie-eau" } },
-        "c3": { "type": "collection", "settings": { "collection": "chauffage-climatisation" } },
-        "c4": { "type": "collection", "settings": { "collection": "auvents-exterieur" } },
-        "c5": { "type": "collection", "settings": { "collection": "attelage-remorquage" } },
-        "c6": { "type": "collection", "settings": { "collection": "essieux-suspension-freins" } }
+        "c1": {
+          "type": "collection",
+          "settings": {
+            "collection": "electricite-batteries"
+          }
+        },
+        "c2": {
+          "type": "collection",
+          "settings": {
+            "collection": "plomberie-eau"
+          }
+        },
+        "c3": {
+          "type": "collection",
+          "settings": {
+            "collection": "chauffage-climatisation"
+          }
+        },
+        "c4": {
+          "type": "collection",
+          "settings": {
+            "collection": "auvents-exterieur"
+          }
+        },
+        "c5": {
+          "type": "collection",
+          "settings": {
+            "collection": "attelage-remorquage"
+          }
+        },
+        "c6": {
+          "type": "collection",
+          "settings": {
+            "collection": "essieux-suspension-freins"
+          }
+        },
+        "c7": {
+          "type": "collection",
+          "settings": {
+            "collection": "entretien-produits"
+          }
+        },
+        "c8": {
+          "type": "collection",
+          "settings": {
+            "collection": "interieur-cuisine"
+          }
+        },
+        "c9": {
+          "type": "collection",
+          "settings": {
+            "collection": "accessoires-camping"
+          }
+        },
+        "c10": {
+          "type": "collection",
+          "settings": {
+            "collection": "liquidation"
+          }
+        },
+        "c11": {
+          "type": "collection",
+          "settings": {
+            "collection": "plans-entretien"
+          }
+        },
+        "c12": {
+          "type": "collection",
+          "settings": {
+            "collection": "nouveautes"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9",
+        "c10",
+        "c11",
+        "c12"
+      ],
       "settings": {
         "eyebrow": "Magasiner par catégorie",
         "heading": "Trouvez la bonne pièce pour votre VR",
@@ -68,11 +204,48 @@
     "plans": {
       "type": "service-plans",
       "blocks": {
-        "p1": { "type": "plan", "settings": { "title": "Mise en service printanière", "tagline": "Prêt pour la route dès le premier beau jour", "icon": "sun", "price_suffix": "/ saison", "features": "Dé-hivernation complète du réseau d'eau\nInspection des freins, roulements et pneus\nTest d'étanchéité du toit et des scellants\nVérification propane et détecteurs", "featured": false, "button_label": "Réserver mon plan" } },
-        "p2": { "type": "plan", "settings": { "title": "Plan d'entretien Complet", "tagline": "Le printemps + l'automne, sans y penser", "icon": "shield", "price_suffix": "/ an", "features": "Mise en service printanière\nHivernation à l'automne\nTraitement des scellants du toit\n10 % de rabais sur les pièces toute l'année\nPriorité au calendrier de l'atelier", "featured": true, "button_label": "Choisir le plan Complet" } },
-        "p3": { "type": "plan", "settings": { "title": "Hivernation", "tagline": "Protégez votre investissement contre le gel", "icon": "snow", "price_suffix": "/ saison", "features": "Purge et antigel du réseau d'eau\nEntretien des batteries\nInspection des scellants\nEntreposage disponible sur place", "featured": false, "button_label": "Réserver mon plan" } }
+        "p1": {
+          "type": "plan",
+          "settings": {
+            "title": "Mise en service printanière",
+            "tagline": "Prêt pour la route dès le premier beau jour",
+            "icon": "sun",
+            "price_suffix": "/ saison",
+            "features": "Dé-hivernation complète du réseau d'eau\nInspection des freins, roulements et pneus\nTest d'étanchéité du toit et des scellants\nVérification propane et détecteurs",
+            "featured": false,
+            "button_label": "Réserver mon plan"
+          }
+        },
+        "p2": {
+          "type": "plan",
+          "settings": {
+            "title": "Plan d'entretien Complet",
+            "tagline": "Le printemps + l'automne, sans y penser",
+            "icon": "shield",
+            "price_suffix": "/ an",
+            "features": "Mise en service printanière\nHivernation à l'automne\nTraitement des scellants du toit\n10 % de rabais sur les pièces toute l'année\nPriorité au calendrier de l'atelier",
+            "featured": true,
+            "button_label": "Choisir le plan Complet"
+          }
+        },
+        "p3": {
+          "type": "plan",
+          "settings": {
+            "title": "Hivernation",
+            "tagline": "Protégez votre investissement contre le gel",
+            "icon": "snow",
+            "price_suffix": "/ saison",
+            "features": "Purge et antigel du réseau d'eau\nEntretien des batteries\nInspection des scellants\nEntreposage disponible sur place",
+            "featured": false,
+            "button_label": "Réserver mon plan"
+          }
+        }
       },
-      "block_order": ["p1", "p2", "p3"],
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
       "settings": {
         "eyebrow": "Atelier Escale VR",
         "heading": "Plans d'entretien et mise en service printanière",
@@ -84,7 +257,7 @@
     "new_arrivals": {
       "type": "featured-collection",
       "settings": {
-        "collection": "nouveautes",
+        "collection": "accessoires-camping",
         "eyebrow": "Accessoires de camping",
         "eyebrow_hot": false,
         "heading": "Les essentiels de la saison",
@@ -96,12 +269,45 @@
     "partners": {
       "type": "brand-partners",
       "blocks": {
-        "b1": { "type": "partner", "settings": { "name": "Meyer Distributing", "description": "Accessoires VR et camionnettes", "link": "shopify://collections/meyer" } },
-        "b2": { "type": "partner", "settings": { "name": "NTP-STAG", "description": "Pièces et accessoires VR", "link": "shopify://collections/ntp-stag" } },
-        "b3": { "type": "partner", "settings": { "name": "Keystone Automotive", "description": "Remorquage et équipement", "link": "shopify://collections/keystone" } },
-        "b4": { "type": "partner", "settings": { "name": "Atlas Trailer", "description": "Pièces de remorque et d'essieux", "link": "shopify://collections/atlas-trailer" } }
+        "b1": {
+          "type": "partner",
+          "settings": {
+            "name": "Meyer Distributing",
+            "description": "Accessoires VR et camionnettes",
+            "link": "shopify://collections/meyer"
+          }
+        },
+        "b2": {
+          "type": "partner",
+          "settings": {
+            "name": "NTP-STAG",
+            "description": "Pièces et accessoires VR",
+            "link": "shopify://collections/ntp-stag"
+          }
+        },
+        "b3": {
+          "type": "partner",
+          "settings": {
+            "name": "Keystone Automotive",
+            "description": "Remorquage et équipement",
+            "link": "shopify://collections/keystone"
+          }
+        },
+        "b4": {
+          "type": "partner",
+          "settings": {
+            "name": "Atlas Trailer",
+            "description": "Pièces de remorque et d'essieux",
+            "link": "shopify://collections/atlas-trailer"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4"],
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
       "settings": {
         "eyebrow": "Nos partenaires",
         "heading": "Des dizaines de milliers de pièces sur commande",
@@ -123,13 +329,49 @@
     "faq": {
       "type": "faq",
       "blocks": {
-        "q1": { "type": "question", "settings": { "question": "Expédiez-vous partout au Canada?", "answer": "<p>Oui. Toutes les commandes sont expédiées depuis l'entrepôt d'Escale VR à Beaumont (Québec) partout au Canada. La livraison est gratuite à partir de 150 $ avant taxes.</p>" } },
-        "q2": { "type": "question", "settings": { "question": "Puis-je récupérer ma commande en magasin?", "answer": "<p>Oui, la cueillette est gratuite au 12, rue de la Chute à Beaumont, à la sortie 337 de l'autoroute 20. Vous recevez un courriel dès que votre commande est prête.</p>" } },
-        "q3": { "type": "question", "settings": { "question": "Comment savoir si une pièce est compatible avec mon VR?", "answer": "<p>Chaque fiche indique le numéro de pièce du fabricant et la compatibilité connue. En cas de doute, appelez le comptoir des pièces d'Escale VR au 418 833-5777 avec la marque, le modèle et l'année de votre VR : on valide avant l'expédition.</p>" } },
-        "q4": { "type": "question", "settings": { "question": "Comment suivre ma commande?", "answer": "<p>Créez un compte client pour voir vos commandes en attente, expédiées et livrées, avec le numéro de suivi du transporteur. Le lien de suivi est aussi envoyé par courriel.</p>" } },
-        "q5": { "type": "question", "settings": { "question": "Qu'est-ce qu'une mise en service printanière de VR?", "answer": "<p>La mise en service printanière (dé-hivernation) prépare un VR après l'hiver : rinçage de l'antigel du réseau d'eau, inspection des freins, roulements et pneus, test d'étanchéité du toit et vérification du système au propane. Escale VR offre ce service à son atelier de Beaumont.</p>" } }
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Expédiez-vous partout au Canada?",
+            "answer": "<p>Oui. Toutes les commandes sont expédiées depuis l'entrepôt d'Escale VR à Beaumont (Québec) partout au Canada. La livraison est gratuite à partir de 150 $ avant taxes.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je récupérer ma commande en magasin?",
+            "answer": "<p>Oui, la cueillette est gratuite au 12, rue de la Chute à Beaumont, à la sortie 337 de l'autoroute 20. Vous recevez un courriel dès que votre commande est prête.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Comment savoir si une pièce est compatible avec mon VR?",
+            "answer": "<p>Chaque fiche indique le numéro de pièce du fabricant et la compatibilité connue. En cas de doute, appelez le comptoir des pièces d'Escale VR au 418 833-5777 avec la marque, le modèle et l'année de votre VR : on valide avant l'expédition.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Comment suivre ma commande?",
+            "answer": "<p>Créez un compte client pour voir vos commandes en attente, expédiées et livrées, avec le numéro de suivi du transporteur. Le lien de suivi est aussi envoyé par courriel.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Qu'est-ce qu'une mise en service printanière de VR?",
+            "answer": "<p>La mise en service printanière (dé-hivernation) prépare un VR après l'hiver : rinçage de l'antigel du réseau d'eau, inspection des freins, roulements et pneus, test d'étanchéité du toit et vérification du système au propane. Escale VR offre ce service à son atelier de Beaumont.</p>"
+          }
+        }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
       "settings": {
         "eyebrow": "Questions fréquentes",
         "heading": "Tout savoir avant de commander",
@@ -139,5 +381,15 @@
       }
     }
   },
-  "order": ["hero", "trust", "categories", "liquidation", "plans", "new_arrivals", "partners", "about", "faq"]
+  "order": [
+    "hero",
+    "trust",
+    "categories",
+    "liquidation",
+    "plans",
+    "new_arrivals",
+    "partners",
+    "about",
+    "faq"
+  ]
 }

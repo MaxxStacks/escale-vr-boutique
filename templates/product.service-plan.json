@@ -5,7 +5,8 @@
       "settings": {
         "layout": "plan",
         "show_dynamic_checkout": false,
-        "low_stock": 3
+        "low_stock": 3,
+        "shipping_page": "livraison-et-retours"
       }
     },
     "plans": {
