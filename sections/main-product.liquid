@@ -3,6 +3,14 @@
   assign part_number = product.metafields.custom.part_number.value
   assign compat = product.metafields.custom.compatibility
   assign specs = product.metafields.custom.specifications
+  comment
+    Rich-text specs are written as a bulleted list of "<strong>Label</strong> : value" items; split them
+    so they can feed the key-spec cards and the spec table. Index 0 is the markup before the first <li>.
+  endcomment
+  assign spec_items = ''
+  if specs != blank
+    assign spec_items = specs | metafield_tag | split: '<li>'
+  endif
   assign cond = product.metafields.custom.condition.value
   assign is_plan = false
   if section.settings.layout == 'plan'
@@ -109,6 +117,18 @@
         {%- if product.type != blank -%}<div class="product__id"><dt>{{ 'products.product.category' | t }}</dt><dd>{{ product.type }}</dd></div>{%- endif -%}
         {%- unless is_plan -%}<div class="product__id"><dt>{{ 'products.product.condition' | t }}</dt><dd>{{ cond_key | t }}</dd></div>{%- endunless -%}
       </dl>
+
+      {%- if spec_items.size > 1 -%}
+        <ul class="key-specs" role="list" aria-label="{{ 'products.tabs.specifications' | t }}">
+          {%- for item in spec_items offset: 1 limit: 4 -%}
+            {%- assign row = item | split: '</li>' | first | split: '</strong>' -%}
+            <li>
+              <span class="key-specs__label">{{ row.first | strip_html | strip }}</span>
+              <span class="key-specs__value">{{ row.last | strip_html | remove_first: ':' | strip }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
 
       <div class="product__price" data-price-wrap>
         {%- render 'price', product: product, variant: current_variant, size: 'lg' -%}
@@ -250,10 +270,14 @@
           {%- if current_variant.barcode != blank -%}<tr><th>{{ 'products.specs.barcode' | t }}</th><td>{{ current_variant.barcode }}</td></tr>{%- endif -%}
           {%- if product.type != blank -%}<tr><th>{{ 'products.product.category' | t }}</th><td>{{ product.type }}</td></tr>{%- endif -%}
           {%- unless is_plan -%}<tr><th>{{ 'products.product.condition' | t }}</th><td>{{ cond_key | t }}</td></tr>{%- endunless -%}
+          {%- for item in spec_items offset: 1 -%}
+            {%- assign row = item | split: '</li>' | first | split: '</strong>' -%}
+            <tr><th>{{ row.first | strip_html | strip }}</th><td>{{ row.last | strip_html | remove_first: ':' | strip }}</td></tr>
+          {%- endfor -%}
           {%- if current_variant.weight > 0 -%}<tr><th>{{ 'products.specs.weight' | t }}</th><td>{{ current_variant.weight | weight_with_unit }}</td></tr>{%- endif -%}
         </tbody>
       </table>
-      {%- if specs != blank -%}<div class="rte spec-extra">{{ specs | metafield_tag }}</div>{%- endif -%}
+      {%- if specs != blank and spec_items.size <= 1 -%}<div class="rte spec-extra">{{ specs | metafield_tag }}</div>{%- endif -%}
     </div>
     {%- unless is_plan -%}
       <div class="product-tabs__panel rte" role="tabpanel" id="tab-compat-{{ section.id }}" hidden>
