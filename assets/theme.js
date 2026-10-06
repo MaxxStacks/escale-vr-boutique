@@ -453,7 +453,9 @@
     const cfgEl = $('[data-chat-config]', chat || document);
     if (!chat || !cfgEl) return;
     const cfg = JSON.parse(cfgEl.textContent);
-    const s = cfg.t;
+    // Shopify HTML-escapes translations (l&#39;atelier); decode once since everything is re-escaped on output.
+    const decoder = document.createElement('textarea');
+    const s = Object.fromEntries(Object.entries(cfg.t).map(([k, v]) => { decoder.innerHTML = v; return [k, decoder.value]; }));
     const panel = $('#ChatPanel', chat);
     const log = $('[data-chat-log]', chat);
     const chips = $('[data-chat-chips]', chat);
