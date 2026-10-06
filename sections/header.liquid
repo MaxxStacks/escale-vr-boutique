@@ -3,6 +3,7 @@
   assign t_account = 'customer.account.title' | t
   assign logo_w = section.settings.logo_width
   assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
+  assign cat_exclude = settings.category_exclude | remove: ' ' | split: ','
 -%}
 <header class="header{% if section.settings.sticky %} header--sticky{% endif %}" data-header>
   {%- comment -%} Main bar — logo + BOUTIQUE, part search, account, cart {%- endcomment -%}
@@ -22,7 +23,7 @@
                   <ul>
                     <li><a href="{{ routes.collections_url }}" class="drawer-menu__all">{{ 'sections.header.all_categories' | t }}</a></li>
                     {%- for c in collections -%}
-                      {%- if c.handle == 'frontpage' or c.handle == 'all' or c.products_count == 0 or c.handle contains 'src-' -%}{%- continue -%}{%- endif -%}
+                      {%- if cat_exclude contains c.handle or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
                       <li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>
                     {%- endfor -%}
                   </ul>
@@ -189,7 +190,7 @@
                       <ul class="mega__tiles" role="list">
                         {%- assign shown = 0 -%}
                         {%- for c in collections -%}
-                          {%- if c.handle == 'frontpage' or c.handle == 'all' or c.products_count == 0 or c.handle contains 'src-' -%}{%- continue -%}{%- endif -%}
+                          {%- if cat_exclude contains c.handle or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
                           {%- if shown >= 18 -%}{%- break -%}{%- endif -%}
                           {%- assign shown = shown | plus: 1 -%}
                           <li>

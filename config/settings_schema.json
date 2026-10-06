@@ -425,6 +425,13 @@
       },
       {
         "type": "text",
+        "id": "category_exclude",
+        "label": "Collections hidden from category lists",
+        "info": "Comma-separated handles. Used by the category mega menu and the all-categories page (promo and distributor collections).",
+        "default": "frontpage,all,liquidation,nouveautes,plans-entretien,meyer,ntp-stag,keystone,atlas-trailer"
+      },
+      {
+        "type": "text",
         "id": "popular_searches",
         "label": "Popular searches (comma separated)",
         "default": "pompe à eau, batterie, antigel, auvent, contrôleur de freins, scellant de toit"
