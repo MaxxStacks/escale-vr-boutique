@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "deny": [
+      "mcp__claude_ai_Shopify"
+    ],
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git push origin main)",
+      "Bash(git fetch:*)"
+    ]
+  }
+}
