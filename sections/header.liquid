@@ -211,11 +211,14 @@
                       </ul>
                       <div class="mega__side">
                         <div class="mega__col">
+                          {%- assign quick_handles = 'liquidation,nouveautes,plans-entretien' | split: ',' -%}
                           <p class="mega__title">{{ 'sections.header.quick_links' | t }}</p>
                           <ul>
-                            {%- if collections['liquidation'].products_count > 0 -%}<li><a href="{{ collections['liquidation'].url }}" class="mega__hot">{{ collections['liquidation'].title | escape }}</a></li>{%- endif -%}
-                            {%- if collections['nouveautes'].products_count > 0 -%}<li><a href="{{ collections['nouveautes'].url }}">{{ collections['nouveautes'].title | escape }}</a></li>{%- endif -%}
-                            {%- if collections['plans-entretien'].products_count > 0 -%}<li><a href="{{ collections['plans-entretien'].url }}">{{ collections['plans-entretien'].title | escape }}</a></li>{%- endif -%}
+                            {%- for qh in quick_handles -%}
+                              {%- assign qc = collections[qh] -%}
+                              {%- if qc.id == blank -%}{%- continue -%}{%- endif -%}
+                              {%- if qc.products_count > 0 -%}<li><a href="{{ qc.url }}"{% if qh == 'liquidation' %} class="mega__hot"{% endif %}>{{ qc.title | escape }}</a></li>{%- endif -%}
+                            {%- endfor -%}
                             <li><a href="{{ routes.all_products_collection_url }}">{{ 'sections.header.all_products' | t }}</a></li>
                             <li><a href="{{ routes.collections_url }}">{{ 'sections.header.all_categories' | t }}</a></li>
                             <li><a href="{{ routes.account_url }}">{{ 'sections.header.track_order' | t }}</a></li>
