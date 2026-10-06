@@ -9,6 +9,15 @@
   It is denied in `.claude/settings.json`. All theme changes go through git.
 - Do not edit the theme through the Shopify CLI (`shopify theme push`) either. Git is the single source of truth.
 
+## Store data (products, collections, menus, pages)
+
+- Store: **`kwfqgi-7w.myshopify.com`** (permanent domain; `escalevr.myshopify.com` is an alias that Shopify CLI
+  auth rejects). Verify with `curl -s https://kwfqgi-7w.myshopify.com/ | grep Shopify.theme` → `escale-vr-boutique/main`.
+- Store data is not in git. Change it with the Admin API through Shopify CLI, **always passing the store explicitly**:
+  `shopify store execute --store kwfqgi-7w.myshopify.com --query-file q.graphql [--variable-file v.json] [--allow-mutations]`.
+  If the token expired, the owner re-runs `shopify store auth --store kwfqgi-7w.myshopify.com --scopes …`.
+- Dummy catalog (created 2026-10-06) is tagged **`exemple`**: delete those products before launch.
+
 ## Workflow for every change
 
 1. `git pull --rebase origin main` before starting. Shopify commits theme-editor changes back to `main`
