@@ -23,7 +23,7 @@
       {%- if section.settings.logo != blank -%}
         {{ section.settings.logo | image_url: width: 400 | image_tag: loading: 'lazy', width: 180, class: 'footer__logo', alt: settings.biz_name }}
       {%- else -%}
-        <p class="footer__wordmark">{{ settings.biz_name }}</p>
+        <img src="{{ 'escale-logo-light.png' | asset_url }}" class="footer__logo" width="180" height="61" alt="{{ settings.biz_name }}" loading="lazy">
       {%- endif -%}
       <p class="footer__about">{{ section.settings.about }}</p>
       <address class="footer__nap">

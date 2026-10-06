@@ -59,10 +59,10 @@ Shopify commits theme-editor changes back to the branch. Use a `staging` branch 
    | `meyer`, `ntp-stag`, `keystone`, `atlas-trailer` | tag = `src-meyer`, etc. | distributor catalogs |
    | `nouveautes` | created in last X days / manual | homepage “Les essentiels de la saison” |
 
-7. **Navigation:** create `main-menu` (Liquidation · Pièces ▾ (category children) · Plans d'entretien · Marques ▾ · Nous joindre), `footer`, `footer-help` (Livraison, Retours, FAQ, Suivi de commande, Politique de confidentialité).
+7. **Navigation:** create `escalevr-site` (white top bar, mirrors the dealership: Nos VR neufs → escalevr.ca/acheter/, Nos VR usagés → /vr-occasion/, Location → /louer-un-vr/, Services → /notre-service/, Financement → /financement/, Promotions → /promotions/), `main-menu` (Liquidation · Pièces ▾ (category children) · Plans d'entretien · Marques ▾ · Nous joindre), `footer`, `footer-help` (Livraison, Retours, FAQ, Suivi de commande, Politique de confidentialité).
 8. **Pages:** *Nous joindre* (template `page.contact`), *FAQ* (`page.faq`), *Livraison et retours*. Pick that last page in Product → “Shipping & returns page” so every product carries the real policy.
 9. **Policies:** Settings → Policies: refund, privacy (**Quebec Law 25**: name the person in charge of personal information), shipping, terms, all in French and English.
-10. **Theme settings:** upload the Escale VR logos (header = light version on the brand color, footer, Google logo). Set **Brand colors** to the exact escalevr.ca values. Confirm business info, hours and lat/long, which feed the LocalBusiness schema.
+10. **Theme settings:** official Escale VR logos and brand colors (green #465C50, dark green #354940, orange #F5901D) are built in. Upload higher-resolution logo files (SVG/PNG ≥ 600 px) in Header/Footer if you have them, and set the Google logo under Business info. Confirm business info, hours and lat/long, which feed the LocalBusiness schema.
 11. **Sales channels:** Google & YouTube (Merchant Center free listings; product schema and GTIN/MPN are ready), Shop app, Facebook & Instagram.
 
 ## 4. Loading the inventory
@@ -83,7 +83,7 @@ Shopify commits theme-editor changes back to the branch. Use a `staging` branch 
 
 ## 6. Before launch
 
-- [ ] Real logos and brand hex values in Theme settings
+- [ ] Higher-resolution logo files (bundled ones are 189×64 px)
 - [ ] Confirm hours, lat/long and return policy (FAQ answers state 30 days, change if different)
 - [ ] Translate all section text into EN with Translate & Adapt
 - [ ] Test order: place, fulfill with tracking, check account → order page shows tracking

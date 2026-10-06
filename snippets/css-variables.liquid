@@ -11,6 +11,8 @@
   :root {
     --c-primary: {{ settings.color_primary }};
     --c-primary-rgb: {{ settings.color_primary.red }}, {{ settings.color_primary.green }}, {{ settings.color_primary.blue }};
+    --c-primary-dark: {{ settings.color_primary_dark }};
+    --c-primary-dark-rgb: {{ settings.color_primary_dark.red }}, {{ settings.color_primary_dark.green }}, {{ settings.color_primary_dark.blue }};
     --c-on-primary: {{ settings.color_primary_contrast }};
     --c-accent: {{ settings.color_accent }};
     --c-accent-hover: {{ settings.color_accent | color_darken: 8 }};

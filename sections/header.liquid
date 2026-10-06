@@ -1,133 +1,162 @@
 {%- liquid
   assign menu = section.settings.menu
+  assign site_menu = section.settings.site_menu
   assign t_account = 'customer.account.title' | t
-  if section.settings.logo != blank
-    assign logo_w = section.settings.logo_width
-    assign logo_h = section.settings.logo.height | times: logo_w | divided_by: section.settings.logo.width
-  endif
+  assign logo_w = section.settings.logo_width
 -%}
 <header class="header{% if section.settings.sticky %} header--sticky{% endif %}" data-header>
-  <div class="page-width header__inner">
-    <details class="header__drawer" data-drawer>
-      <summary class="header__icon header__icon--menu" aria-label="{{ 'sections.header.menu' | t }}">
-        <span class="when-closed">{%- render 'icon', name: 'menu' -%}</span>
-        <span class="when-open">{%- render 'icon', name: 'close' -%}</span>
-      </summary>
-      <div class="drawer-menu" id="MobileMenu">
-        <nav aria-label="{{ 'sections.header.menu' | t }}">
-          <ul class="drawer-menu__list">
-            {%- for link in menu.links -%}
-              <li>
-                {%- if link.links.size > 0 -%}
-                  <details>
-                    <summary>{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
-                    <ul>
-                      <li><a href="{{ link.url }}" class="drawer-menu__all">{{ 'sections.header.view_all' | t }} {{ link.title | escape }}</a></li>
-                      {%- for child in link.links -%}
-                        <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
-                      {%- endfor -%}
-                    </ul>
-                  </details>
-                {%- else -%}
-                  <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-                {%- endif -%}
-              </li>
+  {%- comment -%} Tier 1 — white bar that mirrors escalevr.ca (logo + dealership menu) {%- endcomment -%}
+  <div class="header__top">
+    <div class="page-width header__top-inner">
+      <details class="header__drawer" data-drawer>
+        <summary class="header__icon header__icon--menu" aria-label="{{ 'sections.header.menu' | t }}">
+          <span class="when-closed">{%- render 'icon', name: 'menu' -%}</span>
+          <span class="when-open">{%- render 'icon', name: 'close' -%}</span>
+        </summary>
+        <div class="drawer-menu" id="MobileMenu">
+          <nav aria-label="{{ 'sections.header.menu' | t }}">
+            <p class="drawer-menu__label">{{ 'sections.header.boutique' | t }}</p>
+            <ul class="drawer-menu__list">
+              {%- for link in menu.links -%}
+                <li>
+                  {%- if link.links.size > 0 -%}
+                    <details>
+                      <summary>{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
+                      <ul>
+                        <li><a href="{{ link.url }}" class="drawer-menu__all">{{ 'sections.header.view_all' | t }} {{ link.title | escape }}</a></li>
+                        {%- for child in link.links -%}
+                          <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    </details>
+                  {%- else -%}
+                    <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+            {%- if site_menu.links.size > 0 -%}
+              <p class="drawer-menu__label">{{ settings.biz_name }}</p>
+              <ul class="drawer-menu__list drawer-menu__list--site">
+                {%- for link in site_menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </nav>
+          <div class="drawer-menu__footer">
+            <a href="{{ routes.account_url }}" class="drawer-menu__link">{%- render 'icon', name: 'account' -%} {{ 'customer.account.title' | t }}</a>
+            <a href="tel:{{ settings.biz_phone_e164 }}" class="drawer-menu__link">{%- render 'icon', name: 'phone' -%} {{ settings.biz_phone }}</a>
+            {%- render 'localization-switcher', id: 'DrawerLocalization' -%}
+          </div>
+        </div>
+      </details>
+
+      <div class="header__brand">
+        <a href="{{ routes.root_url }}" class="header__logo-link" aria-label="{{ shop.name }}">
+          {%- if section.settings.logo != blank -%}
+            {%- assign logo_h = section.settings.logo.height | times: logo_w | divided_by: section.settings.logo.width -%}
+            {{
+              section.settings.logo
+              | image_url: width: 600
+              | image_tag:
+                class: 'header__logo',
+                widths: '200, 300, 400, 600',
+                width: logo_w,
+                height: logo_h,
+                alt: shop.name,
+                loading: 'eager',
+                fetchpriority: 'high'
+            }}
+          {%- else -%}
+            {%- assign logo_h = logo_w | times: 64 | divided_by: 189 -%}
+            <img src="{{ 'escale-logo-dark.png' | asset_url }}" class="header__logo" width="{{ logo_w }}" height="{{ logo_h }}" alt="{{ shop.name }}" fetchpriority="high">
+          {%- endif -%}
+        </a>
+        <span class="header__badge">{{ 'sections.header.boutique' | t }}</span>
+      </div>
+
+      {%- if site_menu.links.size > 0 -%}
+        <nav class="header__site-nav" aria-label="{{ settings.biz_name }}">
+          <ul>
+            {%- for link in site_menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
             {%- endfor -%}
           </ul>
         </nav>
-        <div class="drawer-menu__footer">
-          <a href="{{ routes.account_url }}" class="drawer-menu__link">{%- render 'icon', name: 'account' -%} {{ 'customer.account.title' | t }}</a>
-          <a href="tel:{{ settings.biz_phone_e164 }}" class="drawer-menu__link">{%- render 'icon', name: 'phone' -%} {{ settings.biz_phone }}</a>
-          {%- render 'localization-switcher', id: 'DrawerLocalization' -%}
-        </div>
+      {%- endif -%}
+
+      <div class="header__icons">
+        <a href="tel:{{ settings.biz_phone_e164 }}" class="header__phone">{%- render 'icon', name: 'phone' -%}<span>{{ settings.biz_phone }}</span></a>
+        <a href="{{ routes.account_url }}" class="header__icon" aria-label="{{ 'customer.account.title' | t }}">
+          {%- render 'icon', name: 'account' -%}
+          <span class="header__icon-label">{% if customer %}{{ customer.first_name | default: t_account }}{% else %}{{ 'customer.login.title' | t }}{% endif %}</span>
+        </a>
+        <a href="{{ routes.cart_url }}" class="header__icon header__cart" data-cart-toggle aria-label="{{ 'sections.cart.title' | t }}">
+          {%- render 'icon', name: 'cart' -%}
+          <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+        </a>
       </div>
-    </details>
-
-    <div class="header__brand">
-      <a href="{{ routes.root_url }}" class="header__logo-link">
-        {%- if section.settings.logo != blank -%}
-          {{
-            section.settings.logo
-            | image_url: width: 600
-            | image_tag:
-              class: 'header__logo',
-              widths: '200, 300, 400, 600',
-              width: logo_w,
-              height: logo_h,
-              alt: shop.name,
-              loading: 'eager',
-              fetchpriority: 'high'
-          }}
-        {%- else -%}
-          <span class="header__wordmark">{{ settings.biz_name }}<small>{{ 'sections.header.boutique' | t }}</small></span>
-        {%- endif -%}
-      </a>
     </div>
+  </div>
 
-    <nav class="header__nav" aria-label="{{ 'sections.header.menu' | t }}">
-      <ul class="nav">
-        {%- for link in menu.links -%}
-          <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
-            {%- if link.links.size > 0 -%}
-              <details class="nav__details" data-hover-menu>
-                <summary class="nav__link">{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
-                <div class="mega">
-                  <div class="page-width mega__inner">
-                    {%- for child in link.links -%}
-                      <div class="mega__col">
-                        <a href="{{ child.url }}" class="mega__title">{{ child.title | escape }}</a>
-                        {%- if child.links.size > 0 -%}
-                          <ul>
-                            {%- for grandchild in child.links -%}
-                              <li><a href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a></li>
-                            {%- endfor -%}
-                          </ul>
-                        {%- endif -%}
-                      </div>
-                    {%- endfor -%}
-                    <a href="{{ link.url }}" class="mega__all btn btn--ghost">{{ 'sections.header.view_all' | t }} {{ link.title | escape }} {%- render 'icon', name: 'arrow' -%}</a>
+  {%- comment -%} Tier 2 — green store bar: boutique navigation + part search {%- endcomment -%}
+  <div class="header__bar">
+    <div class="page-width header__bar-inner">
+      <nav class="header__nav" aria-label="{{ 'sections.header.menu' | t }}">
+        <ul class="nav">
+          {%- for link in menu.links -%}
+            <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
+              {%- if link.links.size > 0 -%}
+                <details class="nav__details" data-hover-menu>
+                  <summary class="nav__link">{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
+                  <div class="mega">
+                    <div class="page-width mega__inner">
+                      {%- for child in link.links -%}
+                        <div class="mega__col">
+                          <a href="{{ child.url }}" class="mega__title">{{ child.title | escape }}</a>
+                          {%- if child.links.size > 0 -%}
+                            <ul>
+                              {%- for grandchild in child.links -%}
+                                <li><a href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a></li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </div>
+                      {%- endfor -%}
+                      <a href="{{ link.url }}" class="mega__all btn btn--ghost">{{ 'sections.header.view_all' | t }} {{ link.title | escape }} {%- render 'icon', name: 'arrow' -%}</a>
+                    </div>
                   </div>
-                </div>
-              </details>
-            {%- else -%}
-              <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
+                </details>
+              {%- else -%}
+                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
 
-    <div class="header__search">
-      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form" data-predictive-search>
-        <label for="HeaderSearch" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
-        <input
-          id="HeaderSearch"
-          type="search"
-          name="q"
-          value="{{ search.terms | escape }}"
-          placeholder="{{ 'sections.search.placeholder' | t }}"
-          autocomplete="off"
-          role="combobox"
-          aria-expanded="false"
-          aria-owns="PredictiveResults"
-          aria-controls="PredictiveResults"
-          aria-autocomplete="list"
-        >
-        <input type="hidden" name="options[prefix]" value="last">
-        <button type="submit" class="search-form__submit" aria-label="{{ 'sections.search.submit' | t }}">{%- render 'icon', name: 'search' -%}</button>
-        <div id="PredictiveResults" class="predictive" data-predictive-results hidden></div>
-      </form>
-    </div>
-
-    <div class="header__icons">
-      <a href="{{ routes.account_url }}" class="header__icon" aria-label="{{ 'customer.account.title' | t }}">
-        {%- render 'icon', name: 'account' -%}
-        <span class="header__icon-label">{% if customer %}{{ customer.first_name | default: t_account }}{% else %}{{ 'customer.login.title' | t }}{% endif %}</span>
-      </a>
-      <a href="{{ routes.cart_url }}" class="header__icon header__cart" data-cart-toggle aria-label="{{ 'sections.cart.title' | t }}">
-        {%- render 'icon', name: 'cart' -%}
-        <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
-      </a>
+      <div class="header__search">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form" data-predictive-search>
+          <label for="HeaderSearch" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
+          <input
+            id="HeaderSearch"
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ 'sections.search.placeholder' | t }}"
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-owns="PredictiveResults"
+            aria-controls="PredictiveResults"
+            aria-autocomplete="list"
+          >
+          <input type="hidden" name="options[prefix]" value="last">
+          <button type="submit" class="search-form__submit" aria-label="{{ 'sections.search.submit' | t }}">{%- render 'icon', name: 'search' -%}</button>
+          <div id="PredictiveResults" class="predictive" data-predictive-results hidden></div>
+        </form>
+      </div>
     </div>
   </div>
 </header>
@@ -138,9 +167,10 @@
   "tag": "div",
   "class": "section-header",
   "settings": [
-    { "type": "image_picker", "id": "logo", "label": "Logo" },
-    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 80, "max": 280, "step": 10, "unit": "px", "default": 170 },
-    { "type": "link_list", "id": "menu", "label": "Main menu", "default": "main-menu" },
+    { "type": "image_picker", "id": "logo", "label": "Logo (leave empty to use the official Escale VR logo)" },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 100, "max": 260, "step": 5, "unit": "px", "default": 170 },
+    { "type": "link_list", "id": "menu", "label": "Store menu (green bar)", "default": "main-menu" },
+    { "type": "link_list", "id": "site_menu", "label": "Dealership menu (links to escalevr.ca)", "info": "Create a menu with: Nos VR neufs, Nos VR usagés, Location, Services, Financement, Promotions, all pointing to escalevr.ca" },
     { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true }
   ]
 }
