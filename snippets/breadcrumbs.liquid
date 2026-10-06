@@ -1,0 +1,69 @@
+{%- comment -%}
+  Visible breadcrumb + BreadcrumbList JSON-LD.
+  Usage: {% render 'breadcrumbs' %} (reads product / collection / page / article from context)
+{%- endcomment -%}
+{%- liquid
+  assign t_shop = 'breadcrumbs.shop' | t
+  assign crumb_names = 'breadcrumbs.home' | t
+  assign crumb_urls = routes.root_url
+  case request.page_type
+    when 'product'
+      assign crumb_collection = collection | default: product.collections.first
+      if crumb_collection
+        assign crumb_names = crumb_names | append: '§§' | append: crumb_collection.title
+        assign crumb_urls = crumb_urls | append: '§§' | append: crumb_collection.url
+      endif
+      assign crumb_names = crumb_names | append: '§§' | append: product.title
+      assign crumb_urls = crumb_urls | append: '§§' | append: product.url
+    when 'collection'
+      assign crumb_names = crumb_names | append: '§§' | append: t_shop
+      assign crumb_urls = crumb_urls | append: '§§' | append: routes.collections_url
+      assign crumb_names = crumb_names | append: '§§' | append: collection.title
+      assign crumb_urls = crumb_urls | append: '§§' | append: collection.url
+    when 'page'
+      assign crumb_names = crumb_names | append: '§§' | append: page.title
+      assign crumb_urls = crumb_urls | append: '§§' | append: page.url
+    when 'blog'
+      assign crumb_names = crumb_names | append: '§§' | append: blog.title
+      assign crumb_urls = crumb_urls | append: '§§' | append: blog.url
+    when 'article'
+      assign crumb_names = crumb_names | append: '§§' | append: blog.title | append: '§§' | append: article.title
+      assign crumb_urls = crumb_urls | append: '§§' | append: blog.url | append: '§§' | append: article.url
+    when 'list-collections'
+      assign crumb_names = crumb_names | append: '§§' | append: t_shop
+      assign crumb_urls = crumb_urls | append: '§§' | append: routes.collections_url
+  endcase
+  assign names = crumb_names | split: '§§'
+  assign urls = crumb_urls | split: '§§'
+-%}
+{%- if names.size > 1 -%}
+  <nav class="breadcrumbs" aria-label="{{ 'breadcrumbs.label' | t }}">
+    <ol>
+      {%- for name in names -%}
+        <li>
+          {%- if forloop.last -%}
+            <span aria-current="page">{{ name | escape }}</span>
+          {%- else -%}
+            <a href="{{ urls[forloop.index0] }}">{{ name | escape }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </nav>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {%- for name in names -%}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "name": {{ name | json }},
+          "item": {{ request.origin | append: urls[forloop.index0] | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}

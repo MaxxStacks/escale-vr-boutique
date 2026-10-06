@@ -1,0 +1,16 @@
+<section class="page-width page-narrow empty-state empty-state--page">
+  <p class="eyebrow">404</p>
+  <h1 class="h1">{{ 'templates.404.title' | t }}</h1>
+  <p class="muted">{{ 'templates.404.subtext' | t }}</p>
+  <form action="{{ routes.search_url }}" method="get" role="search" class="hero__search hero__search--inline">
+    <label for="Search404" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
+    {%- render 'icon', name: 'search' -%}
+    <input id="Search404" type="search" name="q" placeholder="{{ 'sections.search.placeholder' | t }}">
+    <button type="submit" class="btn btn--accent">{{ 'sections.search.submit' | t }}</button>
+  </form>
+  <a href="{{ routes.root_url }}" class="btn btn--ghost">{{ 'templates.404.home' | t }}</a>
+</section>
+
+{% schema %}
+{ "name": "404", "tag": "div", "class": "section-404", "settings": [] }
+{% endschema %}

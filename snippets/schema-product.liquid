@@ -1,0 +1,116 @@
+{%- comment -%}
+  Product JSON-LD with per-variant Offers, MPN/GTIN, brand, condition, shipping and
+  return policy (required by Google for merchant listings). Renders a ProductGroup when
+  the product has real variants.
+  Metafields used (all optional):
+    custom.part_number (single line)  -> mpn fallback
+    custom.condition   (new | used | refurbished)
+    custom.compatibility (multi-line) -> isAccessoryOrSparePartFor-ish text in description
+{%- endcomment -%}
+{%- liquid
+  assign url = request.origin | append: product.url
+  assign condition = product.metafields.custom.condition.value | default: 'new' | downcase
+  case condition
+    when 'used', 'usagé', 'usage'
+      assign condition_url = 'https://schema.org/UsedCondition'
+    when 'refurbished', 'reconditionné'
+      assign condition_url = 'https://schema.org/RefurbishedCondition'
+    else
+      assign condition_url = 'https://schema.org/NewCondition'
+  endcase
+  assign has_variants = false
+  if product.has_only_default_variant == false
+    assign has_variants = true
+  endif
+  assign part_number = product.metafields.custom.part_number.value
+  assign seller_id = request.origin | append: '/#store'
+  assign price_valid = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d'
+-%}
+{%- capture shipping_and_returns -%}
+  "shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "CA" },
+    "deliveryTime": {
+      "@type": "ShippingDeliveryTime",
+      "handlingTime": { "@type": "QuantitativeValue", "minValue": {{ settings.handling_days | split: '-' | first | plus: 0 }}, "maxValue": {{ settings.handling_days | split: '-' | last | plus: 0 }}, "unitCode": "DAY" },
+      "transitTime": { "@type": "QuantitativeValue", "minValue": {{ settings.transit_days | split: '-' | first | plus: 0 }}, "maxValue": {{ settings.transit_days | split: '-' | last | plus: 0 }}, "unitCode": "DAY" }
+    }
+  },
+  "hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "CA",
+    {%- if settings.return_days > 0 %}
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": {{ settings.return_days }},
+    "returnMethod": ["https://schema.org/ReturnByMail", "https://schema.org/ReturnInStore"],
+    "returnFees": "https://schema.org/ReturnShippingFees"
+    {%- else %}
+    "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+    {%- endif %}
+  }
+{%- endcapture -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": {% if has_variants %}"ProductGroup"{% else %}"Product"{% endif %},
+  "@id": {{ url | append: '#product' | json }},
+  "name": {{ product.title | json }},
+  "url": {{ url | json }},
+  "description": {{ product.description | strip_html | strip_newlines | truncate: 5000 | json }},
+  {%- if product.featured_media %}
+  "image": [
+    {%- for media in product.media limit: 6 -%}
+      {{ media.preview_image | image_url: width: 1200 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  {%- endif %}
+  "brand": { "@type": "Brand", "name": {{ product.vendor | json }} },
+  {%- if product.type != blank %}"category": {{ product.type | json }},{% endif %}
+  {%- if has_variants %}
+  "productGroupID": {{ product.id | json }},
+  "variesBy": [
+    {%- for option in product.options -%}{{ option | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
+  ],
+  "hasVariant": [
+    {%- for variant in product.variants limit: 50 -%}
+    {
+      "@type": "Product",
+      "name": {{ variant.title | prepend: ' – ' | prepend: product.title | json }},
+      "sku": {{ variant.sku | json }},
+      {%- if variant.sku != blank %}"mpn": {{ variant.sku | json }},{% endif %}
+      {%- assign gtin_len = variant.barcode | size -%}
+      {%- if gtin_len >= 8 and gtin_len <= 14 %}"gtin": {{ variant.barcode | json }},{% endif %}
+      "offers": {
+        "@type": "Offer",
+        "url": {{ url | append: '?variant=' | append: variant.id | json }},
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "price": {{ variant.price | divided_by: 100.0 | json }},
+        "priceValidUntil": {{ price_valid | json }},
+        "itemCondition": {{ condition_url | json }},
+        "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+        "seller": { "@id": {{ seller_id | json }} },
+        {{ shipping_and_returns }}
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+  {%- else -%}
+  {%- assign v = product.selected_or_first_available_variant -%}
+  {%- assign gtin_len = v.barcode | size -%}
+  "sku": {{ v.sku | json }},
+  "mpn": {{ part_number | default: v.sku | json }},
+  {%- if gtin_len >= 8 and gtin_len <= 14 %}"gtin": {{ v.barcode | json }},{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "url": {{ url | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "price": {{ v.price | divided_by: 100.0 | json }},
+    "priceValidUntil": {{ price_valid | json }},
+    "itemCondition": {{ condition_url | json }},
+    "availability": "https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+    "seller": { "@id": {{ seller_id | json }} },
+    {{ shipping_and_returns }}
+  }
+  {%- endif %}
+}
+</script>

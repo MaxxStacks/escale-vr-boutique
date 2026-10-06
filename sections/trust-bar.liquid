@@ -1,0 +1,41 @@
+<section class="trust{% if section.settings.style == 'dark' %} trust--dark{% endif %}">
+  <ul class="page-width trust__list">
+    {%- for block in section.blocks -%}
+      <li class="trust__item" {{ block.shopify_attributes }}>
+        <span class="trust__icon">{%- render 'icon', name: block.settings.icon -%}</span>
+        <span>
+          <strong>{{ block.settings.title }}</strong>
+          <span>{{ block.settings.text }}</span>
+        </span>
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+{% schema %}
+{
+  "name": "Trust bar",
+  "tag": "div",
+  "class": "section-trust",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "select", "id": "style", "label": "Style", "default": "light", "options": [{ "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" }] }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+          { "value": "truck", "label": "Truck" }, { "value": "store", "label": "Store" }, { "value": "shield", "label": "Shield" },
+          { "value": "wrench", "label": "Wrench" }, { "value": "return", "label": "Return" }, { "value": "tag", "label": "Tag" },
+          { "value": "phone", "label": "Phone" }, { "value": "package", "label": "Package" }, { "value": "calendar", "label": "Calendar" }
+        ] },
+        { "type": "text", "id": "title", "label": "Title", "default": "Livraison rapide" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Partout au Canada" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Trust bar", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }, { "type": "item" }] }]
+}
+{% endschema %}

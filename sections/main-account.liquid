@@ -1,0 +1,94 @@
+{%- liquid
+  assign pending_count = 0
+  for order in customer.orders
+    unless order.cancelled or order.fulfillment_status == 'fulfilled'
+      assign pending_count = pending_count | plus: 1
+    endunless
+  endfor
+  assign display_name = customer.first_name | default: customer.email
+-%}
+<section class="page-width account">
+  <div class="account__head">
+    <div>
+      <p class="eyebrow">{{ 'customer.account.title' | t }}</p>
+      <h1 class="h2">{{ 'customer.account.welcome' | t: name: display_name }}</h1>
+    </div>
+    <a href="{{ routes.account_logout_url }}" class="btn btn--ghost">{{ 'customer.account.logout' | t }}</a>
+  </div>
+
+  <ul class="account__stats" role="list">
+    <li><strong>{{ customer.orders_count }}</strong><span>{{ 'customer.account.orders_total' | t }}</span></li>
+    <li><strong>{{ pending_count }}</strong><span>{{ 'customer.account.orders_pending' | t }}</span></li>
+    <li><strong>{{ customer.total_spent | money_without_trailing_zeros }}</strong><span>{{ 'customer.account.total_spent' | t }}</span></li>
+  </ul>
+
+  <div class="account__grid">
+    <div class="account__orders" data-orders>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" class="tabs__btn is-active" aria-selected="true" data-orders-filter="all">{{ 'customer.orders.all' | t }}</button>
+        <button type="button" role="tab" class="tabs__btn" aria-selected="false" data-orders-filter="pending">{{ 'customer.orders.pending' | t }} ({{ pending_count }})</button>
+        <button type="button" role="tab" class="tabs__btn" aria-selected="false" data-orders-filter="done">{{ 'customer.orders.completed' | t }}</button>
+      </div>
+
+      {%- paginate customer.orders by 20 -%}
+        {%- if customer.orders.size > 0 -%}
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>{{ 'customer.orders.order' | t }}</th>
+                <th>{{ 'customer.orders.date' | t }}</th>
+                <th>{{ 'customer.orders.status' | t }}</th>
+                <th class="ta-right">{{ 'customer.orders.total' | t }}</th>
+                <th><span class="visually-hidden">{{ 'customer.orders.view' | t }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                {%- liquid
+                  assign state = 'pending'
+                  if order.cancelled or order.fulfillment_status == 'fulfilled'
+                    assign state = 'done'
+                  endif
+                -%}
+                <tr data-order-state="{{ state }}">
+                  <td data-label="{{ 'customer.orders.order' | t }}"><a href="{{ order.customer_url }}" class="link"><strong>{{ order.name }}</strong></a></td>
+                  <td data-label="{{ 'customer.orders.date' | t }}">{{ order.created_at | time_tag: format: 'date' }}</td>
+                  <td data-label="{{ 'customer.orders.status' | t }}">{%- render 'order-status', order: order -%}</td>
+                  <td data-label="{{ 'customer.orders.total' | t }}" class="ta-right">{{ order.total_price | money }}</td>
+                  <td class="ta-right"><a href="{{ order.customer_url }}" class="btn btn--ghost btn--sm">{{ 'customer.orders.track' | t }}</a></td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {%- render 'pagination', paginate: paginate -%}
+        {%- else -%}
+          <div class="empty-state">
+            <p>{{ 'customer.orders.none' | t }}</p>
+            <a href="{{ routes.all_products_collection_url }}" class="btn btn--accent">{{ 'sections.cart.continue' | t }}</a>
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+
+    <aside class="account__side">
+      <div class="panel">
+        <h2 class="h5">{{ 'customer.account.details' | t }}</h2>
+        <p>{{ customer.name }}<br>{{ customer.email }}</p>
+        {%- if customer.default_address -%}
+          <h3 class="h6">{{ 'customer.addresses.default' | t }}</h3>
+          <p class="small">{{ customer.default_address | format_address }}</p>
+        {%- endif -%}
+        <a href="{{ routes.account_addresses_url }}" class="btn btn--primary btn--block">{{ 'customer.addresses.manage' | t: count: customer.addresses_count }}</a>
+      </div>
+      <div class="panel panel--accent">
+        <h2 class="h5">{{ 'customer.account.help_title' | t }}</h2>
+        <p class="small">{{ 'customer.account.help_text' | t }}</p>
+        <a href="tel:{{ settings.biz_phone_e164 }}" class="link">{{ settings.biz_phone }}</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Account", "tag": "div", "class": "section-account", "settings": [] }
+{% endschema %}

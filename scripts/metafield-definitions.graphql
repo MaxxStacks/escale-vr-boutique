@@ -1,0 +1,58 @@
+# Run once per store (Shopify Admin GraphQL, e.g. GraphiQL app or `shopify app` CLI).
+# Creates the metafield definitions the theme reads. All are storefront-readable and
+# show up as editable fields on each product / collection in the admin.
+
+mutation PartNumber {
+  metafieldDefinitionCreate(definition: {
+    name: "Numéro de pièce (fabricant)", namespace: "custom", key: "part_number",
+    type: "single_line_text_field", ownerType: PRODUCT,
+    description: "MPN / numéro du fabricant. Affiché sur la fiche, utilisé pour la recherche et le schema.org (mpn).",
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}
+
+mutation Condition {
+  metafieldDefinitionCreate(definition: {
+    name: "État", namespace: "custom", key: "condition",
+    type: "single_line_text_field", ownerType: PRODUCT,
+    description: "new, used ou refurbished (schema.org itemCondition).",
+    validations: [{ name: "choices", value: "[\"new\",\"used\",\"refurbished\"]" }],
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}
+
+mutation Compatibility {
+  metafieldDefinitionCreate(definition: {
+    name: "Compatibilité", namespace: "custom", key: "compatibility",
+    type: "rich_text_field", ownerType: PRODUCT,
+    description: "Marques / modèles / années de VR compatibles.",
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}
+
+mutation Specifications {
+  metafieldDefinitionCreate(definition: {
+    name: "Caractéristiques", namespace: "custom", key: "specifications",
+    type: "rich_text_field", ownerType: PRODUCT,
+    description: "Dimensions, voltage, matériaux, etc.",
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}
+
+mutation PlanFeatures {
+  metafieldDefinitionCreate(definition: {
+    name: "Inclus dans le plan", namespace: "custom", key: "plan_features",
+    type: "list.single_line_text_field", ownerType: PRODUCT,
+    description: "Liste des services inclus (plans d'entretien seulement).",
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}
+
+mutation CollectionSeoBottom {
+  metafieldDefinitionCreate(definition: {
+    name: "Texte SEO (bas de page)", namespace: "custom", key: "description_bottom",
+    type: "rich_text_field", ownerType: COLLECTION,
+    description: "Contenu long affiché sous la grille de produits (page 1 seulement).",
+    access: { storefront: PUBLIC_READ }
+  }) { createdDefinition { id } userErrors { field message } }
+}

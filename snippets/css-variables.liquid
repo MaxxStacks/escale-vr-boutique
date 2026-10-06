@@ -1,0 +1,39 @@
+{%- liquid
+  assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+  assign body_font_medium = settings.type_body_font | font_modify: 'weight', '600'
+-%}
+<style>
+  {{ settings.type_header_font | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {%- if body_font_bold -%}{{ body_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
+  {%- if body_font_medium -%}{{ body_font_medium | font_face: font_display: 'swap' }}{%- endif -%}
+
+  :root {
+    --c-primary: {{ settings.color_primary }};
+    --c-primary-rgb: {{ settings.color_primary.red }}, {{ settings.color_primary.green }}, {{ settings.color_primary.blue }};
+    --c-on-primary: {{ settings.color_primary_contrast }};
+    --c-accent: {{ settings.color_accent }};
+    --c-accent-hover: {{ settings.color_accent | color_darken: 8 }};
+    --c-on-accent: {{ settings.color_accent_contrast }};
+    --c-text: {{ settings.color_text }};
+    --c-muted: {{ settings.color_muted }};
+    --c-bg: {{ settings.color_background }};
+    --c-surface: {{ settings.color_surface }};
+    --c-border: {{ settings.color_border }};
+    --c-sale: {{ settings.color_sale }};
+    --c-success: {{ settings.color_success }};
+
+    --f-heading: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    --f-heading-weight: {{ settings.type_header_font.weight }};
+    --f-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --f-body-weight: {{ settings.type_body_font.weight }};
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+    --heading-transform: {% if settings.heading_uppercase %}uppercase{% else %}none{% endif %};
+
+    --radius: {{ settings.radius }}px;
+    --btn-radius: {{ settings.button_radius }}px;
+    --page-width: 1320px;
+    --gutter: clamp(16px, 3vw, 32px);
+    --header-h: 72px;
+  }
+</style>

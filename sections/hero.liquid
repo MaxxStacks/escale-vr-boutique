@@ -1,0 +1,91 @@
+{%- liquid
+  assign heading_tag = 'h2'
+  if section.settings.is_page_h1
+    assign heading_tag = 'h1'
+  endif
+-%}
+<section class="hero" style="--overlay: {{ section.settings.overlay | divided_by: 100.0 }}; --hero-min-h: {{ section.settings.min_height }}vh;">
+  <div class="hero__media">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '750, 1100, 1500, 1920, 2400',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: section.settings.image.alt | default: section.settings.heading
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+  </div>
+  <div class="page-width hero__content">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow eyebrow--light">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <{{ heading_tag }} class="hero__heading">{{ section.settings.heading }}</{{ heading_tag }}>
+    {%- if section.settings.text != blank -%}<div class="hero__text">{{ section.settings.text }}</div>{%- endif -%}
+
+    {%- if section.settings.show_search -%}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="hero__search">
+        <label for="HeroSearch" class="visually-hidden">{{ 'sections.search.label' | t }}</label>
+        {%- render 'icon', name: 'search' -%}
+        <input id="HeroSearch" type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" autocomplete="off">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="btn btn--accent">{{ 'sections.search.submit' | t }}</button>
+      </form>
+    {%- endif -%}
+
+    <div class="hero__ctas">
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn btn--accent btn--lg">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+      {%- if section.settings.button2_label != blank -%}
+        <a href="{{ section.settings.button2_link }}" class="btn btn--outline-light btn--lg">{{ section.settings.button2_label }}</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="hero__stats">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}><strong>{{ block.settings.value }}</strong><span>{{ block.settings.label }}</span></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "div",
+  "class": "section-hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "range", "id": "overlay", "label": "Overlay darkness", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 55 },
+    { "type": "range", "id": "min_height", "label": "Minimum height", "min": 40, "max": 90, "step": 5, "unit": "vh", "default": 70 },
+    { "type": "checkbox", "id": "is_page_h1", "label": "Heading is the page H1 (use once per page)", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Boutique officielle Escale VR · Beaumont" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pièces et accessoires de VR, expédiés partout au Québec" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Plus de 300 000 $ de pièces en inventaire à prix de liquidation. Roulottes, caravanes à sellette, motorisés : trouvez la bonne pièce par numéro, marque ou modèle.</p>" },
+    { "type": "checkbox", "id": "show_search", "label": "Show part search", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Numéro de pièce, marque ou mot-clé (ex. : pompe à eau, Dometic)" },
+    { "type": "text", "id": "button_label", "label": "Button 1 label", "default": "Voir la liquidation" },
+    { "type": "url", "id": "button_link", "label": "Button 1 link" },
+    { "type": "text", "id": "button2_label", "label": "Button 2 label", "default": "Plans d'entretien" },
+    { "type": "url", "id": "button2_link", "label": "Button 2 link" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "35 ans+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "d'expertise en VR" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

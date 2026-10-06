@@ -1,0 +1,38 @@
+<section class="section{% if section.settings.surface %} section--surface{% endif %}">
+  <div class="page-width split{% if section.settings.reverse %} split--reverse{% endif %}">
+    <div class="split__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: section.settings.image.alt | default: section.settings.heading }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="split__content">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h2">{{ section.settings.heading }}</h2>
+      <div class="rte">{{ section.settings.text }}</div>
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn btn--primary">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "div",
+  "class": "section-split",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "checkbox", "id": "reverse", "label": "Image on the right", "default": false },
+    { "type": "checkbox", "id": "surface", "label": "Tinted background", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Depuis 1986" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Des experts du VR, pas un simple entrepôt" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Escale VR est un concessionnaire de véhicules récréatifs établi à Beaumont, sur la Rive-Sud de Québec. Notre comptoir des pièces sert les campeurs de Lévis, Québec, Bellechasse et de partout au Québec. Chaque pièce vendue en ligne est vérifiée par l'équipe qui entretient nos propres VR.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Découvrir Escale VR" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Image with text" }]
+}
+{% endschema %}

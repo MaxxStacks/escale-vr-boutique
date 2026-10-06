@@ -1,0 +1,81 @@
+{%- comment -%}
+  Site-wide entity graph: Organization (the dealership brand), the online store (AutoPartsStore,
+  a LocalBusiness subtype with a physical pickup counter) and WebSite with SearchAction.
+  The @id values stay stable across pages so search and AI engines merge them into one entity.
+{%- endcomment -%}
+{%- liquid
+  assign org_id = settings.main_site_url | append: '/#organization'
+  assign store_id = request.origin | append: '/#store'
+  assign site_id = request.origin | append: '/#website'
+  assign areas = settings.biz_area_served | split: ','
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": {{ org_id | json }},
+      "name": {{ settings.biz_name | json }},
+      "legalName": {{ settings.biz_legal_name | json }},
+      "url": {{ settings.main_site_url | json }},
+      {%- if settings.biz_founded != blank %}"foundingDate": {{ settings.biz_founded | json }},{% endif %}
+      {%- if settings.logo_schema != blank %}"logo": {{ settings.logo_schema | image_url: width: 600 | prepend: 'https:' | json }},{% endif %}
+      "telephone": {{ settings.biz_phone_e164 | json }},
+      "email": {{ settings.biz_email | json }},
+      "sameAs": [
+        {{ settings.social_facebook | json }},
+        {{ settings.social_instagram | json }},
+        {{ request.origin | json }}
+      ]
+    },
+    {
+      "@type": "AutoPartsStore",
+      "@id": {{ store_id | json }},
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | json }},
+      "parentOrganization": { "@id": {{ org_id | json }} },
+      "telephone": {{ settings.biz_phone_e164 | json }},
+      "email": {{ settings.biz_email | json }},
+      "priceRange": "$$",
+      "currenciesAccepted": "CAD",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": {{ settings.biz_street | json }},
+        "addressLocality": {{ settings.biz_city | json }},
+        "addressRegion": {{ settings.biz_region | json }},
+        "postalCode": {{ settings.biz_postal | json }},
+        "addressCountry": "CA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": {{ settings.biz_lat | json }},
+        "longitude": {{ settings.biz_lng | json }}
+      },
+      {%- if settings.biz_hours_schema != blank %}"openingHours": {{ settings.biz_hours_schema | json }},{% endif %}
+      "areaServed": [
+        {%- for area in areas -%}
+          { "@type": "Place", "name": {{ area | strip | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      "knowsLanguage": ["fr-CA", "en-CA"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": {{ site_id | json }},
+      "url": {{ request.origin | json }},
+      "name": {{ shop.name | json }},
+      "inLanguage": {{ request.locale.iso_code | json }},
+      "publisher": { "@id": {{ org_id | json }} },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": {{ request.origin | append: routes.search_url | append: '?q={search_term_string}' | json }}
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>

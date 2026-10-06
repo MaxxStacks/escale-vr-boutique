@@ -1,0 +1,59 @@
+{%- comment -%}
+  Storefront filtering (Shopify Search & Discovery). Plain GET form = crawlable, works without JS;
+  JS auto-submits on change. Usage: {% render 'facets', results: collection, url: collection.url %}
+{%- endcomment -%}
+<form class="facets" id="FacetsForm" action="{{ url }}" method="get" data-facets-form>
+  {%- if results.terms -%}<input type="hidden" name="q" value="{{ results.terms | escape }}"><input type="hidden" name="options[prefix]" value="last">{%- endif -%}
+  {%- if results.sort_by -%}<input type="hidden" name="sort_by" value="{{ results.sort_by }}">{%- endif -%}
+
+  <div class="facets__head">
+    <h2 class="h5">{{ 'sections.filters.title' | t }}</h2>
+    <button type="button" class="btn btn--icon btn--plain facets__close" data-facets-close aria-label="{{ 'general.close' | t }}">{%- render 'icon', name: 'close' -%}</button>
+  </div>
+
+  {%- for filter in results.filters -%}
+    <details class="facet" {% if forloop.index <= 3 or filter.active_values.size > 0 %}open{% endif %}>
+      <summary class="facet__label">
+        {{ filter.label | escape }}
+        {%- if filter.active_values.size > 0 -%}<span class="facet__count">{{ filter.active_values.size }}</span>{%- endif -%}
+        {%- render 'icon', name: 'chevron' -%}
+      </summary>
+      <div class="facet__body">
+        {%- case filter.type -%}
+          {%- when 'list', 'boolean' -%}
+            <ul class="facet__list{% if filter.values.size > 8 %} facet__list--scroll{% endif %}">
+              {%- for value in filter.values -%}
+                <li>
+                  <label class="check{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                    <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                    <span>{{ value.label | escape }}</span>
+                    <span class="muted small">({{ value.count }})</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- when 'price_range' -%}
+            {%- assign max_price = filter.range_max | divided_by: 100 | ceil -%}
+            <div class="price-range">
+              <label>
+                <span class="small muted">{{ 'sections.filters.from' | t }}</span>
+                <input type="number" name="{{ filter.min_value.param_name }}" min="0" max="{{ max_price }}" step="1" inputmode="numeric"
+                  {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100 }}"{% endif %} placeholder="0">
+              </label>
+              <label>
+                <span class="small muted">{{ 'sections.filters.to' | t }}</span>
+                <input type="number" name="{{ filter.max_value.param_name }}" min="0" max="{{ max_price }}" step="1" inputmode="numeric"
+                  {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100 }}"{% endif %} placeholder="{{ max_price }}">
+              </label>
+            </div>
+        {%- endcase -%}
+      </div>
+    </details>
+  {%- endfor -%}
+
+  <noscript><button type="submit" class="btn btn--primary btn--block">{{ 'sections.filters.apply' | t }}</button></noscript>
+  <div class="facets__mobile-actions">
+    <a href="{{ url }}{% if results.terms %}?q={{ results.terms | url_encode }}{% endif %}" class="btn btn--ghost">{{ 'sections.filters.clear' | t }}</a>
+    <button type="submit" class="btn btn--accent">{{ 'sections.filters.apply' | t }}</button>
+  </div>
+</form>

@@ -1,0 +1,36 @@
+{%- comment -%}
+  Keeps Shopify's default rules, then:
+  - stops crawlers wasting budget on faceted/filter URLs (thousands of parts × filters)
+  - explicitly welcomes AI answer-engine crawlers (GEO / AI citations)
+{%- endcomment -%}
+{% for group in robots.default_groups %}
+  {{- group.user_agent }}
+
+  {%- for rule in group.rules -%}
+    {{ rule }}
+  {%- endfor -%}
+
+  {%- if group.user_agent.value == '*' -%}
+    {{ 'Disallow: /collections/*filter.*' }}
+    {{ 'Disallow: /collections/*sort_by*' }}
+    {{ 'Disallow: /search/*filter.*' }}
+  {%- endif -%}
+
+  {%- if group.sitemap != blank -%}
+    {{ group.sitemap }}
+  {%- endif %}
+{% endfor %}
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /

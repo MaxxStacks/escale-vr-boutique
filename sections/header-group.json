@@ -1,0 +1,20 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg1": { "type": "message", "settings": { "text": "Livraison gratuite au Canada dès 150 $ · Cueillette gratuite à Beaumont", "link": "" } },
+        "msg2": { "type": "message", "settings": { "text": "Grande liquidation : plus de 300 000 $ de pièces en inventaire", "link": "shopify://collections/liquidation" } }
+      },
+      "block_order": ["msg1", "msg2"],
+      "settings": { "show_phone": true, "show_main_site": true }
+    },
+    "header": {
+      "type": "header",
+      "settings": { "logo_width": 170, "menu": "main-menu", "sticky": true }
+    }
+  },
+  "order": ["announcement", "header"]
+}

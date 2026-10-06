@@ -1,0 +1,27 @@
+{%- comment -%}
+  Usage: {% render 'price', product: product, variant: variant, size: 'lg' %}
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign price = target.price
+  assign compare = target.compare_at_price
+  if variant == blank and product.price_varies
+    assign price = product.price_min
+    assign compare = product.compare_at_price_min
+  endif
+  assign on_sale = false
+  if compare > price
+    assign on_sale = true
+    assign saving_pct = compare | minus: price | times: 100.0 | divided_by: compare | round
+  endif
+-%}
+<div class="price{% if size %} price--{{ size }}{% endif %}{% if on_sale %} price--sale{% endif %}" data-price>
+  {%- if variant == blank and product.price_varies -%}
+    <span class="price__from">{{ 'products.product.from' | t }}</span>
+  {%- endif -%}
+  <span class="price__current">{{ price | money }}</span>
+  {%- if on_sale -%}
+    <s class="price__compare"><span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>{{ compare | money }}</s>
+    <span class="badge badge--sale">-{{ saving_pct }}&nbsp;%</span>
+  {%- endif -%}
+</div>

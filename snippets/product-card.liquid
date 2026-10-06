@@ -1,0 +1,56 @@
+{%- comment -%}
+  Usage: {% render 'product-card', product: product, lazy: true, position: forloop.index %}
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign part_number = product.metafields.custom.part_number.value | default: variant.sku
+  assign is_liquidation = false
+  if product.tags contains 'liquidation' or product.tags contains 'Liquidation'
+    assign is_liquidation = true
+  endif
+  assign loading = 'lazy'
+  if lazy == false
+    assign loading = 'eager'
+  endif
+-%}
+<article class="card card--product" data-product-card>
+  <a href="{{ product.url }}" class="card__media ratio ratio--{{ settings.card_image_ratio }}" tabindex="-1" aria-hidden="true">
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 720
+        | image_tag:
+          loading: loading,
+          widths: '240, 360, 480, 720',
+          sizes: '(min-width: 1200px) 300px, (min-width: 750px) 33vw, 50vw',
+          alt: product.featured_media.alt | default: product.title
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+    <span class="card__badges">
+      {%- if is_liquidation -%}<span class="badge badge--sale">{{ 'products.badges.liquidation' | t }}</span>{%- endif -%}
+      {%- unless product.available -%}<span class="badge badge--muted">{{ 'products.product.sold_out' | t }}</span>{%- endunless -%}
+    </span>
+  </a>
+  <div class="card__body">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <p class="card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+    <h3 class="card__title"><a href="{{ product.url }}" class="link-cover">{{ product.title | escape }}</a></h3>
+    {%- if settings.card_show_sku and part_number != blank -%}
+      <p class="card__sku">{{ 'products.product.part_number' | t }}&nbsp;: {{ part_number }}</p>
+    {%- endif -%}
+    <div class="card__footer">
+      {%- render 'price', product: product -%}
+      {%- if settings.card_quick_add and product.available and product.has_only_default_variant -%}
+        {%- form 'product', product, class: 'card__quick-add', data-product-form: '' -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+          <button type="submit" class="btn btn--icon btn--accent" aria-label="{{ 'products.product.add_to_cart_named' | t: title: product.title | escape }}">
+            {%- render 'icon', name: 'cart' -%}
+          </button>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,103 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "layout": "plan",
+        "show_dynamic_checkout": false,
+        "low_stock": 3
+      }
+    },
+    "plans": {
+      "type": "service-plans",
+      "settings": {
+        "eyebrow": "Comparer",
+        "heading": "Trouvez le plan qui vous convient",
+        "dark": false
+      },
+      "blocks": {
+        "p1": {
+          "type": "plan",
+          "settings": {
+            "title": "Mise en service printanière",
+            "tagline": "Prêt pour la route dès le premier beau jour",
+            "icon": "sun",
+            "price_suffix": "/ saison",
+            "features": "Dé-hivernation complète du réseau d'eau\nInspection des freins, roulements et pneus\nTest d'étanchéité du toit et des scellants\nVérification propane et détecteurs",
+            "button_label": "Réserver mon plan"
+          }
+        },
+        "p2": {
+          "type": "plan",
+          "settings": {
+            "title": "Plan d'entretien Complet",
+            "tagline": "Le printemps + l'automne, sans y penser",
+            "icon": "shield",
+            "price_suffix": "/ an",
+            "features": "Mise en service printanière\nHivernation à l'automne\nTraitement des scellants du toit\n10 % de rabais sur les pièces toute l'année\nPriorité au calendrier de l'atelier",
+            "featured": true,
+            "button_label": "Choisir le plan Complet"
+          }
+        },
+        "p3": {
+          "type": "plan",
+          "settings": {
+            "title": "Hivernation",
+            "tagline": "Protégez votre investissement contre le gel",
+            "icon": "snow",
+            "price_suffix": "/ saison",
+            "features": "Purge et antigel du réseau d'eau\nEntretien des batteries\nInspection des scellants\nEntreposage disponible sur place",
+            "button_label": "Réserver mon plan"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "eyebrow": "Plans d'entretien",
+        "heading": "Questions sur nos plans",
+        "emit_schema": true,
+        "open_first": true
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Comment se passe la prise de rendez-vous?",
+            "answer": "<p>Après l'achat du plan, l'équipe de l'atelier Escale VR vous appelle dans les 48 heures ouvrables pour fixer une date. Les premières dates du printemps partent vite : réservez tôt.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Le plan est-il remboursable?",
+            "answer": "<p>Un plan non utilisé est remboursable jusqu'à 7 jours avant la date du rendez-vous. Les pièces de remplacement requises sont facturées en sus, avec votre accord préalable.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Mon VR doit-il avoir été acheté chez Escale VR?",
+            "answer": "<p>Non. Les plans d'entretien d'Escale VR s'appliquent à toutes les marques de roulottes, caravanes à sellette, tentes-roulottes et motorisés.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "plans",
+    "faq"
+  ]
+}

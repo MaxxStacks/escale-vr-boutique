@@ -1,0 +1,99 @@
+{%- comment -%}
+  Service / seasonal plans. Each block points at a Shopify product (the plan) so it can be
+  bought online. Features come from the block text, or from the product metafield
+  custom.plan_features (list of single-line text) when the block text is empty.
+{%- endcomment -%}
+<section class="section plans{% if section.settings.dark %} plans--dark{% endif %}" id="plans-{{ section.id }}">
+  <div class="page-width">
+    <div class="section__head section__head--center">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h2">{{ section.settings.heading }}</h2>
+        {%- if section.settings.text != blank -%}<div class="section__sub">{{ section.settings.text }}</div>{%- endif -%}
+      </div>
+    </div>
+    <ul class="plans__grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign p = block.settings.product
+          assign features = block.settings.features | newline_to_br | split: '<br />'
+          if block.settings.features == blank and p.metafields.custom.plan_features.value
+            assign features = p.metafields.custom.plan_features.value
+          endif
+        -%}
+        <li class="plan{% if block.settings.featured %} plan--featured{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.featured -%}<span class="plan__flag">{{ 'sections.plans.popular' | t }}</span>{%- endif -%}
+          <span class="plan__icon">{%- render 'icon', name: block.settings.icon -%}</span>
+          <h3 class="plan__name">{{ block.settings.title | default: p.title }}</h3>
+          <p class="plan__tagline">{{ block.settings.tagline }}</p>
+          <div class="plan__price">
+            {%- if p != blank -%}
+              {%- if p.price_varies -%}<span class="small muted">{{ 'products.product.from' | t }}</span>{%- endif -%}
+              <strong>{{ p.price_min | money_without_trailing_zeros }}</strong>
+            {%- elsif block.settings.price_text != blank -%}
+              <strong>{{ block.settings.price_text }}</strong>
+            {%- endif -%}
+            {%- if block.settings.price_suffix != blank -%}<span class="muted">{{ block.settings.price_suffix }}</span>{%- endif -%}
+          </div>
+          <ul class="plan__features">
+            {%- for f in features -%}
+              {%- assign f_clean = f | strip -%}
+              {%- if f_clean != blank -%}<li>{%- render 'icon', name: 'check' -%}<span>{{ f_clean }}</span></li>{%- endif -%}
+            {%- endfor -%}
+          </ul>
+          <a href="{{ p.url | default: block.settings.link | default: '#' }}" class="btn {% if block.settings.featured %}btn--accent{% else %}btn--primary{% endif %} btn--block">
+            {{ block.settings.button_label }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if section.settings.footnote != blank -%}<p class="plans__note">{{ section.settings.footnote }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Service plans",
+  "tag": "div",
+  "class": "section-plans",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Atelier Escale VR" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Plans d'entretien et mise en service printanière" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Réservez dès maintenant et arrivez au printemps l'esprit tranquille. Nos techniciens certifiés inspectent, entretiennent et préparent votre VR pour la saison.</p>" },
+    { "type": "text", "id": "footnote", "label": "Footnote", "default": "Rendez-vous confirmé par notre équipe dans les 48 h suivant l'achat. Taxes en sus." },
+    { "type": "checkbox", "id": "dark", "label": "Dark background", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Plan product (to sell online)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Mise en service printanière" },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "Prêt pour la route dès le premier beau jour" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "sun", "options": [
+          { "value": "sun", "label": "Sun (spring)" }, { "value": "snow", "label": "Snow (winter)" },
+          { "value": "wrench", "label": "Wrench" }, { "value": "shield", "label": "Shield" }, { "value": "calendar", "label": "Calendar" }
+        ] },
+        { "type": "text", "id": "price_text", "label": "Price text (if no product)" },
+        { "type": "text", "id": "price_suffix", "label": "Price suffix", "default": "/ saison" },
+        { "type": "textarea", "id": "features", "label": "Features (one per line)", "default": "Dé-hivernation complète du réseau d'eau\nInspection des freins, roulements et pneus\nTest d'étanchéité du toit et des scellants\nVérification propane et détecteurs" },
+        { "type": "checkbox", "id": "featured", "label": "Highlight as most popular", "default": false },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Réserver mon plan" },
+        { "type": "url", "id": "link", "label": "Link (if no product)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Service plans",
+      "blocks": [
+        { "type": "plan" },
+        { "type": "plan", "settings": { "title": "Plan d'entretien Complet", "tagline": "Le printemps + l'automne, sans y penser", "icon": "shield", "featured": true, "features": "Mise en service printanière\nHivernation à l'automne\nTraitement des scellants du toit\n10 % de rabais sur les pièces toute l'année\nPriorité au calendrier de l'atelier" } },
+        { "type": "plan", "settings": { "title": "Hivernation", "tagline": "Protégez votre investissement contre le gel", "icon": "snow", "features": "Purge et antigel du réseau d'eau\nEntretien des batteries\nInspection des scellants\nEntreposage disponible sur place" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "emit_schema": true
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "q1"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "faq"
+  ]
+}

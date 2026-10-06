@@ -1,0 +1,30 @@
+<section class="page-width auth">
+  <div class="auth__card">
+    <h1 class="h2">{{ 'customer.register.title' | t }}</h1>
+    {%- form 'create_customer', novalidate: 'novalidate', class: 'form' -%}
+      {{ form.errors | default_errors }}
+      <div class="form__row">
+        <label>{{ 'customer.fields.first_name' | t }}<input type="text" name="customer[first_name]" autocomplete="given-name"></label>
+        <label>{{ 'customer.fields.last_name' | t }}<input type="text" name="customer[last_name]" autocomplete="family-name"></label>
+      </div>
+      <label>{{ 'customer.fields.email' | t }} *<input type="email" name="customer[email]" autocomplete="email" autocapitalize="off" required></label>
+      <label>{{ 'customer.fields.password' | t }} *<input type="password" name="customer[password]" autocomplete="new-password" required></label>
+      <label class="check"><input type="checkbox" name="customer[accepts_marketing]" value="true"><span>{{ 'customer.register.marketing' | t }}</span></label>
+      <button type="submit" class="btn btn--accent btn--block btn--lg">{{ 'customer.register.submit' | t }}</button>
+      <p class="small">{{ 'customer.register.have_account' | t }} <a href="{{ routes.account_login_url }}" class="link">{{ 'customer.login.title' | t }}</a></p>
+    {%- endform -%}
+  </div>
+  <aside class="auth__perks">
+    <h2 class="h4">{{ 'customer.perks.title' | t }}</h2>
+    <ul>
+      <li>{%- render 'icon', name: 'package' -%}{{ 'customer.perks.track' | t }}</li>
+      <li>{%- render 'icon', name: 'calendar' -%}{{ 'customer.perks.pending' | t }}</li>
+      <li>{%- render 'icon', name: 'return' -%}{{ 'customer.perks.reorder' | t }}</li>
+      <li>{%- render 'icon', name: 'tag' -%}{{ 'customer.perks.deals' | t }}</li>
+    </ul>
+  </aside>
+</section>
+
+{% schema %}
+{ "name": "Register", "tag": "div", "class": "section-register", "settings": [] }
+{% endschema %}

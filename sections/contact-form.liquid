@@ -1,0 +1,49 @@
+<section class="section">
+  <div class="page-width contact">
+    <div class="contact__info">
+      <h2 class="h3">{{ section.settings.heading }}</h2>
+      <div class="rte">{{ section.settings.text }}</div>
+      <address class="contact__nap">
+        <strong>{{ settings.biz_legal_name }}</strong><br>
+        {{ settings.biz_street }}, {{ settings.biz_city }} ({{ 'general.province_quebec' | t }}) {{ settings.biz_postal }}<br>
+        <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a> · <a href="mailto:{{ settings.biz_email }}">{{ settings.biz_email }}</a>
+      </address>
+      <h3 class="h5">{{ 'general.hours' | t }}</h3>
+      <p>{{ settings.biz_hours | newline_to_br }}</p>
+      {%- if section.settings.map_query != blank -%}
+        <iframe class="contact__map" title="{{ 'general.map' | t }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q={{ section.settings.map_query | url_encode }}&output=embed"></iframe>
+      {%- endif -%}
+    </div>
+    {%- form 'contact', class: 'form contact__form' -%}
+      {%- if form.posted_successfully? -%}<p class="form-success" role="status">{{ 'contact.success' | t }}</p>{%- endif -%}
+      {{ form.errors | default_errors }}
+      <div class="form__row">
+        <label>{{ 'contact.name' | t }}<input type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}"></label>
+        <label>{{ 'contact.email' | t }} *<input type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}"></label>
+      </div>
+      <div class="form__row">
+        <label>{{ 'contact.phone' | t }}<input type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}"></label>
+        <label>{{ 'contact.rv' | t }}<input type="text" name="contact[vr]" placeholder="{{ 'contact.rv_placeholder' | t }}"></label>
+      </div>
+      <label>{{ 'contact.part' | t }}<input type="text" name="contact[piece]"></label>
+      <label>{{ 'contact.message' | t }} *<textarea name="contact[body]" rows="6" required>{{ form.body }}</textarea></label>
+      <p class="small muted">{{ 'contact.privacy' | t }}</p>
+      <button type="submit" class="btn btn--accent btn--lg">{{ 'contact.send' | t }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "div",
+  "class": "section-contact",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Comptoir des pièces" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Vous ne trouvez pas la pièce? Donnez-nous la marque, le modèle et l'année de votre VR : on la trouve chez nos distributeurs et on vous revient rapidement avec un prix.</p>" },
+    { "type": "text", "id": "map_query", "label": "Google Maps query", "default": "Escale VR, 12 rue de la Chute, Beaumont, QC G0R 1C0" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

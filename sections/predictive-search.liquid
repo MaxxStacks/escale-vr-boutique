@@ -1,0 +1,49 @@
+{%- if predictive_search.performed -%}
+  <div class="predictive__inner" data-predictive-content>
+    {%- if predictive_search.resources.queries.size > 0 -%}
+      <div class="predictive__group">
+        <p class="predictive__heading">{{ 'sections.search.suggestions' | t }}</p>
+        <ul role="listbox">
+          {%- for query in predictive_search.resources.queries -%}
+            <li role="option"><a href="{{ query.url }}">{{ query.styled_text }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+    {%- if predictive_search.resources.collections.size > 0 -%}
+      <div class="predictive__group">
+        <p class="predictive__heading">{{ 'sections.search.collections' | t }}</p>
+        <ul role="listbox">
+          {%- for collection in predictive_search.resources.collections -%}
+            <li role="option"><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <div class="predictive__group predictive__group--products">
+        <p class="predictive__heading">{{ 'sections.search.products' | t }}</p>
+        <ul role="listbox">
+          {%- for product in predictive_search.resources.products limit: 6 -%}
+            <li role="option">
+              <a href="{{ product.url }}" class="predictive__product">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', width: 56, height: 56, alt: '' }}
+                {%- endif -%}
+                <span>
+                  <span class="predictive__title">{{ product.title }}</span>
+                  {%- assign pn = product.metafields.custom.part_number.value | default: product.selected_or_first_available_variant.sku -%}
+                  {%- if pn != blank -%}<span class="predictive__sku">{{ pn }}</span>{%- endif -%}
+                </span>
+                <span class="predictive__price">{{ product.price | money }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+    <a class="predictive__all" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options%5Bprefix%5D=last">
+      {{ 'sections.search.view_all' | t: terms: predictive_search.terms }} {%- render 'icon', name: 'arrow' -%}
+    </a>
+  </div>
+{%- endif -%}

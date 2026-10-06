@@ -1,0 +1,31 @@
+<article class="page-width page-narrow article">
+  {%- render 'breadcrumbs' -%}
+  <header class="article__head">
+    <p class="eyebrow"><time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | time_tag: format: 'date' }}</time>{% if article.author %} · {{ article.author }}{% endif %}</p>
+    <h1 class="h1">{{ article.title }}</h1>
+  </header>
+  {%- if article.image -%}
+    <figure class="article__image">{{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '750, 1100, 1600', sizes: '(min-width: 990px) 800px, 100vw', alt: article.image.alt | default: article.title }}</figure>
+  {%- endif -%}
+  <div class="rte">{{ article.content }}</div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "url": {{ request.origin | append: article.url | json }},
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "inLanguage": {{ request.locale.iso_code | json }},
+  {%- if article.image %}"image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}
+  "author": { "@type": "Person", "name": {{ article.author | json }} },
+  "publisher": { "@id": {{ settings.main_site_url | append: '/#organization' | json }} },
+  "description": {{ article.excerpt_or_content | strip_html | truncate: 300 | json }}
+}
+</script>
+
+{% schema %}
+{ "name": "Article", "tag": "div", "class": "section-main-article", "settings": [] }
+{% endschema %}

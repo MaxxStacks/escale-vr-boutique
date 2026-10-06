@@ -1,0 +1,19 @@
+{%- comment -%}
+  Normalized order status pill. Usage: {% render 'order-status', order: order %}
+  Pending = open and not fully fulfilled (paid or awaiting payment).
+{%- endcomment -%}
+{%- liquid
+  if order.cancelled
+    assign status_key = 'cancelled'
+  elsif order.fulfillment_status == 'fulfilled'
+    assign status_key = 'shipped'
+  elsif order.fulfillment_status == 'partial'
+    assign status_key = 'partial'
+  elsif order.financial_status == 'pending' or order.financial_status == 'authorized'
+    assign status_key = 'awaiting_payment'
+  else
+    assign status_key = 'processing'
+  endif
+  assign tkey = 'customer.status.' | append: status_key
+-%}
+<span class="status status--{{ status_key }}">{{ tkey | t }}</span>

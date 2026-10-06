@@ -1,0 +1,88 @@
+{%- liquid
+  assign threshold = settings.free_shipping_threshold | plus: 0 | times: 100
+  assign remaining = threshold | minus: cart.total_price
+  assign remaining_money = remaining | money
+  if threshold > 0
+    assign progress = cart.total_price | times: 100 | divided_by: threshold
+    if progress > 100
+      assign progress = 100
+    endif
+  endif
+-%}
+<div class="cart-drawer" id="CartDrawer" data-cart-drawer aria-hidden="true">
+  <div class="cart-drawer__overlay" data-cart-close></div>
+  <div class="cart-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle" tabindex="-1">
+    <div class="cart-drawer__head">
+      <h2 id="CartDrawerTitle" class="h4">{{ 'sections.cart.title' | t }} <span class="muted">({{ cart.item_count }})</span></h2>
+      <button type="button" class="btn btn--icon btn--plain" data-cart-close aria-label="{{ 'general.close' | t }}">{%- render 'icon', name: 'close' -%}</button>
+    </div>
+
+    {%- if threshold > 0 and cart.item_count > 0 -%}
+      <div class="ship-meter">
+        {%- if remaining > 0 -%}
+          <p>{{ 'sections.cart.free_shipping_remaining' | t: amount: remaining_money }}</p>
+        {%- else -%}
+          <p><strong>{{ 'sections.cart.free_shipping_unlocked' | t }}</strong></p>
+        {%- endif -%}
+        <div class="ship-meter__bar"><span style="width: {{ progress }}%"></span></div>
+      </div>
+    {%- endif -%}
+
+    <div class="cart-drawer__items">
+      {%- if cart.item_count == 0 -%}
+        <div class="cart-empty">
+          <p>{{ 'sections.cart.empty' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--accent">{{ 'sections.cart.continue' | t }}</a>
+        </div>
+      {%- else -%}
+        <ul class="line-items">
+          {%- for item in cart.items -%}
+            <li class="line-item" data-line="{{ forloop.index }}" data-key="{{ item.key }}">
+              <a href="{{ item.url }}" class="line-item__media">
+                {%- if item.image -%}{{ item.image | image_url: width: 160 | image_tag: loading: 'lazy', width: 80, height: 80, alt: item.title | escape }}{%- endif -%}
+              </a>
+              <div class="line-item__info">
+                <a href="{{ item.url }}" class="line-item__title">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}<p class="muted small">{{ item.variant.title }}</p>{%- endunless -%}
+                {%- if item.sku != blank -%}<p class="muted small">{{ 'products.product.part_number' | t }} : {{ item.sku }}</p>{%- endif -%}
+                <div class="qty qty--sm">
+                  <button type="button" class="qty__btn" data-qty-change="{{ item.quantity | minus: 1 }}" aria-label="{{ 'products.product.decrease' | t }}">{%- render 'icon', name: 'minus' -%}</button>
+                  <span class="qty__value" aria-live="polite">{{ item.quantity }}</span>
+                  <button type="button" class="qty__btn" data-qty-change="{{ item.quantity | plus: 1 }}" aria-label="{{ 'products.product.increase' | t }}">{%- render 'icon', name: 'plus' -%}</button>
+                </div>
+              </div>
+              <div class="line-item__price">
+                {%- if item.original_line_price != item.final_line_price -%}<s class="muted small">{{ item.original_line_price | money }}</s>{%- endif -%}
+                <strong>{{ item.final_line_price | money }}</strong>
+                <button type="button" class="link small" data-qty-change="0">{{ 'sections.cart.remove' | t }}</button>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      <div class="cart-drawer__foot">
+        <div class="cart-drawer__total">
+          <span>{{ 'sections.cart.subtotal' | t }}</span>
+          <strong>{{ cart.total_price | money_with_currency }}</strong>
+        </div>
+        <p class="muted small">{{ 'sections.cart.taxes_note' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button type="submit" name="checkout" class="btn btn--accent btn--block btn--lg">{{ 'sections.cart.checkout' | t }}</button>
+        </form>
+        <a href="{{ routes.cart_url }}" class="btn btn--ghost btn--block">{{ 'sections.cart.view_cart' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "tag": "div",
+  "class": "section-cart-drawer",
+  "settings": []
+}
+{% endschema %}

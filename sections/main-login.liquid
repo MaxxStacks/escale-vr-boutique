@@ -1,0 +1,47 @@
+<section class="page-width auth">
+  <div class="auth__card" id="login">
+    <h1 class="h2">{{ 'customer.login.title' | t }}</h1>
+    {%- form 'customer_login', novalidate: 'novalidate', class: 'form' -%}
+      {{ form.errors | default_errors }}
+      <label>{{ 'customer.fields.email' | t }}<input type="email" name="customer[email]" autocomplete="email" autocapitalize="off" required></label>
+      {%- if form.password_needed -%}
+        <label>{{ 'customer.fields.password' | t }}<input type="password" name="customer[password]" autocomplete="current-password" required></label>
+        <a href="#recover" class="link small">{{ 'customer.login.forgot' | t }}</a>
+      {%- endif -%}
+      <button type="submit" class="btn btn--accent btn--block btn--lg">{{ 'customer.login.submit' | t }}</button>
+      <p class="small">{{ 'customer.login.no_account' | t }} <a href="{{ routes.account_register_url }}" class="link">{{ 'customer.register.title' | t }}</a></p>
+    {%- endform -%}
+  </div>
+
+  <div class="auth__card" id="recover">
+    <h2 class="h3">{{ 'customer.recover.title' | t }}</h2>
+    <p class="muted">{{ 'customer.recover.subtext' | t }}</p>
+    {%- form 'recover_customer_password', class: 'form' -%}
+      {%- if form.posted_successfully? -%}<p class="form-success" role="status">{{ 'customer.recover.success' | t }}</p>{%- endif -%}
+      {{ form.errors | default_errors }}
+      <label>{{ 'customer.fields.email' | t }}<input type="email" name="email" autocomplete="email" required></label>
+      <button type="submit" class="btn btn--primary">{{ 'customer.recover.submit' | t }}</button>
+    {%- endform -%}
+  </div>
+
+  {%- if shop.checkout.guest_login -%}
+    <div class="auth__card">
+      <h2 class="h4">{{ 'customer.login.guest_title' | t }}</h2>
+      {%- form 'guest_login' -%}<button type="submit" class="btn btn--ghost">{{ 'customer.login.guest_continue' | t }}</button>{%- endform -%}
+    </div>
+  {%- endif -%}
+
+  <aside class="auth__perks">
+    <h2 class="h4">{{ 'customer.perks.title' | t }}</h2>
+    <ul>
+      <li>{%- render 'icon', name: 'package' -%}{{ 'customer.perks.track' | t }}</li>
+      <li>{%- render 'icon', name: 'calendar' -%}{{ 'customer.perks.pending' | t }}</li>
+      <li>{%- render 'icon', name: 'return' -%}{{ 'customer.perks.reorder' | t }}</li>
+      <li>{%- render 'icon', name: 'tag' -%}{{ 'customer.perks.deals' | t }}</li>
+    </ul>
+  </aside>
+</section>
+
+{% schema %}
+{ "name": "Login", "tag": "div", "class": "section-login", "settings": [] }
+{% endschema %}

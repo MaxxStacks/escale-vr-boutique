@@ -1,0 +1,289 @@
+{
+  "accessibility": {
+    "skip_to_content": "Passer au contenu"
+  },
+  "breadcrumbs": {
+    "home": "Accueil",
+    "label": "Fil d'Ariane",
+    "shop": "Boutique"
+  },
+  "contact": {
+    "email": "Courriel",
+    "message": "Message",
+    "name": "Nom",
+    "part": "Pièce recherchée (numéro ou description)",
+    "phone": "Téléphone",
+    "privacy": "Vos renseignements servent uniquement à répondre à votre demande, conformément à notre politique de confidentialité (Loi 25).",
+    "rv": "Votre VR (marque, modèle, année)",
+    "rv_placeholder": "ex. : Jayco Jay Flight 264BH 2021",
+    "send": "Envoyer ma demande",
+    "success": "Merci! Notre comptoir des pièces vous répondra rapidement."
+  },
+  "customer": {
+    "account": {
+      "details": "Mes informations",
+      "help_text": "Une question sur une commande? Notre comptoir des pièces est là pour vous.",
+      "help_title": "Besoin d'aide?",
+      "logout": "Se déconnecter",
+      "orders_pending": "Commandes en cours",
+      "orders_total": "Commandes",
+      "title": "Mon compte",
+      "total_spent": "Total des achats",
+      "welcome": "Bonjour {{ name }}"
+    },
+    "activate": {
+      "decline": "Refuser l'invitation",
+      "submit": "Activer mon compte",
+      "subtext": "Créez votre mot de passe pour activer votre compte.",
+      "title": "Activer votre compte"
+    },
+    "addresses": {
+      "add": "Ajouter une adresse",
+      "default": "Adresse par défaut",
+      "delete": "Supprimer",
+      "delete_confirm": "Supprimer cette adresse?",
+      "edit": "Modifier",
+      "manage": "Gérer mes adresses ({{ count }})",
+      "save": "Enregistrer l'adresse",
+      "set_default": "Définir comme adresse par défaut",
+      "title": "Mes adresses"
+    },
+    "fields": {
+      "address1": "Adresse",
+      "address2": "Appartement, bureau, etc.",
+      "city": "Ville",
+      "company": "Entreprise",
+      "country": "Pays",
+      "email": "Courriel",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe",
+      "phone": "Téléphone",
+      "province": "Province",
+      "zip": "Code postal"
+    },
+    "login": {
+      "forgot": "Mot de passe oublié?",
+      "guest_continue": "Continuer comme invité",
+      "guest_title": "Commander sans compte",
+      "no_account": "Pas encore de compte?",
+      "submit": "Se connecter",
+      "title": "Connexion"
+    },
+    "order": {
+      "back": "Retour à mon compte",
+      "billing_address": "Adresse de facturation",
+      "cancelled": "Commande annulée le {{ date }}",
+      "discount": "Rabais",
+      "help": "Mentionnez la commande {{ name }} lors de votre appel.",
+      "payment_status": "Paiement",
+      "product": "Produit",
+      "progress": "Progression de la commande",
+      "quantity": "Qté",
+      "shipment": "Expédition",
+      "shipping": "Livraison",
+      "shipping_address": "Adresse de livraison",
+      "step_paid": "Paiement confirmé",
+      "step_received": "Commande reçue",
+      "step_shipped": "Expédiée",
+      "step_shipping": "En préparation",
+      "subtotal": "Sous-total",
+      "title": "Commande {{ name }}",
+      "total": "Total",
+      "track": "Suivre le colis"
+    },
+    "orders": {
+      "all": "Toutes",
+      "completed": "Complétées",
+      "date": "Date",
+      "none": "Vous n'avez pas encore passé de commande.",
+      "order": "Commande",
+      "pending": "En attente",
+      "status": "Statut",
+      "total": "Total",
+      "track": "Détails et suivi",
+      "view": "Voir"
+    },
+    "perks": {
+      "deals": "Accès aux liquidations avant tout le monde",
+      "pending": "Voir vos commandes en attente en temps réel",
+      "reorder": "Retrouver vos pièces pour les recommander",
+      "title": "Avec un compte Escale VR",
+      "track": "Suivre vos colis et vos numéros de suivi"
+    },
+    "recover": {
+      "submit": "Envoyer le lien",
+      "subtext": "Nous vous enverrons un courriel pour réinitialiser votre mot de passe.",
+      "success": "Courriel envoyé! Vérifiez votre boîte de réception.",
+      "title": "Réinitialiser le mot de passe"
+    },
+    "register": {
+      "have_account": "Déjà un compte?",
+      "marketing": "Recevoir les liquidations et rappels d'entretien par courriel",
+      "submit": "Créer mon compte",
+      "title": "Créer un compte"
+    },
+    "reset": {
+      "submit": "Réinitialiser",
+      "title": "Nouveau mot de passe"
+    },
+    "status": {
+      "processing": "En traitement",
+      "shipped": "Expédiée",
+      "partial": "Partiellement expédiée",
+      "awaiting_payment": "Paiement en attente",
+      "cancelled": "Annulée"
+    }
+  },
+  "general": {
+    "close": "Fermer",
+    "error": "Une erreur est survenue. Veuillez réessayer.",
+    "hours": "Heures d'ouverture",
+    "language": "Langue",
+    "map": "Carte : Escale VR à Beaumont",
+    "meta": {
+      "page": "Page {{ page }}",
+      "tagged": "Étiqueté « {{ tags }} »"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "next": "Page suivante",
+      "previous": "Page précédente"
+    },
+    "password_owner": "Vous êtes le propriétaire?",
+    "payment_methods": "Modes de paiement",
+    "pickup_note": "Cueillette gratuite au comptoir",
+    "province_quebec": "Québec",
+    "rights": "Tous droits réservés."
+  },
+  "gift_card": {
+    "code": "Code",
+    "expired": "Cette carte-cadeau est expirée ou désactivée.",
+    "expires_on": "Expire le {{ date }}",
+    "shop": "Magasiner",
+    "title": "Votre carte-cadeau"
+  },
+  "newsletter": {
+    "button": "M'inscrire",
+    "label": "Votre courriel",
+    "success": "Merci! Vous êtes inscrit."
+  },
+  "products": {
+    "assurances": {
+      "expert": "Un doute sur la compatibilité? Appelez-nous :",
+      "pickup": "Cueillette gratuite à Beaumont (sortie 337, A-20)",
+      "plan_booking": "Rendez-vous confirmé sous 48 h ouvrables",
+      "plan_techs": "Réalisé à l'atelier Escale VR de Beaumont",
+      "returns": "Retours acceptés sous {{ days }} jours (pièces neuves non installées)",
+      "shipping": "Livraison gratuite au Canada dès {{ threshold }} $"
+    },
+    "badges": {
+      "liquidation": "Liquidation"
+    },
+    "product": {
+      "add_to_cart": "Ajouter au panier",
+      "add_to_cart_named": "Ajouter {{ title }} au panier",
+      "backorder": "Sur commande : expédié sous 5 à 10 jours",
+      "book_plan": "Réserver ce plan",
+      "category": "Catégorie",
+      "condition": "État",
+      "decrease": "Diminuer la quantité",
+      "from": "À partir de",
+      "in_stock": "En stock à Beaumont, prêt à expédier",
+      "increase": "Augmenter la quantité",
+      "low_stock": {
+        "one": "Plus que {{ count }} en stock",
+        "other": "Plus que {{ count }} en stock"
+      },
+      "media_n": "Voir l'image {{ n }}",
+      "out_of_stock": "Épuisé",
+      "part_number": "N° de pièce",
+      "quantity": "Quantité",
+      "regular_price": "Prix régulier",
+      "sold_out": "Épuisé",
+      "taxes_note": "Taxes en sus. Frais de livraison calculés à la caisse.",
+      "unavailable": "Non disponible"
+    },
+    "tabs": {
+      "compatibility": "Compatibilité",
+      "description": "Description",
+      "shipping": "Livraison et retours",
+      "shipping_default": "Expédition depuis Beaumont (Québec) partout au Canada, gratuite dès {{ threshold }} $. Cueillette gratuite au comptoir. Retours acceptés sous {{ days }} jours pour les pièces neuves non installées dans leur emballage d'origine.",
+      "specifications": "Caractéristiques"
+    }
+  },
+  "sections": {
+    "announcement": {
+      "label": "Annonces",
+      "main_site": "← escalevr.ca"
+    },
+    "cart": {
+      "checkout": "Passer à la caisse",
+      "continue": "Continuer à magasiner",
+      "empty": "Votre panier est vide.",
+      "free_shipping_remaining": "Plus que {{ amount }} pour la livraison gratuite",
+      "free_shipping_unlocked": "Livraison gratuite débloquée!",
+      "login_prompt_html": "Déjà client? <a href=\"{{ url }}\" class=\"link\">Connectez-vous</a> pour retrouver vos commandes.",
+      "note": "Note pour le comptoir (modèle de VR, instructions)",
+      "note_placeholder": "ex. : Keystone Cougar 2019, cueillette jeudi",
+      "product": "Produit",
+      "remove": "Retirer",
+      "subtotal": "Sous-total",
+      "taxes_note": "Taxes et livraison calculées à la caisse.",
+      "title": "Panier",
+      "total": "Total",
+      "update": "Mettre à jour",
+      "view_cart": "Voir le panier"
+    },
+    "collection": {
+      "empty": "Aucun produit ne correspond à ces filtres.",
+      "empty_help": "On peut probablement la commander pour vous : appelez le comptoir des pièces au {{ phone }}.",
+      "products_count": {
+        "one": "{{ count }} produit",
+        "other": "{{ count }} produits"
+      },
+      "view_all": "Tout voir"
+    },
+    "filters": {
+      "apply": "Appliquer",
+      "clear": "Effacer les filtres",
+      "from": "De ($)",
+      "sort": "Trier par",
+      "title": "Filtrer",
+      "to": "À ($)"
+    },
+    "header": {
+      "boutique": "Boutique",
+      "menu": "Menu principal",
+      "view_all": "Tout voir :"
+    },
+    "plans": {
+      "popular": "Le plus populaire"
+    },
+    "search": {
+      "collections": "Catégories",
+      "count": {
+        "one": "{{ count }} résultat",
+        "other": "{{ count }} résultats"
+      },
+      "label": "Rechercher une pièce",
+      "no_results": "Aucun résultat pour « {{ terms }} »",
+      "placeholder": "N° de pièce, marque, mot-clé…",
+      "products": "Produits",
+      "request_part": "Demander cette pièce",
+      "results_for": "Résultats pour « {{ terms }} »",
+      "submit": "Rechercher",
+      "suggestions": "Suggestions",
+      "title": "Rechercher une pièce",
+      "view_all": "Voir tous les résultats pour « {{ terms }} »"
+    }
+  },
+  "templates": {
+    "404": {
+      "home": "Retour à l'accueil",
+      "subtext": "Cette page n'existe plus, mais la pièce que vous cherchez est peut-être encore en stock.",
+      "title": "Page introuvable"
+    }
+  }
+}

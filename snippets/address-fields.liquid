@@ -1,0 +1,21 @@
+{%- comment -%} Usage inside a customer_address form: {% render 'address-fields', form: form, id: 'new' %} {%- endcomment -%}
+<div class="form__row">
+  <label>{{ 'customer.fields.first_name' | t }}<input type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name"></label>
+  <label>{{ 'customer.fields.last_name' | t }}<input type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name"></label>
+</div>
+<label>{{ 'customer.fields.company' | t }}<input type="text" name="address[company]" value="{{ form.company }}" autocomplete="organization"></label>
+<label>{{ 'customer.fields.address1' | t }}<input type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1"></label>
+<label>{{ 'customer.fields.address2' | t }}<input type="text" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2"></label>
+<div class="form__row">
+  <label>{{ 'customer.fields.city' | t }}<input type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2"></label>
+  <label>{{ 'customer.fields.zip' | t }}<input type="text" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code"></label>
+</div>
+<div class="form__row">
+  <label>{{ 'customer.fields.country' | t }}
+    <select name="address[country]" data-country-select data-default="{{ form.country | default: 'Canada' }}" data-province-target="Province-{{ id }}">{{ all_country_option_tags }}</select>
+  </label>
+  <label>{{ 'customer.fields.province' | t }}
+    <select name="address[province]" id="Province-{{ id }}" data-default="{{ form.province | default: 'Quebec' }}"></select>
+  </label>
+</div>
+<label>{{ 'customer.fields.phone' | t }}<input type="tel" name="address[phone]" value="{{ form.phone }}" autocomplete="tel"></label>

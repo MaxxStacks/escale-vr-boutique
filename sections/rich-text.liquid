@@ -1,0 +1,38 @@
+<section class="section{% if section.settings.surface %} section--surface{% endif %}">
+  <div class="page-width rich rich--{{ section.settings.align }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'eyebrow' -%}<p class="eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {%- when 'heading' -%}<{{ block.settings.tag }} class="{% if block.settings.tag == 'h1' %}h1{% else %}h2{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text }}</{{ block.settings.tag }}>
+        {%- when 'text' -%}<div class="rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- when 'button' -%}<a href="{{ block.settings.link }}" class="btn btn--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "div",
+  "class": "section-rich-text",
+  "settings": [
+    { "type": "select", "id": "align", "label": "Alignment", "default": "center", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }] },
+    { "type": "checkbox", "id": "surface", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "limit": 1, "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Escale VR" }] },
+    { "type": "heading", "name": "Heading", "settings": [
+      { "type": "text", "id": "text", "label": "Heading", "default": "Titre" },
+      { "type": "select", "id": "tag", "label": "HTML tag", "default": "h2", "options": [{ "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" }, { "value": "h3", "label": "H3" }] }
+    ] },
+    { "type": "text", "name": "Text", "settings": [{ "type": "richtext", "id": "text", "label": "Text", "default": "<p>Texte</p>" }] },
+    { "type": "button", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "En savoir plus" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "style", "label": "Style", "default": "primary", "options": [{ "value": "primary", "label": "Primary" }, { "value": "accent", "label": "Accent" }, { "value": "ghost", "label": "Outline" }] }
+    ] }
+  ],
+  "presets": [{ "name": "Rich text", "blocks": [{ "type": "heading" }, { "type": "text" }] }]
+}
+{% endschema %}

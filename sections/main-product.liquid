@@ -1,0 +1,213 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign part_number = product.metafields.custom.part_number.value
+  assign compat = product.metafields.custom.compatibility
+  assign specs = product.metafields.custom.specifications
+  assign is_plan = false
+  if section.settings.layout == 'plan'
+    assign is_plan = true
+  endif
+  assign plan_features = product.metafields.custom.plan_features.value
+  assign is_liquidation = false
+  if product.tags contains 'liquidation' or product.tags contains 'Liquidation'
+    assign is_liquidation = true
+  endif
+-%}
+<section class="product page-width{% if is_plan %} product--plan{% endif %}" data-product-section data-section-id="{{ section.id }}" data-product-url="{{ product.url }}">
+  {%- render 'breadcrumbs' -%}
+
+  <div class="product__grid">
+    <div class="product__gallery" data-gallery>
+      <div class="gallery__main">
+        {%- if product.media.size > 0 -%}
+          {%- for media in product.media -%}
+            <figure class="gallery__slide{% if media.id == current_variant.featured_media.id or forloop.first and current_variant.featured_media == blank %} is-active{% endif %}" data-media-id="{{ media.id }}">
+              {%- case media.media_type -%}
+                {%- when 'image' -%}
+                  {%- liquid
+                    assign loading = 'lazy'
+                    assign priority = 'auto'
+                    if forloop.first
+                      assign loading = 'eager'
+                      assign priority = 'high'
+                    endif
+                  -%}
+                  {{ media | image_url: width: 1400 | image_tag: loading: loading, fetchpriority: priority, widths: '550, 750, 1000, 1400', sizes: '(min-width: 990px) 55vw, 100vw', alt: media.alt | default: product.title }}
+                {%- when 'video', 'external_video' -%}
+                  {{ media | media_tag: image_size: '1400x' }}
+                {%- else -%}
+                  {{ media | media_tag }}
+              {%- endcase -%}
+            </figure>
+          {%- endfor -%}
+        {%- else -%}
+          <figure class="gallery__slide is-active">{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}</figure>
+        {%- endif -%}
+        {%- if is_liquidation -%}<span class="badge badge--sale badge--lg gallery__badge">{{ 'products.badges.liquidation' | t }}</span>{%- endif -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <ul class="gallery__thumbs" role="list">
+          {%- for media in product.media -%}
+            <li>
+              <button type="button" class="gallery__thumb{% if forloop.first %} is-active{% endif %}" data-thumb="{{ media.id }}" aria-label="{{ 'products.product.media_n' | t: n: forloop.index }}">
+                {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', width: 80, height: 80, alt: '' }}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      {%- if product.vendor != blank -%}
+        <p class="product__vendor">{{ product.vendor | link_to_vendor }}</p>
+      {%- endif -%}
+      <h1 class="product__title h2">{{ product.title }}</h1>
+
+      <dl class="product__ids">
+        <div><dt>{{ 'products.product.part_number' | t }}</dt><dd data-sku>{{ part_number | default: current_variant.sku | default: '—' }}</dd></div>
+        {%- if product.type != blank -%}<div><dt>{{ 'products.product.category' | t }}</dt><dd>{{ product.type }}</dd></div>{%- endif -%}
+        {%- assign cond = product.metafields.custom.condition.value -%}
+        {%- if cond != blank -%}<div><dt>{{ 'products.product.condition' | t }}</dt><dd>{{ cond }}</dd></div>{%- endif -%}
+      </dl>
+
+      <div class="product__price" data-price-wrap>
+        {%- render 'price', product: product, variant: current_variant, size: 'lg' -%}
+        <p class="small muted">{{ 'products.product.taxes_note' | t }}</p>
+      </div>
+
+      {%- if is_plan and plan_features -%}
+        <ul class="plan__features plan__features--product">
+          {%- for f in plan_features -%}<li>{%- render 'icon', name: 'check' -%}<span>{{ f }}</span></li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- form 'product', product, class: 'product-form', id: 'ProductForm', data-product-form: '', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+        {%- unless product.has_only_default_variant -%}
+          <div class="variants" data-variant-picker>
+            {%- for option in product.options_with_values -%}
+              <fieldset class="variants__option">
+                <legend>{{ option.name }}&nbsp;: <span data-option-selected="{{ forloop.index0 }}">{{ option.selected_value }}</span></legend>
+                <div class="variants__values">
+                  {%- for value in option.values -%}
+                    <label class="pill">
+                      <input type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" data-option-index="{{ forloop.parentloop.index0 }}" {% if option.selected_value == value %}checked{% endif %}>
+                      <span>{{ value }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          </div>
+          <script type="application/json" data-variants-json>
+            {{ product.variants | json }}
+          </script>
+        {%- endunless -%}
+
+        <p class="stock" data-stock>
+          {%- if current_variant.available -%}
+            {%- if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= 0 -%}
+              <span class="stock__dot stock__dot--warn"></span>{{ 'products.product.backorder' | t }}
+            {%- elsif current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= section.settings.low_stock -%}
+              <span class="stock__dot stock__dot--warn"></span>{{ 'products.product.low_stock' | t: count: current_variant.inventory_quantity }}
+            {%- else -%}
+              <span class="stock__dot"></span>{{ 'products.product.in_stock' | t }}
+            {%- endif -%}
+          {%- else -%}
+            <span class="stock__dot stock__dot--out"></span>{{ 'products.product.out_of_stock' | t }}
+          {%- endif -%}
+        </p>
+
+        <div class="product-form__buy">
+          {%- unless is_plan -%}
+            <div class="qty">
+              <button type="button" class="qty__btn" data-qty-step="-1" aria-label="{{ 'products.product.decrease' | t }}">{%- render 'icon', name: 'minus' -%}</button>
+              <label for="Quantity-{{ section.id }}" class="visually-hidden">{{ 'products.product.quantity' | t }}</label>
+              <input id="Quantity-{{ section.id }}" class="qty__input" type="number" name="quantity" value="1" min="1" inputmode="numeric">
+              <button type="button" class="qty__btn" data-qty-step="1" aria-label="{{ 'products.product.increase' | t }}">{%- render 'icon', name: 'plus' -%}</button>
+            </div>
+          {%- endunless -%}
+          <button type="submit" name="add" class="btn btn--accent btn--lg product-form__submit" data-add-button {% unless current_variant.available %}disabled{% endunless %}>
+            <span data-add-label>{%- if current_variant.available -%}{% if is_plan %}{{ 'products.product.book_plan' | t }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}</span>
+          </button>
+        </div>
+        {%- if section.settings.show_dynamic_checkout -%}
+          <div class="product-form__dynamic">{{ form | payment_button }}</div>
+        {%- endif -%}
+        <p class="form-error" role="alert" data-form-error hidden></p>
+      {%- endform -%}
+
+      <ul class="product__assurances">
+        {%- if is_plan -%}
+          <li>{%- render 'icon', name: 'calendar' -%}<span>{{ 'products.assurances.plan_booking' | t }}</span></li>
+          <li>{%- render 'icon', name: 'wrench' -%}<span>{{ 'products.assurances.plan_techs' | t }}</span></li>
+        {%- else -%}
+          <li>{%- render 'icon', name: 'truck' -%}<span>{{ 'products.assurances.shipping' | t: threshold: settings.free_shipping_threshold }}</span></li>
+          {%- if settings.pickup_enabled -%}<li>{%- render 'icon', name: 'store' -%}<span>{{ 'products.assurances.pickup' | t }}</span></li>{%- endif -%}
+          <li>{%- render 'icon', name: 'return' -%}<span>{{ 'products.assurances.returns' | t: days: settings.return_days }}</span></li>
+        {%- endif -%}
+        <li>{%- render 'icon', name: 'phone' -%}<span>{{ 'products.assurances.expert' | t }} <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a></span></li>
+      </ul>
+
+      <div class="product__accordions">
+        <details class="accordion" open>
+          <summary><h2 class="accordion__title">{{ 'products.tabs.description' | t }}</h2>{%- render 'icon', name: 'plus' -%}</summary>
+          <div class="accordion__body rte">{{ product.description }}</div>
+        </details>
+        {%- if specs != blank -%}
+          <details class="accordion">
+            <summary><h2 class="accordion__title">{{ 'products.tabs.specifications' | t }}</h2>{%- render 'icon', name: 'plus' -%}</summary>
+            <div class="accordion__body rte">{{ specs | metafield_tag }}</div>
+          </details>
+        {%- endif -%}
+        {%- if compat != blank -%}
+          <details class="accordion">
+            <summary><h2 class="accordion__title">{{ 'products.tabs.compatibility' | t }}</h2>{%- render 'icon', name: 'plus' -%}</summary>
+            <div class="accordion__body rte">{{ compat | metafield_tag }}</div>
+          </details>
+        {%- endif -%}
+        {%- unless is_plan -%}
+          <details class="accordion">
+            <summary><h2 class="accordion__title">{{ 'products.tabs.shipping' | t }}</h2>{%- render 'icon', name: 'plus' -%}</summary>
+            <div class="accordion__body rte">
+              {%- if section.settings.shipping_page != blank -%}
+                {{ section.settings.shipping_page.content }}
+              {%- else -%}
+                <p>{{ 'products.tabs.shipping_default' | t: threshold: settings.free_shipping_threshold, days: settings.return_days }}</p>
+              {%- endif -%}
+            </div>
+          </details>
+        {%- endunless -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-atc" data-sticky-atc hidden>
+    <div class="page-width sticky-atc__inner">
+      <span class="sticky-atc__title">{{ product.title }}</span>
+      <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+      <button type="submit" form="ProductForm" class="btn btn--accent" data-sticky-add {% unless current_variant.available %}disabled{% endunless %}>{{ 'products.product.add_to_cart' | t }}</button>
+    </div>
+  </div>
+</section>
+
+{%- render 'schema-product' -%}
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "div",
+  "class": "section-main-product",
+  "settings": [
+    { "type": "select", "id": "layout", "label": "Layout", "default": "part", "options": [
+      { "value": "part", "label": "Part / accessory" },
+      { "value": "plan", "label": "Service plan" }
+    ] },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show Shop Pay / dynamic checkout", "default": true },
+    { "type": "range", "id": "low_stock", "label": "Low stock warning at", "min": 1, "max": 10, "step": 1, "default": 3 },
+    { "type": "page", "id": "shipping_page", "label": "Shipping & returns page (accordion content)" }
+  ]
+}
+{% endschema %}

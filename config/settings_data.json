@@ -1,0 +1,11 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_primary": "#12263A",
+      "color_accent": "#E2702A",
+      "type_header_font": "montserrat_n7",
+      "type_body_font": "assistant_n4"
+    }
+  }
+}

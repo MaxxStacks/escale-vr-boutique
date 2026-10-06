@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "layout": "part",
+        "show_dynamic_checkout": true,
+        "low_stock": 3
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Souvent achetés ensemble",
+        "intent": "related",
+        "limit": 4
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}
