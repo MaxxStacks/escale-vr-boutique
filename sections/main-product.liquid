@@ -173,7 +173,9 @@
 
         <div class="product__availability">
           <p class="stock" data-stock>
-            {%- if current_variant.available -%}
+            {%- if is_plan -%}
+              <span class="stock__dot"></span>{{ 'products.product.plan_available' | t }}
+            {%- elsif current_variant.available -%}
               {%- if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= 0 -%}
                 <span class="stock__dot stock__dot--warn"></span>{{ 'products.product.backorder' | t }}
               {%- elsif current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= section.settings.low_stock -%}

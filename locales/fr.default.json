@@ -224,7 +224,8 @@
       "pickup_at": "Cueillette disponible à {{ location }} · {{ time }}",
       "save_pct": "-{{ pct }} %",
       "you_save": "Vous économisez {{ amount }}",
-      "zoom": "Agrandir l'image"
+      "zoom": "Agrandir l'image",
+      "plan_available": "Rendez-vous disponibles à l'atelier de Beaumont"
     },
     "tabs": {
       "compatibility": "Compatibilité",

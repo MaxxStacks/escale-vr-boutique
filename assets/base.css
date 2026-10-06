@@ -473,8 +473,10 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 /* ---------- Collection ---------- */
 .coll-hero { position: relative; overflow: hidden; color: #fff; background: radial-gradient(1200px 400px at 85% -10%, rgba(245,144,29,.25), transparent 60%), linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%); }
 .coll-hero--image { background: var(--c-primary-dark); }
-.coll-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .32; }
-.coll-hero__inner { position: relative; padding-block: 28px 30px; }
+.coll-hero__img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
+.coll-hero--image::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, var(--c-primary-dark) 0%, rgba(var(--c-primary-dark-rgb), .94) 38%, rgba(var(--c-primary-dark-rgb), .55) 68%, rgba(var(--c-primary-dark-rgb), .2) 100%); }
+@media (max-width: 749px) { .coll-hero--image::before { background: rgba(var(--c-primary-dark-rgb), .86); } }
+.coll-hero__inner { position: relative; z-index: 2; padding-block: 28px 30px; }
 .coll-hero .breadcrumbs ol { color: rgba(255,255,255,.75); }
 .coll-hero__head { display: flex; align-items: center; gap: 22px; }
 .coll-hero__icon { width: 84px; height: 84px; flex-shrink: 0; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.25); }

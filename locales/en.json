@@ -224,7 +224,8 @@
       "pickup_at": "Pickup available at {{ location }} · {{ time }}",
       "save_pct": "-{{ pct }}%",
       "you_save": "You save {{ amount }}",
-      "zoom": "Zoom image"
+      "zoom": "Zoom image",
+      "plan_available": "Appointments available at our Beaumont shop"
     },
     "tabs": {
       "compatibility": "Compatibility",
