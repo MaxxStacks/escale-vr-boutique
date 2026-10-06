@@ -435,9 +435,11 @@
     $$('.lang-switch__btn').forEach((b) => b.addEventListener('click', () => { try { localStorage.setItem('ev-lang', b.dataset.lang); } catch (e) {} }));
     if (chosen) return;
     const current = (document.documentElement.lang || 'fr').slice(0, 2);
-    const wanted = (navigator.languages && navigator.languages[0] || navigator.language || 'fr').slice(0, 2).toLowerCase();
-    try { localStorage.setItem('ev-lang', wanted === 'en' ? 'en' : 'fr'); } catch (e) {}
-    const target = wanted === 'en' ? 'en' : 'fr';
+    // French if the browser accepts French at all (many Quebec PCs run English Windows with fr-CA as a second
+    // language); English only when English is listed and French is not.
+    const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'fr']).map((l) => l.slice(0, 2).toLowerCase());
+    const target = !langs.includes('fr') && langs.includes('en') ? 'en' : 'fr';
+    try { localStorage.setItem('ev-lang', target); } catch (e) {}
     if (target === current) return;
     const form = $('form.lang-switch');
     const btn = form && form.querySelector(`[data-lang="${target}"]`);

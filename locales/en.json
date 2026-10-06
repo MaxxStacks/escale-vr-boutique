@@ -314,7 +314,18 @@
       "view_all": "View all:",
       "all_categories": "All categories",
       "hello": "Hello,",
-      "mega_help": "Need help finding a part? Call the parts department:"
+      "mega_help": "Need help finding a part? Call the parts department:",
+      "shop_by_category": "Shop by category",
+      "quick_links": "Quick links",
+      "all_products": "All products",
+      "track_order": "Track my order",
+      "brands": "Brands",
+      "default_links": {
+        "home": "Home",
+        "catalog": "Catalog",
+        "contact": "Contact us",
+        "search": "Search"
+      }
     },
     "plans": {
       "popular": "Most popular"

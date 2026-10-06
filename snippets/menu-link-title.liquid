@@ -1,0 +1,20 @@
+{%- comment -%}
+  Prints a menu link title. Shopify's default menu items (Home, Catalog, Contact, Search) are stored
+  in the store's primary language, so they're translated here. Custom titles print as-is.
+  Usage: {% render 'menu-link-title', link: link %}
+{%- endcomment -%}
+{%- liquid
+  assign raw = link.title | strip | downcase
+  case raw
+    when 'home', 'accueil'
+      echo 'sections.header.default_links.home' | t
+    when 'catalog', 'catalogue'
+      echo 'sections.header.default_links.catalog' | t
+    when 'contact', 'contact us', 'nous joindre'
+      echo 'sections.header.default_links.contact' | t
+    when 'search', 'recherche'
+      echo 'sections.header.default_links.search' | t
+    else
+      echo link.title | escape
+  endcase
+-%}

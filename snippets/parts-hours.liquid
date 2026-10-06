@@ -43,8 +43,8 @@
         {%- if current -%}<span class="hours__now">{{ 'hours.now' | t }}</span>{%- endif -%}
       </p>
       <dl>
-        <div><dt>{{ 'hours.weekdays' | t }}</dt><dd>{% if wd_o != blank %}{{ wd_o | remove_first: '0' }} – {{ wd_c | remove_first: '0' }}{% else %}{{ t_closed }}{% endif %}</dd></div>
-        <div><dt>{{ 'hours.weekend' | t }}</dt><dd>{% if we_o != blank %}{{ we_o | remove_first: '0' }} – {{ we_c | remove_first: '0' }}{% else %}{{ t_closed }}{% endif %}</dd></div>
+        <div><dt>{{ 'hours.weekdays' | t }}</dt><dd>{% if wd_o != blank %}{{ wd_o | split: ':' | first | plus: 0 }}:{{ wd_o | split: ':' | last }} – {{ wd_c | split: ':' | first | plus: 0 }}:{{ wd_c | split: ':' | last }}{% else %}{{ t_closed }}{% endif %}</dd></div>
+        <div><dt>{{ 'hours.weekend' | t }}</dt><dd>{% if we_o != blank %}{{ we_o | split: ':' | first | plus: 0 }}:{{ we_o | split: ':' | last }} – {{ we_c | split: ':' | first | plus: 0 }}:{{ we_c | split: ':' | last }}{% else %}{{ t_closed }}{% endif %}</dd></div>
       </dl>
     </div>
   {%- endfor -%}

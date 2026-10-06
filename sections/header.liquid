@@ -16,20 +16,32 @@
         <div class="drawer-menu" id="MobileMenu">
           <nav aria-label="{{ 'sections.header.menu' | t }}">
             <ul class="drawer-menu__list">
+              <li>
+                <details>
+                  <summary>{{ 'sections.header.shop_by_category' | t }}{%- render 'icon', name: 'chevron' -%}</summary>
+                  <ul>
+                    <li><a href="{{ routes.collections_url }}" class="drawer-menu__all">{{ 'sections.header.all_categories' | t }}</a></li>
+                    {%- for c in collections -%}
+                      {%- if c.handle == 'frontpage' or c.handle == 'all' or c.products_count == 0 or c.handle contains 'src-' -%}{%- continue -%}{%- endif -%}
+                      <li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              </li>
               {%- for link in menu.links -%}
                 <li>
                   {%- if link.links.size > 0 -%}
                     <details>
-                      <summary>{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
+                      <summary>{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
                       <ul>
-                        <li><a href="{{ link.url }}" class="drawer-menu__all">{{ 'sections.header.view_all' | t }} {{ link.title | escape }}</a></li>
+                        <li><a href="{{ link.url }}" class="drawer-menu__all">{{ 'sections.header.view_all' | t }} {% render 'menu-link-title', link: link %}</a></li>
                         {%- for child in link.links -%}
                           <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
                         {%- endfor -%}
                       </ul>
                     </details>
                   {%- else -%}
-                    <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                    <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{% render 'menu-link-title', link: link %}</a>
                   {%- endif -%}
                 </li>
               {%- endfor -%}
@@ -149,7 +161,100 @@
     <div class="page-width header__bar-inner">
       <nav class="header__nav" aria-label="{{ 'sections.header.menu' | t }}">
         <ul class="nav">
+          {%- comment -%} Built from the store's collections and vendors, so it is complete without any menu setup. {%- endcomment -%}
+          {%- liquid
+            assign cat_promo = nil
+            assign t_all_cats = 'sections.header.shop_by_category' | t | handle
+            for block in section.blocks
+              assign block_handle = block.settings.menu_title | handle
+              if block_handle == t_all_cats or block_handle == 'magasiner-par-categorie'
+                assign cat_promo = block
+              endif
+            endfor
+            if cat_promo == nil
+              assign cat_promo = section.blocks.first
+            endif
+          -%}
+          <li class="nav__item nav__item--has-children nav__item--categories">
+            <details class="nav__details" data-hover-menu>
+              <summary class="nav__link nav__link--categories">{%- render 'icon', name: 'grid' -%}{{ 'sections.header.shop_by_category' | t }}{%- render 'icon', name: 'chevron' -%}</summary>
+              <div class="mega">
+                <div class="page-width mega__inner{% if cat_promo %} mega__inner--promo{% endif %}">
+                  <div class="mega__main">
+                    <div class="mega__head">
+                      <p class="mega__heading">{{ 'sections.header.shop_by_category' | t }}</p>
+                      <a href="{{ routes.collections_url }}" class="link-arrow">{{ 'sections.header.all_categories' | t }} {%- render 'icon', name: 'arrow' -%}</a>
+                    </div>
+                    <div class="mega__split">
+                      <ul class="mega__tiles" role="list">
+                        {%- assign shown = 0 -%}
+                        {%- for c in collections -%}
+                          {%- if c.handle == 'frontpage' or c.handle == 'all' or c.products_count == 0 or c.handle contains 'src-' -%}{%- continue -%}{%- endif -%}
+                          {%- if shown >= 18 -%}{%- break -%}{%- endif -%}
+                          {%- assign shown = shown | plus: 1 -%}
+                          <li>
+                            <a href="{{ c.url }}" class="mega__tile">
+                              <span class="mega__tile-media">
+                                {%- if c.featured_image -%}
+                                  {{ c.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', width: 56, height: 56, alt: '' }}
+                                {%- else -%}
+                                  {%- render 'category-icon', handle: c.handle, title: c.title -%}
+                                {%- endif -%}
+                              </span>
+                              <span class="mega__tile-text">
+                                <strong>{{ c.title | escape }}</strong>
+                                <small>{{ 'sections.collection.products_count' | t: count: c.products_count }}</small>
+                              </span>
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                      <div class="mega__side">
+                        <div class="mega__col">
+                          <p class="mega__title">{{ 'sections.header.quick_links' | t }}</p>
+                          <ul>
+                            {%- if collections['liquidation'].products_count > 0 -%}<li><a href="{{ collections['liquidation'].url }}" class="mega__hot">{{ collections['liquidation'].title | escape }}</a></li>{%- endif -%}
+                            {%- if collections['nouveautes'].products_count > 0 -%}<li><a href="{{ collections['nouveautes'].url }}">{{ collections['nouveautes'].title | escape }}</a></li>{%- endif -%}
+                            {%- if collections['plans-entretien'].products_count > 0 -%}<li><a href="{{ collections['plans-entretien'].url }}">{{ collections['plans-entretien'].title | escape }}</a></li>{%- endif -%}
+                            <li><a href="{{ routes.all_products_collection_url }}">{{ 'sections.header.all_products' | t }}</a></li>
+                            <li><a href="{{ routes.collections_url }}">{{ 'sections.header.all_categories' | t }}</a></li>
+                            <li><a href="{{ routes.account_url }}">{{ 'sections.header.track_order' | t }}</a></li>
+                          </ul>
+                        </div>
+                        {%- if shop.vendors.size > 0 -%}
+                          <div class="mega__col">
+                            <p class="mega__title">{{ 'sections.header.brands' | t }}</p>
+                            <ul>
+                              {%- for vendor in shop.vendors limit: 10 -%}
+                                <li>{{ vendor | link_to_vendor }}</li>
+                              {%- endfor -%}
+                            </ul>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                    <p class="mega__help">{%- render 'icon', name: 'phone' -%} {{ 'sections.header.mega_help' | t }} <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a></p>
+                  </div>
+                  {%- if cat_promo -%}
+                    <a href="{{ cat_promo.settings.link | default: routes.collections_url }}" class="mega__promo">
+                      {%- if cat_promo.settings.image != blank -%}
+                        {{ cat_promo.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 500, 700', sizes: '340px', alt: cat_promo.settings.heading }}
+                      {%- endif -%}
+                      <span class="mega__promo-body">
+                        {%- if cat_promo.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--light">{{ cat_promo.settings.eyebrow }}</span>{%- endif -%}
+                        <span class="mega__promo-heading">{{ cat_promo.settings.heading }}</span>
+                        {%- if cat_promo.settings.text != blank -%}<span class="mega__promo-text">{{ cat_promo.settings.text }}</span>{%- endif -%}
+                        {%- if cat_promo.settings.button_label != blank -%}<span class="btn btn--accent btn--sm">{{ cat_promo.settings.button_label }}</span>{%- endif -%}
+                      </span>
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </details>
+          </li>
           {%- for link in menu.links -%}
+            {%- assign link_key = link.title | strip | downcase -%}
+            {%- if link_key == 'home' or link_key == 'accueil' or link_key == 'catalog' or link_key == 'catalogue' -%}{%- continue -%}{%- endif -%}
             {%- liquid
               assign link_handle = link.title | handle
               assign promo = nil
@@ -163,13 +268,13 @@
             <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
               {%- if link.links.size > 0 -%}
                 <details class="nav__details" data-hover-menu>
-                  <summary class="nav__link{% if link.child_active or link.active %} is-active{% endif %}">{{ link.title | escape }}{%- render 'icon', name: 'chevron' -%}</summary>
+                  <summary class="nav__link{% if link.child_active or link.active %} is-active{% endif %}">{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
                   <div class="mega">
                     <div class="page-width mega__inner{% if promo %} mega__inner--promo{% endif %}">
                       <div class="mega__main">
                         <div class="mega__head">
-                          <p class="mega__heading">{{ link.title | escape }}</p>
-                          <a href="{{ link.url }}" class="link-arrow">{{ 'sections.header.view_all' | t }} {{ link.title | escape }} {%- render 'icon', name: 'arrow' -%}</a>
+                          <p class="mega__heading">{% render 'menu-link-title', link: link %}</p>
+                          <a href="{{ link.url }}" class="link-arrow">{{ 'sections.header.view_all' | t }} {% render 'menu-link-title', link: link %} {%- render 'icon', name: 'arrow' -%}</a>
                         </div>
                         {%- assign has_grand = false -%}
                         {%- for child in link.links -%}{%- if child.links.size > 0 -%}{%- assign has_grand = true -%}{%- endif -%}{%- endfor -%}
@@ -230,13 +335,12 @@
                   </div>
                 </details>
               {%- else -%}
-                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{% render 'menu-link-title', link: link %}</a>
               {%- endif -%}
             </li>
           {%- endfor -%}
         </ul>
       </nav>
-      <a href="{{ routes.collections_url }}" class="header__all">{%- render 'icon', name: 'grid' -%}<span>{{ 'sections.header.all_categories' | t }}</span></a>
     </div>
   </div>
 </header>

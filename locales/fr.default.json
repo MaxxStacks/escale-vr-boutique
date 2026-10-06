@@ -314,7 +314,18 @@
       "view_all": "Tout voir :",
       "all_categories": "Toutes les catégories",
       "hello": "Bonjour,",
-      "mega_help": "Besoin d'aide pour trouver une pièce? Appelez le département des pièces :"
+      "mega_help": "Besoin d'aide pour trouver une pièce? Appelez le département des pièces :",
+      "shop_by_category": "Magasiner par catégorie",
+      "quick_links": "Accès rapide",
+      "all_products": "Tous les produits",
+      "track_order": "Suivre ma commande",
+      "brands": "Marques",
+      "default_links": {
+        "home": "Accueil",
+        "catalog": "Catalogue",
+        "contact": "Nous joindre",
+        "search": "Recherche"
+      }
     },
     "plans": {
       "popular": "Le plus populaire"
