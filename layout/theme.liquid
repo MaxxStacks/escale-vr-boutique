@@ -48,6 +48,8 @@
 
     {% section 'cart-drawer' %}
 
+    {%- if settings.chat_enabled -%}{%- render 'chat-widget' -%}{%- endif -%}
+
     <script>
       window.theme = {
         routes: {

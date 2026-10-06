@@ -443,5 +443,26 @@
         "default": true
       }
     ]
+  },
+  {
+    "name": "Chat assistant",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Floating help chat: instant answers (parts search, hours, shipping, returns, orders) and hand-off to Facebook Messenger with the question pre-filled."
+      },
+      {
+        "type": "checkbox",
+        "id": "chat_enabled",
+        "label": "Show chat assistant",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "chat_messenger",
+        "label": "Messenger username (m.me/…)",
+        "info": "Your Facebook Page username. Leave empty to use the one in the Facebook URL (Business info)."
+      }
+    ]
   }
 ]

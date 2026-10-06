@@ -446,4 +446,175 @@
     if (!form || !btn) return;
     btn.click();
   })();
+
+  /* ---------- Chat assistant → Messenger hand-off ---------- */
+  (() => {
+    const chat = $('[data-chat]');
+    const cfgEl = $('[data-chat-config]', chat || document);
+    if (!chat || !cfgEl) return;
+    const cfg = JSON.parse(cfgEl.textContent);
+    const s = cfg.t;
+    const panel = $('#ChatPanel', chat);
+    const log = $('[data-chat-log]', chat);
+    const chips = $('[data-chat-chips]', chat);
+    const input = $('[data-chat-input]', chat);
+    const messengerLink = $('[data-chat-messenger]', chat);
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let lastQuestion = '';
+    let started = false;
+
+    // Parts-counter hours, evaluated in Quebec time whatever the visitor's timezone.
+    const now = () => {
+      const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Toronto', weekday: 'short', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+        .formatToParts(new Date()).map((p) => [p.type, p.value]));
+      return { day: parts.weekday, md: `${parts.month}-${parts.day}`, hm: `${parts.hour === '24' ? '00' : parts.hour}:${parts.minute}` };
+    };
+    const season = () => {
+      const { highStart: a, highEnd: b } = cfg.hours;
+      if (!a || !b) return 'off';
+      const { md } = now();
+      return (a <= b ? md >= a && md <= b : md >= a || md <= b) ? 'high' : 'off';
+    };
+    const isOpen = () => {
+      const { day, hm } = now();
+      const h = cfg.hours[season()][day === 'Sat' || day === 'Sun' ? 'we' : 'wd'];
+      return !!(h[0] && h[1] && hm >= h[0] && hm < h[1]);
+    };
+    const fmt = (t) => (t ? `${parseInt(t, 10)}:${t.split(':')[1]}` : '');
+    const range = (h) => (h[0] ? `${fmt(h[0])} – ${fmt(h[1])}` : s.closed);
+
+    const scroll = () => { log.scrollTop = log.scrollHeight; };
+    const say = (html, from = 'bot') => {
+      const el = document.createElement('div');
+      el.className = `chat__msg chat__msg--${from}`;
+      el.innerHTML = html;
+      log.appendChild(el);
+      scroll();
+      return el;
+    };
+    const typing = async (ms = 550) => {
+      const el = say('<span class="chat__typing"><i></i><i></i><i></i></span>');
+      await new Promise((r) => setTimeout(r, ms));
+      el.remove();
+    };
+    const actions = (list) => `<div class="chat__actions">${list.map((a) => `<a class="chat__action${a.primary ? ' chat__action--primary' : ''}" href="${esc(a.href)}"${a.external ? ' target="_blank" rel="noopener"' : ''}>${esc(a.label)}</a>`).join('')}</div>`;
+
+    const messengerUrl = () => {
+      const q = lastQuestion || s.chipHuman;
+      const text = cfg.productTitle
+        ? s.prefillProduct.replace('%product%', cfg.productTitle).replace('%sku%', cfg.productSku || '—').replace('%question%', q)
+        : s.prefill.replace('%question%', q);
+      return `https://m.me/${encodeURIComponent(cfg.messenger)}?text=${encodeURIComponent(`${text}\n${location.origin}${cfg.page}`)}`;
+    };
+    const syncMessenger = () => { messengerLink.href = messengerUrl(); };
+    const handoff = (lead) => say(`<p>${esc(lead || (isOpen() ? s.human : s.humanOffline))}</p>${actions([
+      { label: s.messengerBtn, href: messengerUrl(), external: true, primary: true },
+      ...(cfg.phoneE164 ? [{ label: `${s.callBtn} ${cfg.phone}`, href: `tel:${cfg.phoneE164}` }] : []),
+      { label: s.formBtn, href: cfg.urls.contact }
+    ])}`);
+
+    const searchParts = async (q) => {
+      await typing(300);
+      const wait = say(`<p>${esc(s.searching)}</p>`);
+      try {
+        const res = await fetch(`${cfg.urls.suggest}.json?q=${encodeURIComponent(q)}&resources[type]=product&resources[limit]=4&resources[options][fields]=title,product_type,variants.sku,vendor,variants.barcode`);
+        const items = ((await res.json()).resources?.results?.products) || [];
+        wait.remove();
+        if (!items.length) { handoff(s.notFound); return; }
+        say(`<p>${esc(s.found)}</p><ul class="chat__products">${items.map((p) => `
+          <li><a href="${esc(p.url)}" class="chat__product">
+            ${p.image ? `<img src="${esc(`${p.image}${p.image.includes('?') ? '&' : '?'}width=120`)}" alt="" width="52" height="52" loading="lazy">` : ''}
+            <span><strong>${esc(p.title)}</strong><small>${esc(p.vendor || '')}</small></span>
+            <b>${esc(p.price)} $</b>
+          </a></li>`).join('')}</ul>${actions([{ label: s.seeAll, href: `${cfg.urls.search}?q=${encodeURIComponent(q)}&options[prefix]=last` }])}`);
+      } catch (e) {
+        wait.remove();
+        handoff(s.notFound);
+      }
+    };
+
+    let awaitingPart = false;
+    const intents = {
+      part: async () => { awaitingPart = true; await typing(); say(`<p>${esc(s.askPart)}</p>`); input.focus(); },
+      order: async () => { await typing(); say(`<p>${esc(s.order)}</p>${actions([{ label: s.orderBtn, href: cfg.urls.account, primary: true }])}`); },
+      hours: async () => {
+        await typing();
+        const rows = ['high', 'off'].map((k) => `<p class="chat__hours-season${season() === k ? ' is-current' : ''}"><strong>${esc(k === 'high' ? s.seasonHigh : s.seasonOff)}</strong><br>${esc(s.weekdays)} : ${esc(range(cfg.hours[k].wd))}<br>${esc(s.weekend)} : ${esc(range(cfg.hours[k].we))}</p>`).join('');
+        say(`<p>${esc(s.hoursIntro)}</p>${rows}`);
+      },
+      shipping: async () => { await typing(); say(`<p>${esc(s.shipping)}</p>${actions([{ label: s.shippingBtn, href: cfg.urls.shipping }])}`); },
+      returns: async () => { await typing(); say(`<p>${esc(s.returns)}</p>${actions([{ label: s.shippingBtn, href: cfg.urls.shipping }])}`); },
+      plans: async () => { await typing(); say(`<p>${esc(s.plans)}</p>${actions([{ label: s.plansBtn, href: cfg.urls.plans, primary: true }])}`); },
+      fit: async () => { await typing(); handoff(s.fit); },
+      human: async () => { await typing(); handoff(); }
+    };
+    const keywords = [
+      ['human', /humain|conseill|agent|personne|parler|human|advisor|someone|messenger|appel|call/i],
+      ['order', /commande|suivi|track|order|colis|livr[ée]e?\b|shipped/i],
+      ['hours', /heure|horaire|ouvert|ferm[ée]|hour|open|close/i],
+      ['returns', /retour|rembours|[ée]change|return|refund/i],
+      ['shipping', /livraison|exp[ée]di|cueillette|ramass|pickup|shipping|deliver/i],
+      ['plans', /plan|entretien|hivern|mise en service|winteri|maintenance|atelier|service/i],
+      ['fit', /compatib|fit|convient|mon vr|my rv|mod[èe]le|ann[ée]e/i]
+    ];
+
+    const chipList = () => [
+      ...(cfg.productTitle ? [['fit', s.chipFit]] : []),
+      ['part', s.chipPart], ['order', s.chipOrder], ['hours', s.chipHours], ['shipping', s.chipShipping],
+      ['returns', s.chipReturns], ['plans', s.chipPlans], ['human', s.chipHuman]
+    ];
+    chips.innerHTML = chipList().map(([k, label]) => `<button type="button" class="chat__chip" data-intent="${k}">${esc(label)}</button>`).join('');
+    chips.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-intent]');
+      if (!b) return;
+      lastQuestion = b.textContent;
+      syncMessenger();
+      say(`<p>${esc(b.textContent)}</p>`, 'user');
+      intents[b.dataset.intent]();
+    });
+
+    $('[data-chat-form]', chat).addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      lastQuestion = q;
+      syncMessenger();
+      say(`<p>${esc(q)}</p>`, 'user');
+      const hit = !awaitingPart && keywords.find(([, re]) => re.test(q));
+      awaitingPart = false;
+      if (hit) { intents[hit[0]](); return; }
+      // Anything that looks like a part number or a product search goes to the catalog.
+      if (q.length >= 2) { searchParts(q); return; }
+      typing().then(() => handoff(s.fallback));
+    });
+
+    const status = () => {
+      const open = isOpen();
+      $('[data-chat-status]', chat).classList.toggle('is-open', open);
+      $('[data-chat-status-text]', chat).textContent = open ? s.online : s.offline;
+    };
+
+    const toggle = (force) => {
+      const open = typeof force === 'boolean' ? force : panel.hidden;
+      panel.hidden = !open;
+      chat.classList.toggle('is-open', open);
+      $$('[data-chat-toggle]', chat).forEach((b) => b.setAttribute('aria-expanded', open));
+      if (!open) return;
+      status();
+      syncMessenger();
+      if (!started) {
+        started = true;
+        say(`<p>${esc(s.greeting)}</p>`);
+        if (cfg.productTitle) say(`<p>${esc(s.greetingProduct.replace('%product%', cfg.productTitle))}</p>`);
+      }
+      if (window.matchMedia('(min-width: 750px)').matches) input.focus();
+    };
+    $$('[data-chat-toggle]', chat).forEach((b) => b.addEventListener('click', () => toggle()));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { toggle(false); $('.chat__launcher', chat).focus(); } });
+
+    // Lift the launcher above the product page's sticky add-to-cart bar.
+    const stickyBar = $('[data-sticky-atc]');
+    if (stickyBar) new MutationObserver(() => chat.classList.toggle('is-raised', stickyBar.classList.contains('is-visible'))).observe(stickyBar, { attributes: true, attributeFilter: ['class'] });
+  })();
 })();

@@ -1,0 +1,113 @@
+{%- comment -%}
+  Chat assistant: answers common questions instantly, searches parts, then hands the conversation
+  off to Facebook Messenger (m.me link with the question pre-filled). Behaviour lives in theme.js.
+  Usage: {% render 'chat-widget' %}
+{%- endcomment -%}
+{%- liquid
+  assign messenger = settings.chat_messenger | strip | remove: '@'
+  if messenger == blank
+    assign messenger = settings.social_facebook | split: '?' | first | remove: 'https://' | remove: 'http://' | remove: 'www.' | remove: 'm.facebook.com/' | remove: 'facebook.com/' | split: '/' | first
+  endif
+  assign contact_url = pages['nous-joindre'].url | default: '/pages/nous-joindre'
+  assign shipping_url = pages['livraison-et-retours'].url | default: contact_url
+-%}
+<div class="chat" data-chat>
+  <button type="button" class="chat__launcher" data-chat-toggle aria-expanded="false" aria-controls="ChatPanel">
+    <span class="chat__launcher-icon chat__launcher-icon--open">{%- render 'icon', name: 'chat' -%}</span>
+    <span class="chat__launcher-icon chat__launcher-icon--close">{%- render 'icon', name: 'close' -%}</span>
+    <span class="chat__launcher-label">{{ 'chat.launcher' | t }}</span>
+  </button>
+
+  <section class="chat__panel" id="ChatPanel" role="dialog" aria-modal="false" aria-labelledby="ChatTitle" hidden>
+    <header class="chat__head">
+      <span class="chat__avatar">{%- render 'icon', name: 'wrench' -%}</span>
+      <div class="chat__head-text">
+        <p class="chat__title" id="ChatTitle">{{ 'chat.title' | t }}</p>
+        <p class="chat__status" data-chat-status><span class="chat__status-dot"></span><span data-chat-status-text></span></p>
+      </div>
+      <button type="button" class="chat__close" data-chat-toggle aria-label="{{ 'general.close' | t }}">{%- render 'icon', name: 'close' -%}</button>
+    </header>
+
+    <div class="chat__log" data-chat-log aria-live="polite"></div>
+
+    <div class="chat__chips" data-chat-chips></div>
+
+    <form class="chat__form" data-chat-form>
+      <label for="ChatInput" class="visually-hidden">{{ 'chat.placeholder' | t }}</label>
+      <input id="ChatInput" type="text" autocomplete="off" maxlength="300" placeholder="{{ 'chat.placeholder' | t }}" data-chat-input>
+      <button type="submit" class="chat__send" aria-label="{{ 'chat.send' | t }}">{%- render 'icon', name: 'arrow' -%}</button>
+    </form>
+
+    <a class="chat__messenger" data-chat-messenger href="https://m.me/{{ messenger }}" target="_blank" rel="noopener">
+      {%- render 'icon', name: 'messenger' -%}<span>{{ 'chat.continue_messenger' | t }}</span>
+    </a>
+  </section>
+
+  <script type="application/json" data-chat-config>
+    {
+      "messenger": {{ messenger | json }},
+      "phone": {{ settings.biz_phone | json }},
+      "phoneE164": {{ settings.biz_phone_e164 | json }},
+      "urls": {
+        "search": {{ routes.search_url | json }},
+        "suggest": {{ routes.predictive_search_url | json }},
+        "account": {{ routes.account_url | json }},
+        "contact": {{ contact_url | json }},
+        "shipping": {{ shipping_url | json }},
+        "plans": {{ collections['plans-entretien'].url | default: routes.collections_url | json }},
+        "categories": {{ routes.collections_url | json }}
+      },
+      "hours": {
+        "off": { "wd": [{{ settings.hours_off_weekday_open | json }}, {{ settings.hours_off_weekday_close | json }}], "we": [{{ settings.hours_off_weekend_open | json }}, {{ settings.hours_off_weekend_close | json }}] },
+        "high": { "wd": [{{ settings.hours_high_weekday_open | json }}, {{ settings.hours_high_weekday_close | json }}], "we": [{{ settings.hours_high_weekend_open | json }}, {{ settings.hours_high_weekend_close | json }}] },
+        "highStart": {{ settings.high_season_start | json }},
+        "highEnd": {{ settings.high_season_end | json }}
+      },
+      "page": {{ request.path | json }},
+      "productTitle": {% if product %}{{ product.title | json }}{% else %}null{% endif %},
+      "productSku": {% if product %}{{ product.metafields.custom.part_number.value | default: product.selected_or_first_available_variant.sku | json }}{% else %}null{% endif %},
+      "t": {
+        "greeting": {{ 'chat.greeting' | t: name: settings.biz_name | json }},
+        "greetingProduct": {{ 'chat.greeting_product' | t | json }},
+        "online": {{ 'chat.online' | t | json }},
+        "offline": {{ 'chat.offline' | t | json }},
+        "you": {{ 'chat.you' | t | json }},
+        "chipPart": {{ 'chat.chip_part' | t | json }},
+        "chipOrder": {{ 'chat.chip_order' | t | json }},
+        "chipHours": {{ 'chat.chip_hours' | t | json }},
+        "chipShipping": {{ 'chat.chip_shipping' | t | json }},
+        "chipReturns": {{ 'chat.chip_returns' | t | json }},
+        "chipPlans": {{ 'chat.chip_plans' | t | json }},
+        "chipHuman": {{ 'chat.chip_human' | t | json }},
+        "chipFit": {{ 'chat.chip_fit' | t | json }},
+        "askPart": {{ 'chat.ask_part' | t | json }},
+        "searching": {{ 'chat.searching' | t | json }},
+        "found": {{ 'chat.found' | t | json }},
+        "notFound": {{ 'chat.not_found' | t | json }},
+        "seeAll": {{ 'chat.see_all' | t | json }},
+        "order": {{ 'chat.order' | t | json }},
+        "orderBtn": {{ 'chat.order_btn' | t | json }},
+        "hoursIntro": {{ 'chat.hours_intro' | t | json }},
+        "weekdays": {{ 'hours.weekdays' | t | json }},
+        "weekend": {{ 'hours.weekend' | t | json }},
+        "closed": {{ 'hours.closed' | t | json }},
+        "seasonHigh": {{ 'hours.season_high' | t | json }},
+        "seasonOff": {{ 'hours.season_off' | t | json }},
+        "shipping": {{ 'chat.shipping' | t: threshold: settings.free_shipping_threshold, days: settings.handling_days | json }},
+        "shippingBtn": {{ 'chat.shipping_btn' | t | json }},
+        "returns": {{ 'chat.returns' | t: days: settings.return_days | json }},
+        "plans": {{ 'chat.plans' | t | json }},
+        "plansBtn": {{ 'chat.plans_btn' | t | json }},
+        "fit": {{ 'chat.fit' | t | json }},
+        "human": {{ 'chat.human' | t | json }},
+        "humanOffline": {{ 'chat.human_offline' | t | json }},
+        "messengerBtn": {{ 'chat.messenger_btn' | t | json }},
+        "callBtn": {{ 'chat.call_btn' | t | json }},
+        "formBtn": {{ 'chat.form_btn' | t | json }},
+        "fallback": {{ 'chat.fallback' | t | json }},
+        "prefill": {{ 'chat.prefill' | t | json }},
+        "prefillProduct": {{ 'chat.prefill_product' | t | json }}
+      }
+    }
+  </script>
+</div>
