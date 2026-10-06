@@ -8,7 +8,17 @@
   assign crumb_urls = routes.root_url
   case request.page_type
     when 'product'
-      assign crumb_collection = collection | default: product.collections.first
+      comment
+        Without a collection in the URL, prefer the category collection (title = product type) over
+        promo or distributor collections such as Liquidation or Keystone.
+      endcomment
+      assign crumb_collection = collection
+      if crumb_collection == blank
+        assign crumb_collection = product.collections | where: 'title', product.type | first
+      endif
+      if crumb_collection == blank
+        assign crumb_collection = product.collections.first
+      endif
       if crumb_collection
         assign crumb_names = crumb_names | append: '§§' | append: crumb_collection.title
         assign crumb_urls = crumb_urls | append: '§§' | append: crumb_collection.url
