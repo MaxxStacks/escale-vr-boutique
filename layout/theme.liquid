@@ -30,6 +30,8 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
 
     {{ content_for_header }}
+    {%- comment -%} Hide Shopify's preview bar so shared preview links look like the real store. {%- endcomment -%}
+    <style>#PBarNextFrameWrapper,#PBarNextFrame{display:none!important}</style>
 
     {%- render 'seo-graph' -%}
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
