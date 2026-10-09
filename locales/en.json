@@ -302,9 +302,11 @@
       "stat_experts": "RV technician advice"
     },
     "filters": {
+      "availability": "Availability",
       "apply": "Apply",
       "clear": "Clear filters",
       "from": "From ($)",
+      "price": "Price",
       "sort": "Sort by",
       "title": "Filter",
       "to": "To ($)"

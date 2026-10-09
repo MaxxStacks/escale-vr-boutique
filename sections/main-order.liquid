@@ -66,22 +66,22 @@
                   <span class="status status--processing">{{ 'customer.status.processing' | t }}</span>
                 {%- endif -%}
               </td>
-              <td data-label="{{ 'customer.order.total' | t }}" class="ta-right">{{ line_item.final_line_price | money }}</td>
+              <td data-label="{{ 'customer.order.total' | t }}" class="ta-right">{%- render 'money', amount: line_item.final_line_price -%}</td>
             </tr>
           {%- endfor -%}
         </tbody>
         <tfoot>
-          <tr><td colspan="3">{{ 'customer.order.subtotal' | t }}</td><td class="ta-right">{{ order.line_items_subtotal_price | money }}</td></tr>
+          <tr><td colspan="3">{{ 'customer.order.subtotal' | t }}</td><td class="ta-right">{%- render 'money', amount: order.line_items_subtotal_price -%}</td></tr>
           {%- for discount in order.cart_level_discount_applications -%}
-            <tr><td colspan="3">{{ 'customer.order.discount' | t }} ({{ discount.title }})</td><td class="ta-right">-{{ discount.total_allocated_amount | money }}</td></tr>
+            <tr><td colspan="3">{{ 'customer.order.discount' | t }} ({{ discount.title }})</td><td class="ta-right">-{%- render 'money', amount: discount.total_allocated_amount -%}</td></tr>
           {%- endfor -%}
           {%- for shipping_method in order.shipping_methods -%}
-            <tr><td colspan="3">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</td><td class="ta-right">{{ shipping_method.price | money }}</td></tr>
+            <tr><td colspan="3">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</td><td class="ta-right">{%- render 'money', amount: shipping_method.price -%}</td></tr>
           {%- endfor -%}
           {%- for tax_line in order.tax_lines -%}
-            <tr><td colspan="3">{{ tax_line.title }} ({{ tax_line.rate_percentage }}&nbsp;%)</td><td class="ta-right">{{ tax_line.price | money }}</td></tr>
+            <tr><td colspan="3">{{ tax_line.title }} ({{ tax_line.rate_percentage }}&nbsp;%)</td><td class="ta-right">{%- render 'money', amount: tax_line.price -%}</td></tr>
           {%- endfor -%}
-          <tr class="orders-table__total"><td colspan="3">{{ 'customer.order.total' | t }}</td><td class="ta-right">{{ order.total_price | money_with_currency }}</td></tr>
+          <tr class="orders-table__total"><td colspan="3">{{ 'customer.order.total' | t }}</td><td class="ta-right">{%- render 'money', amount: order.total_price, style: 'currency' -%}</td></tr>
         </tfoot>
       </table>
     </div>

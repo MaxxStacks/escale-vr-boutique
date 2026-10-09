@@ -44,7 +44,7 @@
                   {%- assign pn = product.metafields.custom.part_number.value | default: product.selected_or_first_available_variant.sku -%}
                   {%- if pn != blank -%}<span class="predictive__sku">{{ pn }}</span>{%- endif -%}
                 </span>
-                <span class="predictive__price">{%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}{{ product.price | money }}</span>
+                <span class="predictive__price">{%- if product.compare_at_price > product.price -%}<s>{%- render 'money', amount: product.compare_at_price -%}</s>{%- endif -%}{%- render 'money', amount: product.price -%}</span>
               </a>
             </li>
           {%- endfor -%}

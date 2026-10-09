@@ -109,7 +109,13 @@
           <div id="PredictiveResults" class="predictive" data-predictive-results hidden></div>
           <template data-predictive-empty>
             <div class="predictive__inner">
-              {%- assign popular = settings.popular_searches | split: ',' -%}
+              {%- liquid
+                if request.locale.iso_code == 'en'
+                  assign popular = settings.popular_searches_en | split: ','
+                else
+                  assign popular = settings.popular_searches | split: ','
+                endif
+              -%}
               {%- if popular.size > 0 -%}
                 <div class="predictive__group">
                   <p class="predictive__heading">{{ 'sections.search.popular' | t }}</p>
@@ -151,7 +157,7 @@
         <a href="{{ routes.cart_url }}" class="header__icon header__cart" data-cart-toggle aria-label="{{ 'sections.cart.title' | t }}">
           {%- render 'icon', name: 'cart' -%}
           <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
-          <span class="header__icon-label"><small>{{ 'sections.cart.title' | t }}</small><strong data-cart-total>{{ cart.total_price | money }}</strong></span>
+          <span class="header__icon-label"><small>{{ 'sections.cart.title' | t }}</small><strong data-cart-total>{%- render 'money', amount: cart.total_price -%}</strong></span>
         </a>
       </div>
     </div>
@@ -339,7 +345,7 @@
                   </div>
                 </details>
               {%- else -%}
-                <a href="{{ link.url }}" class="nav__link{% if link.title contains 'iquidation' %} nav__link--hot{% endif %}{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{% render 'menu-link-title', link: link %}</a>
+                <a href="{{ link.url }}" class="nav__link{% if link.url contains '/liquidation' %} nav__link--hot{% endif %}{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{% render 'menu-link-title', link: link %}</a>
               {%- endif -%}
             </li>
           {%- endfor -%}

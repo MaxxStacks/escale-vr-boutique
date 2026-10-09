@@ -1,0 +1,27 @@
+{%- comment -%}
+  Locale-aware price. The store money format ("${{amount}}") is English-only, so French pages print
+  Quebec style instead: 1 234,56 $. English pages keep the store format.
+  Usage: {% render 'money', amount: cents %}  ·  style: 'currency' (adds CAD) or 'short' (drops ,00)
+{%- endcomment -%}
+{%- liquid
+  if request.locale.iso_code == 'fr'
+    assign n = amount | money_without_currency
+    if style == 'short'
+      assign n = n | remove: '.00'
+    endif
+    assign n = n | replace: ',', ' ' | replace: '.', ','
+    echo n | append: ' $'
+    if style == 'currency'
+      echo ' ' | append: cart.currency.iso_code
+    endif
+  else
+    case style
+      when 'currency'
+        echo amount | money_with_currency
+      when 'short'
+        echo amount | money_without_trailing_zeros
+      else
+        echo amount | money
+    endcase
+  endif
+-%}

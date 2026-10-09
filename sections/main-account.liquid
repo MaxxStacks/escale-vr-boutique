@@ -19,7 +19,7 @@
   <ul class="account__stats" role="list">
     <li><strong>{{ customer.orders_count }}</strong><span>{{ 'customer.account.orders_total' | t }}</span></li>
     <li><strong>{{ pending_count }}</strong><span>{{ 'customer.account.orders_pending' | t }}</span></li>
-    <li><strong>{{ customer.total_spent | money_without_trailing_zeros }}</strong><span>{{ 'customer.account.total_spent' | t }}</span></li>
+    <li><strong>{%- render 'money', amount: customer.total_spent, style: 'short' -%}</strong><span>{{ 'customer.account.total_spent' | t }}</span></li>
   </ul>
 
   <div class="account__grid">
@@ -54,7 +54,7 @@
                   <td data-label="{{ 'customer.orders.order' | t }}"><a href="{{ order.customer_url }}" class="link"><strong>{{ order.name }}</strong></a></td>
                   <td data-label="{{ 'customer.orders.date' | t }}">{{ order.created_at | time_tag: format: 'date' }}</td>
                   <td data-label="{{ 'customer.orders.status' | t }}">{%- render 'order-status', order: order -%}</td>
-                  <td data-label="{{ 'customer.orders.total' | t }}" class="ta-right">{{ order.total_price | money }}</td>
+                  <td data-label="{{ 'customer.orders.total' | t }}" class="ta-right">{%- render 'money', amount: order.total_price -%}</td>
                   <td class="ta-right"><a href="{{ order.customer_url }}" class="btn btn--ghost btn--sm">{{ 'customer.orders.track' | t }}</a></td>
                 </tr>
               {%- endfor -%}

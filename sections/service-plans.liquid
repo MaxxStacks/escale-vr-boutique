@@ -29,7 +29,7 @@
           <div class="plan__price">
             {%- if p != blank -%}
               {%- if p.price_varies -%}<span class="small muted">{{ 'products.product.from' | t }}</span>{%- endif -%}
-              <strong>{{ p.price_min | money_without_trailing_zeros }}</strong>
+              <strong>{%- render 'money', amount: p.price_min, style: 'short' -%}</strong>
             {%- elsif block.settings.price_text != blank -%}
               <strong>{{ block.settings.price_text }}</strong>
             {%- endif -%}

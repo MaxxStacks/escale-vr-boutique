@@ -433,8 +433,14 @@
       {
         "type": "text",
         "id": "popular_searches",
-        "label": "Popular searches (comma separated)",
+        "label": "Popular searches, French (comma separated)",
         "default": "pompe à eau, batterie, antigel, auvent, contrôleur de freins, scellant de toit"
+      },
+      {
+        "type": "text",
+        "id": "popular_searches_en",
+        "label": "Popular searches, English (comma separated)",
+        "default": "water pump, battery, antifreeze, awning, brake controller, roof sealant"
       },
       {
         "type": "checkbox",

@@ -19,9 +19,9 @@
   {%- if variant == blank and product.price_varies -%}
     <span class="price__from">{{ 'products.product.from' | t }}</span>
   {%- endif -%}
-  <span class="price__current">{{ price | money }}</span>
+  <span class="price__current">{%- render 'money', amount: price -%}</span>
   {%- if on_sale -%}
-    <s class="price__compare"><span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>{{ compare | money }}</s>
+    <s class="price__compare"><span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>{%- render 'money', amount: compare -%}</s>
     <span class="badge badge--sale">-{{ saving_pct }}&nbsp;%</span>
   {%- endif -%}
 </div>

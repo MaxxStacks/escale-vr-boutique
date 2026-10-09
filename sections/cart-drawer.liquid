@@ -1,7 +1,9 @@
 {%- liquid
   assign threshold = settings.free_shipping_threshold | plus: 0 | times: 100
   assign remaining = threshold | minus: cart.total_price
-  assign remaining_money = remaining | money
+  capture remaining_money
+    render 'money', amount: remaining
+  endcapture
   if threshold > 0
     assign progress = cart.total_price | times: 100 | divided_by: threshold
     if progress > 100
@@ -52,8 +54,8 @@
                 </div>
               </div>
               <div class="line-item__price">
-                {%- if item.original_line_price != item.final_line_price -%}<s class="muted small">{{ item.original_line_price | money }}</s>{%- endif -%}
-                <strong>{{ item.final_line_price | money }}</strong>
+                {%- if item.original_line_price != item.final_line_price -%}<s class="muted small">{%- render 'money', amount: item.original_line_price -%}</s>{%- endif -%}
+                <strong>{%- render 'money', amount: item.final_line_price -%}</strong>
                 <button type="button" class="link small" data-qty-change="0">{{ 'sections.cart.remove' | t }}</button>
               </div>
             </li>
@@ -66,7 +68,7 @@
       <div class="cart-drawer__foot">
         <div class="cart-drawer__total">
           <span>{{ 'sections.cart.subtotal' | t }}</span>
-          <strong>{{ cart.total_price | money_with_currency }}</strong>
+          <strong>{%- render 'money', amount: cart.total_price, style: 'currency' -%}</strong>
         </div>
         <p class="muted small">{{ 'sections.cart.taxes_note' | t }}</p>
         <form action="{{ routes.cart_url }}" method="post">

@@ -14,7 +14,7 @@
   {%- for filter in results.filters -%}
     <details class="facet" {% if forloop.index <= 3 or filter.active_values.size > 0 %}open{% endif %}>
       <summary class="facet__label">
-        {{ filter.label | escape }}
+        {% render 'filter-label', filter: filter %}
         {%- if filter.active_values.size > 0 -%}<span class="facet__count">{{ filter.active_values.size }}</span>{%- endif -%}
         {%- render 'icon', name: 'chevron' -%}
       </summary>

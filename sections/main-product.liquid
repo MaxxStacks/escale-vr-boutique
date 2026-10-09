@@ -25,7 +25,9 @@
   if current_variant.compare_at_price > current_variant.price
     assign saving = current_variant.compare_at_price | minus: current_variant.price
     assign saving_pct = saving | times: 100.0 | divided_by: current_variant.compare_at_price | round
-    assign saving_money = saving | money
+    capture saving_money
+      render 'money', amount: saving
+    endcapture
   endif
   assign contact_url = pages['nous-joindre'].url | default: '/pages/nous-joindre'
   assign pickups = current_variant.store_availabilities | where: 'pick_up_enabled', true
@@ -301,7 +303,7 @@
     <div class="page-width sticky-atc__inner">
       {%- if product.featured_media -%}{{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', width: 44, height: 44, alt: '', class: 'sticky-atc__img' }}{%- endif -%}
       <span class="sticky-atc__title">{{ product.title }}</span>
-      <span class="sticky-atc__price" data-sticky-price>{{ current_variant.price | money }}</span>
+      <span class="sticky-atc__price" data-sticky-price>{%- render 'money', amount: current_variant.price -%}</span>
       <button type="submit" form="ProductForm" class="btn btn--accent" data-sticky-add {% unless current_variant.available %}disabled{% endunless %}>{{ 'products.product.add_short' | t }}</button>
     </div>
   </div>

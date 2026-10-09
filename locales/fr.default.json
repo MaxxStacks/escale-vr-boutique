@@ -302,9 +302,11 @@
       "stat_experts": "Conseils de techniciens VR"
     },
     "filters": {
+      "availability": "Disponibilité",
       "apply": "Appliquer",
       "clear": "Effacer les filtres",
       "from": "De ($)",
+      "price": "Prix",
       "sort": "Trier par",
       "title": "Filtrer",
       "to": "À ($)"

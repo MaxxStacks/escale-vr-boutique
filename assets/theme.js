@@ -430,16 +430,19 @@
   (() => {
     if (!T.autoLanguage) return;
     if (/bot|crawl|spider|slurp|lighthouse|preview/i.test(navigator.userAgent)) return;
+    // v2 key: everyone is re-detected once with the primary-language rule below.
+    const KEY = 'ev-lang-v2';
     let chosen = null;
-    try { chosen = localStorage.getItem('ev-lang'); } catch (e) {}
-    $$('.lang-switch__btn').forEach((b) => b.addEventListener('click', () => { try { localStorage.setItem('ev-lang', b.dataset.lang); } catch (e) {} }));
+    try { chosen = localStorage.getItem(KEY); } catch (e) {}
+    // Only a real click counts as the visitor's choice (the redirect below clicks the button itself).
+    $$('.lang-switch__btn').forEach((b) => b.addEventListener('click', (e) => { if (e.isTrusted) { try { localStorage.setItem(KEY, b.dataset.lang); } catch (err) {} } }));
     if (chosen) return;
     const current = (document.documentElement.lang || 'fr').slice(0, 2);
-    // French if the browser accepts French at all (many Quebec PCs run English Windows with fr-CA as a second
-    // language); English only when English is listed and French is not.
+    // Follow the browser's preferred language: the first of FR/EN in its list wins. Anything else falls back to
+    // French, the store's default.
     const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'fr']).map((l) => l.slice(0, 2).toLowerCase());
-    const target = !langs.includes('fr') && langs.includes('en') ? 'en' : 'fr';
-    try { localStorage.setItem('ev-lang', target); } catch (e) {}
+    const target = langs.find((l) => l === 'fr' || l === 'en') || 'fr';
+    try { localStorage.setItem(KEY, target); } catch (e) {}
     if (target === current) return;
     const form = $('form.lang-switch');
     const btn = form && form.querySelector(`[data-lang="${target}"]`);
@@ -523,11 +526,12 @@
         const items = ((await res.json()).resources?.results?.products) || [];
         wait.remove();
         if (!items.length) { handoff(s.notFound); return; }
+        const priceFmt = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-CA' : 'fr-CA', { style: 'currency', currency: 'CAD' });
         say(`<p>${esc(s.found)}</p><ul class="chat__products">${items.map((p) => `
           <li><a href="${esc(p.url)}" class="chat__product">
             ${p.image ? `<img src="${esc(`${p.image}${p.image.includes('?') ? '&' : '?'}width=120`)}" alt="" width="52" height="52" loading="lazy">` : ''}
             <span><strong>${esc(p.title)}</strong><small>${esc(p.vendor || '')}</small></span>
-            <b>${esc(p.price)} $</b>
+            <b>${esc(priceFmt.format(Number(p.price)))}</b>
           </a></li>`).join('')}</ul>${actions([{ label: s.seeAll, href: `${cfg.urls.search}?q=${encodeURIComponent(q)}&options[prefix]=last` }])}`);
       } catch (e) {
         wait.remove();

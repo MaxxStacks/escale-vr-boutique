@@ -104,11 +104,13 @@
         <ul class="active-filters" role="list">
           {%- for filter in collection.filters -%}
             {%- for value in filter.active_values -%}
-              <li><a href="{{ value.url_to_remove }}" class="chip">{{ filter.label | escape }} : {{ value.label | escape }} {%- render 'icon', name: 'close' -%}</a></li>
+              <li><a href="{{ value.url_to_remove }}" class="chip">{% render 'filter-label', filter: filter %} : {{ value.label | escape }} {%- render 'icon', name: 'close' -%}</a></li>
             {%- endfor -%}
             {%- if filter.type == 'price_range' -%}
               {%- if filter.min_value.value or filter.max_value.value -%}
-                <li><a href="{{ filter.url_to_remove }}" class="chip">{{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }} {%- render 'icon', name: 'close' -%}</a></li>
+                {%- assign range_min = filter.min_value.value | default: 0 -%}
+                {%- assign range_max = filter.max_value.value | default: filter.range_max -%}
+                <li><a href="{{ filter.url_to_remove }}" class="chip">{% render 'money', amount: range_min %} – {% render 'money', amount: range_max %} {%- render 'icon', name: 'close' -%}</a></li>
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}

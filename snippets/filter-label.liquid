@@ -1,0 +1,14 @@
+{%- comment -%}
+  Prints a storefront filter label in the page language. Shopify stores the default availability and
+  price filter labels in one language only, so those two come from the locale files.
+  Usage: {% render 'filter-label', filter: filter %}
+{%- endcomment -%}
+{%- liquid
+  if filter.type == 'price_range'
+    echo 'sections.filters.price' | t
+  elsif filter.param_name == 'filter.v.availability'
+    echo 'sections.filters.availability' | t
+  else
+    echo filter.label | escape
+  endif
+-%}
