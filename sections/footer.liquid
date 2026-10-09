@@ -1,3 +1,23 @@
+{%- liquid
+  assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
+  assign link_cols = 0
+  for block in section.blocks
+    unless block.type == 'hours'
+      assign link_cols = link_cols | plus: 1
+    endunless
+  endfor
+  # PayPal is not offered for now; fall back to the configured card list when nothing else is reported.
+  assign pay_types = ''
+  for type in shop.enabled_payment_types
+    unless type == 'paypal'
+      assign pay_types = pay_types | append: type | append: ','
+    endunless
+  endfor
+  if pay_types == blank
+    assign pay_types = settings.payment_icons | remove: ' '
+  endif
+  assign pay_types = pay_types | split: ','
+-%}
 <footer class="footer">
   {%- if section.settings.show_trust -%}
     <div class="footer__trust">
@@ -30,7 +50,7 @@
     </div>
   {%- endif -%}
 
-  <div class="page-width footer__grid">
+  <div class="page-width footer__grid" style="--footer-cols: {{ link_cols }}">
     <div class="footer__brand">
       <a href="{{ routes.root_url }}" class="footer__logo-link">
         {%- if section.settings.logo != blank -%}
@@ -40,6 +60,7 @@
         {%- endif -%}
       </a>
       <p class="footer__about">{{ 'footer.about' | t }}</p>
+      <p class="footer__ship">{%- render 'icon', name: 'truck' -%}<span>{{ 'footer.ship_line' | t }}</span></p>
       <address class="footer__nap">
         <span>{%- render 'icon', name: 'store' -%}<span>{{ settings.biz_street }}<br>{{ settings.biz_city }} ({{ 'general.province_quebec' | t }}) {{ settings.biz_postal }}<br><small>{{ 'footer.exit' | t }}</small></span></span>
         <a href="tel:{{ settings.biz_phone_e164 }}">{%- render 'icon', name: 'phone' -%}<span>{{ settings.biz_phone }}</span></a>
@@ -63,6 +84,18 @@
                 {%- endfor -%}
               </ul>
             </details>
+          {%- when 'site' -%}
+            <details class="footer__acc" open>
+              <summary class="footer__heading">{{ block.settings.heading | default: settings.biz_name | default: 'Escale VR' }}{%- render 'icon', name: 'chevron' -%}</summary>
+              <ul role="list">
+                <li><a href="{{ main_url }}/acheter/">{{ 'utility.new_rvs' | t }}</a></li>
+                <li><a href="{{ main_url }}/vr-occasion/">{{ 'utility.used_rvs' | t }}</a></li>
+                <li><a href="{{ main_url }}/louer-un-vr/">{{ 'utility.rental' | t }}</a></li>
+                <li><a href="{{ main_url }}/notre-service/">{{ 'utility.service' | t }}</a></li>
+                <li><a href="{{ main_url }}/financement/">{{ 'utility.financing' | t }}</a></li>
+                <li><a href="{{ main_url }}/entreprise/">{{ 'footer.about_us' | t }}</a></li>
+              </ul>
+            </details>
           {%- when 'hours' -%}
             {%- render 'parts-hours', style: 'footer' -%}
         {%- endcase -%}
@@ -72,7 +105,10 @@
 
   <div class="footer__bottom">
     <div class="page-width footer__bottom-inner">
-      <p>&copy; {{ 'now' | date: '%Y' }} {{ settings.biz_legal_name }}. {{ 'general.rights' | t }} · <a href="{{ settings.main_site_url | default: 'https://escalevr.ca' }}">escalevr.ca</a></p>
+      <div class="footer__copy">
+        <img src="{{ 'escale-logo-light.png' | asset_url }}" class="footer__bottom-logo" width="65" height="22" alt="{{ settings.biz_name }}" loading="lazy">
+        <p>&copy; {{ 'now' | date: '%Y' }} {{ settings.biz_legal_name | append: '.' | replace: '..', '.' }} {{ 'general.rights' | t }} · <a href="{{ main_url }}">escalevr.ca</a></p>
+      </div>
       <ul class="footer__policies" role="list">
         {%- for policy in shop.policies -%}
           <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
@@ -80,7 +116,7 @@
       </ul>
       {%- if section.settings.show_payment_icons -%}
         <ul class="footer__payments" role="list" aria-label="{{ 'general.payment_methods' | t }}">
-          {%- for type in shop.enabled_payment_types -%}
+          {%- for type in pay_types -%}
             <li>{{ type | payment_type_svg_tag: class: 'payment-icon' }}</li>
           {%- endfor -%}
         </ul>
@@ -95,7 +131,7 @@
   "name": "Footer",
   "tag": "div",
   "class": "section-footer",
-  "max_blocks": 5,
+  "max_blocks": 6,
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Footer logo (leave empty for the official white logo)" },
     { "type": "checkbox", "id": "show_trust", "label": "Show trust strip", "default": true },
@@ -110,6 +146,15 @@
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading" },
         { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "site",
+      "name": "Escale VR links",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Escale VR" },
+        { "type": "paragraph", "content": "Links to the dealership site (new and used RVs, rentals, service, financing). The base URL is set in Theme settings." }
       ]
     },
     {

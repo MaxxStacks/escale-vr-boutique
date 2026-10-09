@@ -312,6 +312,7 @@
       "to": "To ($)"
     },
     "header": {
+      "brands_empty": "Brands will appear here as soon as products are online.",
       "boutique": "Boutique",
       "menu": "Main menu",
       "view_all": "View all:",
@@ -370,10 +371,14 @@
     }
   },
   "footer": {
+    "ship_line": "Shipping across Quebec and Canada, or free pickup in Beaumont.",
+    "site_heading": "Escale VR",
+    "about_us": "About us",
+    "maintenance": "Maintenance plans",
     "about": "The online store and parts department of Escale VR, a recreational vehicle dealer in Beaumont since 1986. Parts, accessories and maintenance plans for every RV.",
     "exit": "Exit 337, Highway 20",
     "trust_shipping": "Free shipping over ${{ threshold }}",
-    "trust_shipping_sub": "Anywhere in Canada",
+    "trust_shipping_sub": "Across Quebec and Canada",
     "trust_pickup": "Free in-store pickup",
     "trust_pickup_sub": "at the parts counter",
     "trust_experts": "RV experts since 1986",

@@ -312,6 +312,7 @@
       "to": "À ($)"
     },
     "header": {
+      "brands_empty": "Les marques s'afficheront ici dès que les produits seront en ligne.",
       "boutique": "Boutique",
       "menu": "Menu principal",
       "view_all": "Tout voir :",
@@ -370,10 +371,14 @@
     }
   },
   "footer": {
+    "ship_line": "Livraison partout au Québec et au Canada, ou cueillette gratuite à Beaumont.",
+    "site_heading": "Escale VR",
+    "about_us": "À propos",
+    "maintenance": "Plans d’entretien",
     "about": "La boutique en ligne et le département des pièces d'Escale VR, concessionnaire de véhicules récréatifs à Beaumont depuis 1986. Pièces, accessoires et plans d'entretien pour tous les VR.",
     "exit": "Sortie 337 de l'autoroute 20",
     "trust_shipping": "Livraison gratuite dès {{ threshold }} $",
-    "trust_shipping_sub": "Partout au Canada",
+    "trust_shipping_sub": "Partout au Québec et au Canada",
     "trust_pickup": "Cueillette gratuite",
     "trust_pickup_sub": "au comptoir des pièces",
     "trust_experts": "Experts VR depuis 1986",

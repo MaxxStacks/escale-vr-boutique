@@ -443,6 +443,20 @@
         "default": "water pump, battery, antifreeze, awning, brake controller, roof sealant"
       },
       {
+        "type": "text",
+        "id": "vendor_exclude",
+        "label": "Vendors hidden from the Brands menu",
+        "info": "Comma-separated. Distributors and the store itself, so the menu only lists product brands.",
+        "default": "Escale VR,Meyer Distributing,NTP-STAG,Keystone Automotive,Atlas Trailer"
+      },
+      {
+        "type": "text",
+        "id": "payment_icons",
+        "label": "Footer payment icons",
+        "info": "Comma-separated Shopify payment types shown when the store reports none besides PayPal (visa, master, american_express, shopify_pay, apple_pay, google_pay, interac).",
+        "default": "visa,master,american_express,shopify_pay"
+      },
+      {
         "type": "checkbox",
         "id": "auto_language",
         "label": "Auto-detect browser language (FR/EN) on first visit",

@@ -29,12 +29,19 @@
         "hours": {
           "type": "hours",
           "settings": {}
+        },
+        "site": {
+          "type": "site",
+          "settings": {
+            "heading": "Escale VR"
+          }
         }
       },
       "block_order": [
         "shop",
         "parts",
         "help",
+        "site",
         "hours"
       ],
       "settings": {

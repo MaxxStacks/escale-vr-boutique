@@ -4,6 +4,36 @@
   assign logo_w = section.settings.logo_width
   assign main_url = settings.main_site_url | default: 'https://escalevr.ca'
   assign cat_exclude = settings.category_exclude | remove: ' ' | split: ','
+  # If no category has storefront products yet (catalog still syncing), list them all rather than an empty menu.
+  assign cat_show_empty = true
+  for c in collections
+    if cat_exclude contains c.handle
+      continue
+    endif
+    if c.products_count > 0
+      assign cat_show_empty = false
+      break
+    endif
+  endfor
+  # Product brands for the Brands menu: real vendors, minus the store itself and distributors.
+  assign vendor_exclude = settings.vendor_exclude | split: ','
+  assign brand_logos = 'ge-appliances,dometic,furrion,thetford,dicor,lippert,truma,camco,blue-ox,morryde'
+  assign brands = ''
+  for vendor in shop.vendors
+    assign v = vendor | strip
+    assign skip = false
+    for ex in vendor_exclude
+      assign exs = ex | strip
+      if exs == v
+        assign skip = true
+      endif
+    endfor
+    if v == shop.name or v == settings.biz_name or skip
+      continue
+    endif
+    assign brands = brands | append: v | append: '||'
+  endfor
+  assign brands = brands | split: '||'
 -%}
 <header class="header{% if section.settings.sticky %} header--sticky{% endif %}" data-header>
   {%- comment -%} Main bar — logo + BOUTIQUE, part search, account, cart {%- endcomment -%}
@@ -23,7 +53,7 @@
                   <ul>
                     <li><a href="{{ routes.collections_url }}" class="drawer-menu__all">{{ 'sections.header.all_categories' | t }}</a></li>
                     {%- for c in collections -%}
-                      {%- if cat_exclude contains c.handle or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
+                      {%- if cat_exclude contains c.handle or c.products_count == 0 and cat_show_empty == false -%}{%- continue -%}{%- endif -%}
                       <li><a href="{{ c.url }}">{{ c.title | escape }}</a></li>
                     {%- endfor -%}
                   </ul>
@@ -31,7 +61,18 @@
               </li>
               {%- for link in menu.links -%}
                 <li>
-                  {%- if link.links.size > 0 -%}
+                  {%- if link.handle == 'marques' or link.handle == 'brands' -%}
+                    <details>
+                      <summary>{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
+                      <ul>
+                        {%- for vendor in brands -%}
+                          <li><a href="{{ vendor | url_for_vendor }}">{{ vendor | escape }}</a></li>
+                        {%- else -%}
+                          <li><a href="{{ routes.all_products_collection_url }}" class="drawer-menu__all">{{ 'sections.header.all_products' | t }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    </details>
+                  {%- elsif link.links.size > 0 -%}
                     <details>
                       <summary>{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
                       <ul>
@@ -196,7 +237,7 @@
                       <ul class="mega__tiles" role="list">
                         {%- assign shown = 0 -%}
                         {%- for c in collections -%}
-                          {%- if cat_exclude contains c.handle or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
+                          {%- if cat_exclude contains c.handle or c.products_count == 0 and cat_show_empty == false -%}{%- continue -%}{%- endif -%}
                           {%- if shown >= 18 -%}{%- break -%}{%- endif -%}
                           {%- assign shown = shown | plus: 1 -%}
                           <li>
@@ -231,11 +272,11 @@
                             <li><a href="{{ routes.account_url }}">{{ 'sections.header.track_order' | t }}</a></li>
                           </ul>
                         </div>
-                        {%- if shop.vendors.size > 0 -%}
+                        {%- if brands.size > 0 -%}
                           <div class="mega__col">
                             <p class="mega__title">{{ 'sections.header.brands' | t }}</p>
                             <ul>
-                              {%- for vendor in shop.vendors limit: 10 -%}
+                              {%- for vendor in brands limit: 10 -%}
                                 <li>{{ vendor | link_to_vendor }}</li>
                               {%- endfor -%}
                             </ul>
@@ -275,8 +316,59 @@
                 endif
               endfor
             -%}
-            <li class="nav__item{% if link.links.size > 0 %} nav__item--has-children{% endif %}">
-              {%- if link.links.size > 0 -%}
+            {%- assign is_brands = false -%}
+            {%- if link.handle == 'marques' or link.handle == 'brands' -%}{%- assign is_brands = true -%}{%- endif -%}
+            <li class="nav__item{% if link.links.size > 0 or is_brands %} nav__item--has-children{% endif %}">
+              {%- if is_brands -%}
+                <details class="nav__details" data-hover-menu>
+                  <summary class="nav__link{% if link.child_active or link.active %} is-active{% endif %}">{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
+                  <div class="mega">
+                    <div class="page-width mega__inner{% if promo %} mega__inner--promo{% endif %}">
+                      <div class="mega__main">
+                        <div class="mega__head">
+                          <p class="mega__heading">{% render 'menu-link-title', link: link %}</p>
+                          <a href="{{ routes.all_products_collection_url }}" class="link-arrow">{{ 'sections.header.all_products' | t }} {%- render 'icon', name: 'arrow' -%}</a>
+                        </div>
+                        {%- if brands.size > 0 -%}
+                          <ul class="mega__tiles mega__tiles--brands" role="list">
+                            {%- for vendor in brands limit: 18 -%}
+                              {%- assign vh = vendor | handle -%}
+                              <li>
+                                <a href="{{ vendor | url_for_vendor }}" class="mega__tile mega__tile--brand">
+                                  {%- assign logo_key = ',' | append: vh | append: ',' -%}
+                                  {%- assign logo_list = ',' | append: brand_logos | append: ',' -%}
+                                  {%- if logo_list contains logo_key -%}
+                                    {%- assign logo_file = vh | replace: 'ge-appliances', 'ge' | replace: 'blue-ox', 'blueox' -%}
+                                    <img src="{{ 'brand-' | append: logo_file | append: '.png' | asset_url }}" alt="{{ vendor | escape }}" width="144" height="60" loading="lazy">
+                                  {%- else -%}
+                                    <strong>{{ vendor | escape }}</strong>
+                                  {%- endif -%}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- else -%}
+                          <p class="muted">{{ 'sections.header.brands_empty' | t }}</p>
+                        {%- endif -%}
+                        <p class="mega__help">{%- render 'icon', name: 'phone' -%} {{ 'sections.header.mega_help' | t }} <a href="tel:{{ settings.biz_phone_e164 }}">{{ settings.biz_phone }}</a></p>
+                      </div>
+                      {%- if promo -%}
+                        <a href="{{ promo.settings.link | default: link.url }}" class="mega__promo" {{ promo.shopify_attributes }}>
+                          {%- if promo.settings.image != blank -%}
+                            {{ promo.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 500, 700', sizes: '340px', alt: promo.settings.heading }}
+                          {%- endif -%}
+                          <span class="mega__promo-body">
+                            {%- if promo.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--light">{{ promo.settings.eyebrow }}</span>{%- endif -%}
+                            <span class="mega__promo-heading">{{ promo.settings.heading }}</span>
+                            {%- if promo.settings.text != blank -%}<span class="mega__promo-text">{{ promo.settings.text }}</span>{%- endif -%}
+                            {%- if promo.settings.button_label != blank -%}<span class="btn btn--accent btn--sm">{{ promo.settings.button_label }}</span>{%- endif -%}
+                          </span>
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </details>
+              {%- elsif link.links.size > 0 -%}
                 <details class="nav__details" data-hover-menu>
                   <summary class="nav__link{% if link.child_active or link.active %} is-active{% endif %}">{% render 'menu-link-title', link: link %}{%- render 'icon', name: 'chevron' -%}</summary>
                   <div class="mega">

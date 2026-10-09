@@ -504,14 +504,24 @@
     };
     const actions = (list) => `<div class="chat__actions">${list.map((a) => `<a class="chat__action${a.primary ? ' chat__action--primary' : ''}" href="${esc(a.href)}"${a.external ? ' target="_blank" rel="noopener"' : ''}>${esc(a.label)}</a>`).join('')}</div>`;
 
+    // Full URL of the page the visitor is on (variant and search params included) so support sees it.
+    const pageUrl = () => `${location.origin}${location.pathname}${location.search}`;
+    // Report chat activity with the page it came from: Shopify customer events (Settings → Customer events)
+    // and Google Analytics / GTM when present.
+    const track = (name, extra = {}) => {
+      const data = { page_url: pageUrl(), page_title: document.title, product: cfg.productTitle || null, sku: cfg.productSku || null, ...extra };
+      try { window.Shopify?.analytics?.publish?.(name, data); } catch (e) { /* analytics optional */ }
+      try { (window.dataLayer = window.dataLayer || []).push({ event: name, ...data }); } catch (e) { /* analytics optional */ }
+    };
     const messengerUrl = () => {
       const q = lastQuestion || s.chipHuman;
       const text = cfg.productTitle
         ? s.prefillProduct.replace('%product%', cfg.productTitle).replace('%sku%', cfg.productSku || '—').replace('%question%', q)
         : s.prefill.replace('%question%', q);
-      return `https://m.me/${encodeURIComponent(cfg.messenger)}?text=${encodeURIComponent(`${text}\n${location.origin}${cfg.page}`)}`;
+      return `https://m.me/${encodeURIComponent(cfg.messenger)}?text=${encodeURIComponent(`${text}\n${pageUrl()}`)}&ref=${encodeURIComponent(`boutique:${cfg.page}`)}`;
     };
     const syncMessenger = () => { messengerLink.href = messengerUrl(); };
+    chat.addEventListener('click', (e) => { if (e.target.closest('a[href^="https://m.me/"]')) track('chat_messenger_handoff'); });
     const handoff = (lead) => say(`<p>${esc(lead || (isOpen() ? s.human : s.humanOffline))}</p>${actions([
       { label: s.messengerBtn, href: messengerUrl(), external: true, primary: true },
       ...(cfg.phoneE164 ? [{ label: `${s.callBtn} ${cfg.phone}`, href: `tel:${cfg.phoneE164}` }] : []),
@@ -611,6 +621,7 @@
       syncMessenger();
       if (!started) {
         started = true;
+        track('chat_opened');
         say(`<p>${esc(s.greeting)}</p>`);
         if (cfg.productTitle) say(`<p>${esc(s.greetingProduct.replace('%product%', cfg.productTitle))}</p>`);
       }

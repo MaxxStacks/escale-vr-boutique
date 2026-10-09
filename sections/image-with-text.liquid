@@ -3,6 +3,8 @@
     <div class="split__media">
       {%- if section.settings.image != blank -%}
         {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: section.settings.image.alt | default: section.settings.heading }}
+      {%- elsif section.settings.fallback_image != blank -%}
+        <img src="{{ section.settings.fallback_image | asset_url }}" alt="{{ section.settings.heading | escape }}" width="640" height="480" loading="lazy">
       {%- else -%}
         {{ 'image' | placeholder_svg_tag: 'placeholder' }}
       {%- endif -%}
@@ -25,6 +27,7 @@
   "class": "section-split",
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "fallback_image", "label": "Built-in image file", "info": "Used when no image is selected, e.g. escale-about.jpg" },
     { "type": "checkbox", "id": "reverse", "label": "Image on the right", "default": false },
     { "type": "checkbox", "id": "surface", "label": "Tinted background", "default": true },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Depuis 1986" },

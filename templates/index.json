@@ -53,7 +53,7 @@
           "settings": {
             "icon": "truck",
             "title": "Livraison gratuite dès 150 $",
-            "text": "Partout au Canada"
+            "text": "Partout au Québec et au Canada"
           }
         },
         "t2": {
@@ -269,49 +269,93 @@
     "partners": {
       "type": "brand-partners",
       "blocks": {
-        "b1": {
+        "brand_ge": {
           "type": "partner",
           "settings": {
-            "name": "Meyer Distributing",
-            "description": "Accessoires VR et camionnettes",
-            "link": "shopify://collections/meyer"
+            "name": "GE Appliances",
+            "logo_asset": "brand-ge.png"
           }
         },
-        "b2": {
+        "brand_dometic": {
           "type": "partner",
           "settings": {
-            "name": "NTP-STAG",
-            "description": "Pièces et accessoires VR",
-            "link": "shopify://collections/ntp-stag"
+            "name": "Dometic",
+            "logo_asset": "brand-dometic.png"
           }
         },
-        "b3": {
+        "brand_furrion": {
           "type": "partner",
           "settings": {
-            "name": "Keystone Automotive",
-            "description": "Remorquage et équipement",
-            "link": "shopify://collections/keystone"
+            "name": "Furrion",
+            "logo_asset": "brand-furrion.png"
           }
         },
-        "b4": {
+        "brand_thetford": {
           "type": "partner",
           "settings": {
-            "name": "Atlas Trailer",
-            "description": "Pièces de remorque et d'essieux",
-            "link": "shopify://collections/atlas-trailer"
+            "name": "Thetford",
+            "logo_asset": "brand-thetford.png"
+          }
+        },
+        "brand_dicor": {
+          "type": "partner",
+          "settings": {
+            "name": "Dicor",
+            "logo_asset": "brand-dicor.png"
+          }
+        },
+        "brand_lippert": {
+          "type": "partner",
+          "settings": {
+            "name": "Lippert",
+            "logo_asset": "brand-lippert.png"
+          }
+        },
+        "brand_truma": {
+          "type": "partner",
+          "settings": {
+            "name": "Truma",
+            "logo_asset": "brand-truma.png"
+          }
+        },
+        "brand_camco": {
+          "type": "partner",
+          "settings": {
+            "name": "Camco",
+            "logo_asset": "brand-camco.png"
+          }
+        },
+        "brand_blueox": {
+          "type": "partner",
+          "settings": {
+            "name": "Blue Ox",
+            "logo_asset": "brand-blueox.png"
+          }
+        },
+        "brand_morryde": {
+          "type": "partner",
+          "settings": {
+            "name": "MORryde",
+            "logo_asset": "brand-morryde.png"
           }
         }
       },
       "block_order": [
-        "b1",
-        "b2",
-        "b3",
-        "b4"
+        "brand_ge",
+        "brand_dometic",
+        "brand_furrion",
+        "brand_thetford",
+        "brand_dicor",
+        "brand_lippert",
+        "brand_truma",
+        "brand_camco",
+        "brand_blueox",
+        "brand_morryde"
       ],
       "settings": {
-        "eyebrow": "Nos partenaires",
-        "heading": "Des dizaines de milliers de pièces sur commande",
-        "text": "<p>Grâce à nos ententes avec les plus grands distributeurs nord-américains, on trouve la pièce qu'il vous faut, même si elle n'est pas en tablette.</p>"
+        "eyebrow": "Nos marques",
+        "heading": "Les grandes marques du VR, au comptoir des pièces",
+        "text": "<p>Pièces d'origine et accessoires des fabricants en qui nos techniciens ont confiance. Vous cherchez une autre marque? On la commande pour vous.</p>"
       }
     },
     "about": {
@@ -323,7 +367,8 @@
         "heading": "Des experts du VR, pas un simple entrepôt",
         "text": "<p>Escale VR est un concessionnaire de véhicules récréatifs établi à Beaumont, sur la Rive-Sud de Québec, à la sortie 337 de l'autoroute 20. Notre comptoir des pièces sert les campeurs de Lévis, Québec, Bellechasse et de partout au Québec.</p><p>Chaque pièce vendue en ligne est vérifiée par l'équipe qui entretient nos propres VR.</p>",
         "button_label": "Découvrir Escale VR",
-        "button_link": "https://escalevr.ca/entreprise/"
+        "button_link": "https://escalevr.ca/entreprise/",
+        "fallback_image": "escale-about.jpg"
       }
     },
     "faq": {
