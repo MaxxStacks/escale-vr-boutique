@@ -244,7 +244,16 @@
       const btn = e.currentTarget;
       const txt = $('[data-sku]', section)?.textContent.trim();
       if (!txt || !navigator.clipboard) return;
-      navigator.clipboard.writeText(txt).then(() => { btn.classList.add('is-copied'); setTimeout(() => btn.classList.remove('is-copied'), 1500); });
+      const status = $('[data-copy-status]', section);
+      navigator.clipboard.writeText(txt).then(() => {
+        btn.classList.add('is-copied');
+        if (status) status.textContent = status.dataset.copiedText;
+        clearTimeout(btn.copiedTimer);
+        btn.copiedTimer = setTimeout(() => {
+          btn.classList.remove('is-copied');
+          if (status) status.textContent = '';
+        }, 2000);
+      });
     });
 
     // Tabs

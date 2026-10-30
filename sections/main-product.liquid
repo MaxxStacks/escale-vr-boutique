@@ -113,6 +113,7 @@
             <dt>{{ 'products.product.part_number' | t }}</dt>
             <dd><span data-sku>{{ part_number | default: current_variant.sku | default: '—' }}</span>
               <button type="button" class="product__copy" data-copy-sku aria-label="{{ 'products.product.copy' | t }}">{%- render 'icon', name: 'copy' -%}</button>
+              <span class="product__copied" role="status" data-copy-status data-copied-text="{{ 'products.product.copied' | t | escape }}"></span>
             </dd>
           </div>
         {%- endunless -%}

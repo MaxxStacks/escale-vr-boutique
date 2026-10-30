@@ -219,6 +219,7 @@
       "add_short": "Add",
       "choose": "Choose",
       "copy": "Copy part number",
+      "copied": "Copied!",
       "eta": "Ships in {{ days }} business days from Beaumont",
       "in_stock_short": "In stock",
       "pickup_at": "Pickup available at {{ location }} · {{ time }}",

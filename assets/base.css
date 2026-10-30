@@ -616,6 +616,8 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 .product__copy:hover { color: var(--c-primary); background: #fff; }
 .product__copy .icon { width: 14px; height: 14px; }
 .product__copy.is-copied { color: var(--c-success); }
+.product__copied { color: var(--c-success); font-weight: 700; }
+.product__copied:empty { display: none; }
 .product__price { padding: 18px 0; border-block: 1px solid var(--c-border); margin-bottom: 18px; }
 .product__price p { margin: 6px 0 0; }
 .product__saving { display: inline-block; padding: 4px 10px; border-radius: var(--radius); background: #FDECEC; color: var(--c-sale); font-weight: 800; font-size: .86rem; }

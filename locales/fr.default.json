@@ -219,6 +219,7 @@
       "add_short": "Ajouter",
       "choose": "Choisir",
       "copy": "Copier le numéro de pièce",
+      "copied": "Copié!",
       "eta": "Expédié en {{ days }} jours ouvrables depuis Beaumont",
       "in_stock_short": "En stock",
       "pickup_at": "Cueillette disponible à {{ location }} · {{ time }}",
