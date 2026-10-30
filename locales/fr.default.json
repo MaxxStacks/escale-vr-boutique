@@ -149,7 +149,8 @@
     "pagination": {
       "label": "Pagination",
       "next": "Page suivante",
-      "previous": "Page précédente"
+      "previous": "Page précédente",
+      "loading": "Chargement d'autres produits…"
     },
     "password_owner": "Vous êtes le propriétaire?",
     "payment_methods": "Modes de paiement",

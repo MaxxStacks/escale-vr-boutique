@@ -373,6 +373,46 @@
     }
   }));
 
+  /* ---------- Collection & search: infinite scroll ---------- */
+  // The numbered links stay in the HTML for crawlers and as the fallback if a page fails to load.
+  const infiniteGrid = $('[data-infinite-grid]');
+  const pager = $('.pagination');
+  if (infiniteGrid && pager && 'IntersectionObserver' in window) {
+    const sentinel = document.createElement('p');
+    sentinel.className = 'infinite-status muted small';
+    sentinel.setAttribute('role', 'status');
+    pager.after(sentinel);
+    pager.style.display = 'none';
+    $('[data-page-meta]')?.remove();
+
+    let loading = false;
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) loadNext(); }, { rootMargin: '800px' });
+    const stop = () => { observer.disconnect(); sentinel.remove(); };
+    async function loadNext() {
+      const next = pager.querySelector('a[rel="next"]');
+      if (loading) return;
+      if (!next) { stop(); return; }
+      loading = true;
+      sentinel.textContent = pager.dataset.loadingText;
+      try {
+        const res = await fetch(next.href);
+        if (!res.ok) throw new Error(res.status);
+        const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+        $$('[data-infinite-grid] > li', doc).forEach((li) => infiniteGrid.appendChild(document.adoptNode(li)));
+        pager.innerHTML = doc.querySelector('.pagination')?.innerHTML || '';
+        sentinel.textContent = '';
+        loading = false;
+        // Re-observing fires again if the sentinel is still in range (short pages, tall screens).
+        observer.unobserve(sentinel);
+        observer.observe(sentinel);
+      } catch (err) {
+        stop();
+        pager.style.display = '';
+      }
+    }
+    observer.observe(sentinel);
+  }
+
   /* ---------- Account: orders tabs ---------- */
   $$('[data-orders]').forEach((wrap) => {
     wrap.addEventListener('click', (e) => {

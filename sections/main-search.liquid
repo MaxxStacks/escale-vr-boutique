@@ -38,7 +38,7 @@
             <a href="{{ pages['demande-de-piece'].url | default: routes.collections_url }}" class="btn btn--accent">{{ 'sections.search.request_part' | t }}</a>
           </div>
         {%- else -%}
-          <ul class="grid grid--products grid--4" role="list">
+          <ul class="grid grid--products grid--4" role="list" data-infinite-grid>
             {%- for item in search.results -%}
               <li>
                 {%- if item.object_type == 'product' -%}

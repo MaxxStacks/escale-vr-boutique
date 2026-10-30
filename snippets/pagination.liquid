@@ -1,5 +1,5 @@
 {%- if paginate.pages > 1 -%}
-  <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+  <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}" data-loading-text="{{ 'general.pagination.loading' | t | escape }}">
     {%- if paginate.previous -%}
       <a href="{{ paginate.previous.url }}" class="pagination__btn" rel="prev" aria-label="{{ 'general.pagination.previous' | t }}">‹</a>
     {%- endif -%}

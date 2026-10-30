@@ -84,7 +84,7 @@
         </button>
         <p class="toolbar__count" role="status">
           <strong>{{ 'sections.collection.products_count' | t: count: collection.products_count }}</strong>
-          {%- if paginate.pages > 1 %} <span class="muted">· {{ 'general.meta.page' | t: page: paginate.current_page }} / {{ paginate.pages }}</span>{% endif -%}
+          {%- if paginate.pages > 1 %} <span class="muted" data-page-meta>· {{ 'general.meta.page' | t: page: paginate.current_page }} / {{ paginate.pages }}</span>{% endif -%}
         </p>
         <div class="toolbar__density" role="group" aria-label="{{ 'sections.collection.density' | t }}">
           <button type="button" class="toolbar__dens-btn" data-density="3" aria-label="3">{%- render 'icon', name: 'grid' -%}</button>
@@ -129,7 +129,7 @@
           </div>
         </div>
       {%- else -%}
-        <ul class="grid grid--products grid--{{ section.settings.columns }}" role="list" data-product-grid>
+        <ul class="grid grid--products grid--{{ section.settings.columns }}" role="list" data-product-grid data-infinite-grid>
           {%- for product in collection.products -%}
             {%- liquid
               assign lazy = true

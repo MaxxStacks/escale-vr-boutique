@@ -545,6 +545,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 .pagination__btn:hover { border-color: var(--c-primary); }
 .pagination__btn.is-current { background: var(--c-primary); border-color: var(--c-primary); color: var(--c-on-primary); }
 .pagination__gap { display: grid; place-items: center; min-width: 32px; }
+.infinite-status { min-height: 1.5em; margin: 32px 0 0; text-align: center; }
 
 /* All categories */
 .shop-hero { color: #fff; background: radial-gradient(900px 400px at 90% 0%, rgba(245,144,29,.28), transparent 60%), linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%); }

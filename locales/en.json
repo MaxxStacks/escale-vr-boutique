@@ -149,7 +149,8 @@
     "pagination": {
       "label": "Pagination",
       "next": "Next page",
-      "previous": "Previous page"
+      "previous": "Previous page",
+      "loading": "Loading more products…"
     },
     "password_owner": "Are you the store owner?",
     "payment_methods": "Payment methods",
